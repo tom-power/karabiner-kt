@@ -15,5 +15,5 @@ class App(private val filename: String) {
 }
 
 fun main() {
-  println("App ${App("input.txt")()}")
+  println("✗✗ App ${App("input.txt")()}")
 }
