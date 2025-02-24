@@ -19,6 +19,10 @@ repositories {
 }
 
 dependencies {
+
+    implementation(platform((libs.pods4k.bom)))
+    implementation(libs.bundles.pods4k)
+
     testImplementation(libs.bundles.testing)
     testRuntimeOnly(libs.runtime.junit.platform)
 }

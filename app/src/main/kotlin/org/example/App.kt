@@ -3,12 +3,21 @@
  */
 package org.example
 
+import com.danrusu.pods4k.immutableArrays.ImmutableIntArray
+import com.danrusu.pods4k.immutableArrays.immutableArrayOf
+
 class App(private val filename: String) {
 
   operator fun invoke(): Int {
-    var lineCount = 0
+
+    val a: IntArray = intArrayOf(1, 2, 3)
+    val b: Array<Int> = arrayOf(1, 2, 3)
+    val c: ImmutableIntArray = immutableArrayOf(1, 2, 3)
+
+    var lineCount: Int = 0
     Utils.forEachLine(filename) { line ->
-      lineCount++
+      lineCount = lineCount + 1
+
     }
     return lineCount
   }

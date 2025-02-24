@@ -9,12 +9,20 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 runtime-junit-platform = { module = "org.junit.platform:junit-platform-launcher" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
 
+pods4k-bom = { module = "com.danrusu.pods4k:bom", version = "0.6.0" }
+pods4k-core = { module = "com.danrusu.pods4k.immutable-arrays:core" }
+pods4k-core-transforms = { module = "com.danrusu.pods4k.immutable-arrays:transformations-to-standard-collections" }
+
 [bundles]
 testing = [
     "junit-jupiter-engine", # use junit 5 integrations
     "kotlin-test-junit5",   # kotlin junit 5 integrations
 ]
 
+pods4k = [
+    "pods4k-core",
+    "pods4k-core-transforms",
+]
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.0" }
