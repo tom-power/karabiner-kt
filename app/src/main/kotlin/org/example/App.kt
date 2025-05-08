@@ -15,10 +15,8 @@ class App(private val filename: String) {
     val c: ImmutableIntArray = immutableArrayOf(1, 2, 3)
 
     var lineCount: Int = 0
-    Utils.forEachLine(filename) { line ->
-      lineCount = lineCount + 1
+    Utils.forEachLine(filename) { line -> lineCount = lineCount + 1 }
 
-    }
     return lineCount
   }
 }

@@ -10,9 +10,6 @@ class AppTest {
 
   @Test
   fun day1() {
-    assertTrue {
-      Day1(("input.txt"))() == 1222801
-    }
+    assertTrue { Day1(("input.txt"))() == 1222801 }
   }
-
 }
