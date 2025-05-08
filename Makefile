@@ -3,8 +3,11 @@ default: run
 help:			## list out commands with descriptions
 	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
 
-run:
+run:			## generate karabiner.json (using kotlin)
 	./gradlew run
+
+ts:				## generate karabiner.json (using typescript)
+	ts-node --compiler-options '{"module":"commonjs","target":"es2017"}' src/ts/rules.ts
 
 ktfmt:          ## ktfmt changed files on this branch
 	@echo "--- This script will run ktfmt on all changed files"
