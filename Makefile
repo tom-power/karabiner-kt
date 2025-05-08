@@ -5,9 +5,11 @@ help:			## list out commands with descriptions
 
 run:			## generate karabiner.json (using kotlin)
 	./gradlew run
+	cp karabiner.json ~/.config/karabiner/
 
 ts:				## generate karabiner.json (using typescript)
 	ts-node --compiler-options '{"module":"commonjs","target":"es2017"}' src/ts/rules.ts
+	cp karabiner.json ~/.config/karabiner/
 
 ktfmt:          ## ktfmt changed files on this branch
 	@echo "--- This script will run ktfmt on all changed files"
