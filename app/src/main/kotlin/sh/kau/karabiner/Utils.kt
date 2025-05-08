@@ -1,4 +1,4 @@
-package org.example
+package sh.kau.karabiner
 
 import java.math.BigInteger
 import java.nio.file.Path

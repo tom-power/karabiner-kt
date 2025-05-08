@@ -1,4 +1,4 @@
-package org.example
+package sh.kau.karabiner
 
 import kotlin.math.abs
 
