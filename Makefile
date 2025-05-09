@@ -1,9 +1,9 @@
-default: run
+default: kt
 
 help:			## list out commands with descriptions
 	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
 
-run:			## generate karabiner.json (using kotlin)
+kt:			## generate karabiner.json (using kotlin)
 	./gradlew run
 	cp karabiner.json ~/.config/karabiner/
 

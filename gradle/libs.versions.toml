@@ -2,16 +2,28 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
+kotlin = "2.0.20"
 junit-jupiter-engine = "5.10.3"
+junit = "5.10.2"
 
 [libraries]
-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
-runtime-junit-platform = { module = "org.junit.platform:junit-platform-launcher" }
-kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8" }
+
+coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version = "1.9.0" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
+coroutines-android = { module = "org.jetbrains.kotlin:kotlinx-coroutines-android" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
+
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.0" }
 
 pods4k-bom = { module = "com.danrusu.pods4k:bom", version = "0.6.0" }
 pods4k-core = { module = "com.danrusu.pods4k.immutable-arrays:core" }
 pods4k-core-transforms = { module = "com.danrusu.pods4k.immutable-arrays:transformations-to-standard-collections" }
+
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
+runtime-junit-platform = { module = "org.junit.platform:junit-platform-launcher" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
 
 [bundles]
 testing = [
@@ -26,3 +38,4 @@ pods4k = [
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.20" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
