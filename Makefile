@@ -7,9 +7,12 @@ kt:			## generate karabiner.json (using kotlin)
 	./gradlew run
 	cp ./app/karabiner.json ~/.config/karabiner/
 
-ts:				## generate karabiner.json (using typescript)
+ts:			## generate karabiner.json (using typescript)
 	ts-node --compiler-options '{"module":"commonjs","target":"es2017"}' src/ts/rules.ts
 	cp ./app/karabiner.json ~/.config/karabiner/
+
+restart-karabiner:	## restart karabiner user-server forcibly
+	launchctl kickstart -k gui/$(shell id -u)/org.pqrs.service.agent.karabiner_console_user_server
 
 ktfmt:          ## ktfmt changed files on this branch
 	@echo "--- This script will run ktfmt on all changed files"
