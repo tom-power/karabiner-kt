@@ -1,13 +1,13 @@
 package sh.kau.karabiner
 
+import kotlinx.serialization.SerialName
+
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
 fun createMainRules(): List<KarabinerRules> {
     return listOf(
         // --- Right Cmd (alone) -> Enter ---
-        keymap("Right Cmd (alone) -> Enter")
-            .remap(KeyCode.RIGHT_COMMAND).to(KeyCode.RETURN_OR_ENTER).whenAlone()
-            .build(),
+        createRightCommandRule(),
 
         // --- Caps Lock -> Escape (alone) | Ctrl (simple) + Vim/Arrow/Mouse ---
         createCapsLockRule(),
@@ -169,4 +169,36 @@ fun createVimNavigationManipulators(): List<Manipulator> {
                 .build()
         }
     }
+}
+
+/**
+ * Creates the Right Command rule for Apple keyboards
+ */
+fun createRightCommandRule(): KarabinerRules {
+    val manipulators = mutableListOf<Manipulator>()
+
+    // Right Command alone -> Enter, held -> right_control with device conditions
+    manipulators.add(
+        manipulator()
+            .from(KeyCode.RIGHT_COMMAND, optionalModifiers = listOf(ModifiersKeys.ANY))
+            .to(KeyCode.RIGHT_CONTROL) // When held
+            .toIfAlone(KeyCode.RETURN_OR_ENTER) // When pressed alone
+            .withCondition(forAppleKeyboards()) // Only for Apple or built-in keyboards
+            .build()
+    )
+
+    return rule("Right Cmd (alone) -> Enter", manipulators)
+}
+
+/**
+ * Creates a condition for Apple keyboards or built-in keyboards
+ */
+fun forAppleKeyboards(): Condition {
+    return DeviceIfCondition(
+        identifiers = listOf(
+            Identifiers(vendorId = 1452L), // Apple
+            Identifiers(vendorId = 76L),   // Another Apple keyboard ID
+            Identifiers(isBuiltInKeyboard = true)
+        )
+    )
 }

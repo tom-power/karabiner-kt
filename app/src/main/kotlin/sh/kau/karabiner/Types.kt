@@ -82,6 +82,8 @@ data class To(
   @SerialName("key_code")
   val keyCode: KeyCode? = null,
   val modifiers: List<ModifiersKeys>? = null,
+  @SerialName("consumer_key_code")
+  val consumerKeyCode: String? = null,
   @SerialName("shell_command")
   val shellCommand: String? = null,
   @SerialName("set_variable")
@@ -789,4 +791,34 @@ data class DeviceSpecificSettings(
     val simpleModifications: List<SimpleModification>? = null,
     @SerialName("treat_as_built_in_keyboard")
     val treatAsBuiltInKeyboard: Boolean? = null
+)
+
+@Serializable
+data class FromFnKey(
+  @SerialName("key_code")
+  val keyCode: KeyCode
+)
+
+@Serializable
+data class FnFunctionKey(
+  val from: FromFnKey,
+  val to: List<To>
+)
+
+@Serializable
+data class SimpleModification(
+  val from: SimpleModificationKey,
+  val to: List<SimpleModificationValue>
+)
+
+@Serializable
+data class SimpleModificationKey(
+  @SerialName("key_code")
+  val keyCode: KeyCode
+)
+
+@Serializable
+data class SimpleModificationValue(
+  @SerialName("key_code")
+  val keyCode: KeyCode
 )

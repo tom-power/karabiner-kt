@@ -45,7 +45,10 @@ class ManipulatorBuilder {
   ): ManipulatorBuilder = apply {
     val mods = if (optionalModifiers != null || mandatoryModifiers != null) {
       Modifiers(optional = optionalModifiers, mandatory = mandatoryModifiers)
-    } else null
+    } else {
+      // Default to optional: [ANY] for dual-role keys
+      Modifiers(optional = listOf(ModifiersKeys.ANY))
+    }
     this.from = From(keyCode = keyCode, modifiers = mods)
   }
 

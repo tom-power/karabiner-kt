@@ -12,17 +12,27 @@ fun main() {
 
   // Create fn function keys
   val fnFunctionKeys = listOf(
-    To(keyCode = KeyCode.MISSION_CONTROL, modifiers = null),
-    To(keyCode = KeyCode.LAUNCHPAD, modifiers = null),
-    To(keyCode = KeyCode.ILLUMINATION_DECREMENT, modifiers = null),
-    To(keyCode = KeyCode.ILLUMINATION_INCREMENT, modifiers = null),
-    To(keyCode = KeyCode.FASTFORWARD, modifiers = null)
-  ).mapIndexed { index, to ->
     FnFunctionKey(
-      from = KeyCode.values().find { it.name == "F${index + 3}" } ?: throw IllegalStateException("F${index + 3} key not found"),
-      to = listOf(to)
+      from = FromFnKey(KeyCode.F3),
+      to = listOf(To(keyCode = KeyCode.MISSION_CONTROL))
+    ),
+    FnFunctionKey(
+      from = FromFnKey(KeyCode.F4),
+      to = listOf(To(keyCode = KeyCode.LAUNCHPAD))
+    ),
+    FnFunctionKey(
+      from = FromFnKey(KeyCode.F5),
+      to = listOf(To(keyCode = KeyCode.ILLUMINATION_DECREMENT))
+    ),
+    FnFunctionKey(
+      from = FromFnKey(KeyCode.F6),
+      to = listOf(To(keyCode = KeyCode.ILLUMINATION_INCREMENT))
+    ),
+    FnFunctionKey(
+      from = FromFnKey(KeyCode.F9),
+      to = listOf(To(consumerKeyCode = "fastforward"))
     )
-  }
+  )
 
   // Create device configurations
   val devices = listOf(
@@ -102,28 +112,3 @@ fun main() {
     e.printStackTrace()
   }
 }
-
-// Add missing classes for the new features
-@kotlinx.serialization.Serializable
-data class FnFunctionKey(
-  val from: KeyCode,
-  val to: List<To>
-)
-
-@kotlinx.serialization.Serializable
-data class SimpleModification(
-  val from: SimpleModificationKey,
-  val to: List<SimpleModificationValue>
-)
-
-@kotlinx.serialization.Serializable
-data class SimpleModificationKey(
-  @SerialName("key_code")
-  val keyCode: KeyCode
-)
-
-@kotlinx.serialization.Serializable
-data class SimpleModificationValue(
-  @SerialName("key_code")
-  val keyCode: KeyCode
-)
