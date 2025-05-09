@@ -153,6 +153,8 @@ enum class KeyCode {
   TAB,
   @SerialName("spacebar")
   SPACEBAR,
+  @SerialName("hyper")
+  HYPER,
   @SerialName("hyphen")
   HYPHEN,
   @SerialName("equal_sign")
