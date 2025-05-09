@@ -82,7 +82,7 @@ class ManipulatorBuilder {
 
     fun to(
         keyCode: KeyCode,
-        modifiers: List<ModifiersKeys>? = null
+        modifiers: List<ModifiersKeys> = emptyList()
     ): ManipulatorBuilder = to(To(keyCode = keyCode, modifiers = modifiers))
 
     // Convenience for single 'to' modifier
@@ -129,7 +129,7 @@ class ManipulatorBuilder {
 
     fun toIfAlone(
         keyCode: KeyCode,
-        modifiers: List<ModifiersKeys>? = null
+        modifiers: List<ModifiersKeys> = emptyList()
     ): ManipulatorBuilder = toIfAlone(To(keyCode = keyCode, modifiers = modifiers))
 
     // Convenience for single 'toIfAlone' modifier
@@ -147,7 +147,7 @@ class ManipulatorBuilder {
 
     fun toAfterKeyUp(
         keyCode: KeyCode,
-        modifiers: List<ModifiersKeys>? = null
+        modifiers: List<ModifiersKeys> = emptyList()
     ): ManipulatorBuilder = toAfterKeyUp(To(keyCode = keyCode, modifiers = modifiers))
 
     // Convenience for single 'toAfterKeyUp' modifier
@@ -165,7 +165,7 @@ class ManipulatorBuilder {
 
     fun toIfHeldDown(
         keyCode: KeyCode,
-        modifiers: List<ModifiersKeys>? = null
+        modifiers: List<ModifiersKeys> = emptyList()
     ): ManipulatorBuilder = toIfHeldDown(To(keyCode = keyCode, modifiers = modifiers))
 
     // Convenience for single 'toIfHeldDown' modifier
@@ -255,7 +255,7 @@ fun layer(triggerKey: KeyCode): LayerBuilder {
  */
 data class LayerBinding(
     val targetKey: KeyCode,
-    val targetModifiers: List<ModifiersKeys>? = null,
+    val targetModifiers: List<ModifiersKeys> = emptyList(),
     val appTarget: String? = null // e.g., "terminal", "other"
 )
 
@@ -265,7 +265,7 @@ class LayerBuilder(private val triggerKey: KeyCode) {
     private var threshold: Long = 250L //ms
 
     inner class LayerKeyBinder(private val sourceKey: KeyCode) {
-        fun to(targetKey: KeyCode, targetModifiers: List<ModifiersKeys>? = null, appTarget: String? = null): LayerBuilder {
+        fun to(targetKey: KeyCode, targetModifiers: List<ModifiersKeys> = emptyList(), appTarget: String? = null): LayerBuilder {
             val bindingKey = appTarget?.let { "${sourceKey.name}_${it}" } ?: sourceKey.name
             bindings[bindingKey] = LayerBinding(targetKey, targetModifiers, appTarget)
             return this@LayerBuilder
@@ -352,9 +352,9 @@ private fun createLayerManipulators(
             simultaneousKeys = listOf(triggerKey, sourceKey),
             simultaneousOptions = SimultaneousOptions(
                 detectKeyDownUninterruptedly = true,
-                keyDownOrder = "strict", // from original createKeyLayer
-                keyUpOrder = "strict_inverse", // from original createKeyLayer
-                keyUpWhen = "any", // from original createKeyLayer
+                keyDownOrder = "strict",
+                keyUpOrder = "strict_inverse",
+                keyUpWhen = "any",
                 toAfterKeyUp = listOf(
                     To(setVariable = SetVariable(variableName, JsonPrimitive(0)))
                 )
@@ -362,7 +362,14 @@ private fun createLayerManipulators(
         )
         .toSetVariable(variableName, 1) // Set mode to 1
         .to(toOutput) // Then perform the action
-        .withParameters(Parameters(simultaneousThresholdMilliseconds = simultaneousThreshold))
+        .withParameters(
+            Parameters(
+                simultaneousThresholdMilliseconds = simultaneousThreshold,
+                toDelayedActionDelayMilliseconds = 10,
+                toIfAloneTimeoutMilliseconds = 250,
+                toIfHeldDownThresholdMilliseconds = 500
+            )
+        )
 
     layerConditions.forEach { simultaneousManipulatorBuilder.withCondition(it) }
     applyAppTargetCondition(simultaneousManipulatorBuilder, layerBinding.appTarget)
@@ -395,7 +402,7 @@ class KeyMapBuilder(private val description: String) {
     private var currentConditions = mutableListOf<Condition>() // Conditions active for subsequent remaps
 
     inner class RemapToBuilder(private val fromKey: KeyCode, private val fromModifiers: List<ModifiersKeys>?) {
-        fun to(targetKey: KeyCode, targetModifiers: List<ModifiersKeys>? = null): RemapFinalizer {
+        fun to(targetKey: KeyCode, targetModifiers: List<ModifiersKeys> = emptyList()): RemapFinalizer {
             val baseManipulatorBuilder = manipulator()
                 .from(fromKey, mandatoryModifiers = fromModifiers) // Assuming direct remap modifiers are mandatory
                 .to(targetKey, modifiers = targetModifiers)
@@ -421,13 +428,13 @@ class KeyMapBuilder(private val description: String) {
         private val fromKey: KeyCode,
         private val fromModifiers: List<ModifiersKeys>?,
         private val toKeyIfAlone: KeyCode, // In this context, the .to() key becomes the if_alone key
-        private val toModifiersIfAlone: List<ModifiersKeys>?
+        private val toModifiersIfAlone: List<ModifiersKeys>
     ) {
         /**
          * Configures the remapping to trigger `toKeyIfAlone` when `fromKey` is pressed alone,
          * and a different key (the `heldKey`) when `fromKey` is held.
          */
-        fun otherwise(heldKey: KeyCode, heldModifiers: List<ModifiersKeys>? = null): KeyMapBuilder {
+        fun otherwise(heldKey: KeyCode, heldModifiers: List<ModifiersKeys> = emptyList()): KeyMapBuilder {
             val dualRoleManipulator = manipulator()
                 .from(fromKey, mandatoryModifiers = fromModifiers)
                 .to(heldKey, modifiers = heldModifiers) // This is the primary action when held
@@ -451,7 +458,7 @@ class KeyMapBuilder(private val description: String) {
             // The original .to() key in RemapToBuilder now becomes the key when held.
             // The .toIfAlone() is the key specified in the initial .to() call.
             val originalToTarget = originalToManipulator.to?.firstOrNull()?.keyCode ?: throw IllegalStateException("Original .to() target key not found for whenAlone logic")
-            val originalToModifiers = originalToManipulator.to?.firstOrNull()?.modifiers
+            val originalToModifiers = originalToManipulator.to?.firstOrNull()?.modifiers ?: emptyList()
 
             val dualRoleManipulator = manipulator()
                 .from(fromKey, mandatoryModifiers = fromModifiers)

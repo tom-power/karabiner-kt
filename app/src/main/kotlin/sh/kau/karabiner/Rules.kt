@@ -126,6 +126,21 @@ fun createCapsLockRule(): KarabinerRules {
         )
     }
 
+    // Add return_or_enter + right_control to click mouse buttons
+    manipulators.add(
+        manipulator()
+            .from(KeyCode.RETURN_OR_ENTER, mandatoryModifier = ModifiersKeys.RIGHT_CONTROL)
+            .to(To(pointingButton = "button1"))
+            .build()
+    )
+
+    manipulators.add(
+        manipulator()
+            .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(ModifiersKeys.LEFT_COMMAND, ModifiersKeys.RIGHT_CONTROL))
+            .to(To(pointingButton = "button2"))
+            .build()
+    )
+
     return rule("Caps Lock -> Escape (alone) | Ctrl (simple)", manipulators)
 }
 

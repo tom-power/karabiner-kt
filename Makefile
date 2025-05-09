@@ -5,7 +5,7 @@ help:			## list out commands with descriptions
 
 kt:			## generate karabiner.json (using kotlin)
 	./gradlew run
-	mv ./app/karabiner.json ~/.config/karabiner/
+	cp ./app/karabiner.json ~/.config/karabiner/
 
 ts:				## generate karabiner.json (using typescript)
 	ts-node --compiler-options '{"module":"commonjs","target":"es2017"}' src/ts/rules.ts

@@ -30,13 +30,13 @@ data class Manipulator(
 @Serializable
 data class Parameters(
   @SerialName("basic.simultaneous_threshold_milliseconds")
-  val simultaneousThresholdMilliseconds: Long? = null,
+  val simultaneousThresholdMilliseconds: Long?,
   @SerialName("basic.to_delayed_action_delay_milliseconds")
-  val toDelayedActionDelayMilliseconds: Long? = null,
+  val toDelayedActionDelayMilliseconds: Long?,
   @SerialName("basic.to_if_alone_timeout_milliseconds")
-  val toIfAloneTimeoutMilliseconds: Long? = null,
+  val toIfAloneTimeoutMilliseconds: Long?,
   @SerialName("basic.to_if_held_down_threshold_milliseconds")
-  val toIfHeldDownThresholdMilliseconds: Long? = null
+  val toIfHeldDownThresholdMilliseconds: Long?,
   // Potentially add other parameters if they exist, or allow for a map
   // For now, sticking to explicitly defined ones from your JSON.
 )
@@ -746,48 +746,47 @@ data class Profile(
     @SerialName("complex_modifications")
     val complexModifications: ComplexModifications,
     @SerialName("fn_function_keys")
-    val fnFunctionKeys: List<To>? = null, // Assuming 'To' structure is suitable
+    val fnFunctionKeys: List<FnFunctionKey>? = null,
     @SerialName("simple_modifications")
-    val simpleModifications: List<JsonObject>? = null, // Or a more specific type if structure is known
+    val simpleModifications: List<SimpleModification>? = null,
     val selected: Boolean? = null,
     @SerialName("virtual_hid_keyboard")
-    val virtualHidKeyboard: VirtualHidKeyboard? = null,
+    val virtualHidKeyboard: VirtualHidKeyboard = VirtualHidKeyboard(),
     @SerialName("devices")
     val devices: List<DeviceSpecificSettings>? = null
-    // Add other profile settings as needed
 )
 
 @Serializable
 data class ComplexModifications(
-    val parameters: Parameters, // Re-using Parameters from above
-    val rules: List<KarabinerRules>
+  val parameters: Parameters, // Re-using Parameters from above
+  val rules: List<KarabinerRules>
 )
 
 @Serializable
 data class VirtualHidKeyboard(
     @SerialName("country_code")
-    val countryCode: Int? = null,
+    val countryCode: Int = 0,
     @SerialName("mouse_key_xy_scale")
     val mouseKeyXyScale: Double? = null,
     @SerialName("indicate_sticky_modifier_keys_state")
     val indicateStickyModifierKeysState: Boolean? = null,
-    @SerialName("keyboard_type") // Original TS used keyboard_type_v2, JSON uses keyboard_type
-    val keyboardType: String? = null // e.g., "ansi"
+    @SerialName("keyboard_type_v2") // Original TS used keyboard_type_v2, JSON uses keyboard_type
+    val keyboardType: String = "ansi" // e.g., "ansi"
 )
 
 @Serializable
 data class DeviceSpecificSettings(
-    val identifiers: Identifiers, // Re-use from Condition types
+    val identifiers: Identifiers,
     @SerialName("disable_built_in_keyboard_if_exists")
     val disableBuiltInKeyboardIfExists: Boolean? = null,
     @SerialName("fn_function_keys")
-    val fnFunctionKeys: List<To>? = null,
+    val fnFunctionKeys: List<FnFunctionKey>? = null,
     @SerialName("ignore")
     val ignore: Boolean? = null,
     @SerialName("manipulate_caps_lock_led")
     val manipulateCapsLockLed: Boolean? = null,
     @SerialName("simple_modifications")
-    val simpleModifications: List<JsonObject>? = null, // Or specific type
+    val simpleModifications: List<SimpleModification>? = null,
     @SerialName("treat_as_built_in_keyboard")
     val treatAsBuiltInKeyboard: Boolean? = null
 )
