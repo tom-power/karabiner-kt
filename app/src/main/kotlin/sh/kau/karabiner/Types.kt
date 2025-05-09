@@ -755,12 +755,14 @@ data class Profile(
     @SerialName("virtual_hid_keyboard")
     val virtualHidKeyboard: VirtualHidKeyboard = VirtualHidKeyboard(),
     @SerialName("devices")
-    val devices: List<DeviceSpecificSettings>? = null
+    val devices: List<DeviceSpecificSettings>? = null,
+    @SerialName("parameters")
+    val parameters: Parameters? = null,
 )
 
 @Serializable
 data class ComplexModifications(
-  val parameters: Parameters, // Re-using Parameters from above
+  val parameters: Parameters? = null, // Re-using Parameters from above
   val rules: List<KarabinerRules>
 )
 

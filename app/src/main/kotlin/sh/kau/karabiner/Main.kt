@@ -1,11 +1,7 @@
 package sh.kau.karabiner
 
-import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.modifiers
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
-import kotlin.Long
 
 fun main() {
   val mainRules = createMainRules()
@@ -69,35 +65,37 @@ fun main() {
 
   val defaultProfile = Profile(
     name = "Default",
+    selected = true,
+    fnFunctionKeys = fnFunctionKeys,
     complexModifications = ComplexModifications(
-      parameters = Parameters(
-        simultaneousThresholdMilliseconds = 250,
-        toDelayedActionDelayMilliseconds = 10,
-        toIfAloneTimeoutMilliseconds = 250,
-        toIfHeldDownThresholdMilliseconds = 500,
-      ),
       rules = mainRules
     ),
-    fnFunctionKeys = fnFunctionKeys,
-    devices = devices,
-    selected = true,
     virtualHidKeyboard = VirtualHidKeyboard(
       countryCode = 0,
       keyboardType = "ansi"
-    )
+    ),
+    devices = devices,
+    parameters = Parameters(
+      simultaneousThresholdMilliseconds = 250,
+      toDelayedActionDelayMilliseconds = 10,
+      toIfAloneTimeoutMilliseconds = 250,
+      toIfHeldDownThresholdMilliseconds = 500,
+    ),
   )
 
-  val targetConfig = KarabinerConfig(
-    global = GlobalSettings(showInMenuBar = false),
-    profiles = listOf(defaultProfile)
-  )
 
   val json = Json {
     prettyPrint = true
     encodeDefaults = true
     explicitNulls = false  // Don't serialize null values
   }
-  val jsonString = json.encodeToString(targetConfig)
+
+  val jsonString = json.encodeToString(
+    KarabinerConfig(
+      global = GlobalSettings(showInMenuBar = false),
+      profiles = listOf(defaultProfile)
+    )
+  )
 
   val outputFile =
     File("karabiner.json") // This will be relative to where it's run (project root for gradle run)

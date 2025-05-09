@@ -14,7 +14,7 @@ ts:			## generate karabiner.json (using typescript)
 restart-karabiner:	## restart karabiner user-server forcibly
 	launchctl kickstart -k gui/$(shell id -u)/org.pqrs.service.agent.karabiner_console_user_server
 
-ktfmt:          ## ktfmt changed files on this branch
+ktfmt:			## ktfmt changed files on this branch
 	@echo "--- This script will run ktfmt on all changed files"
 	@MERGE_BASE=$$(git merge-base HEAD origin/master); \
 	MODIFIED_FILES=$$(git diff $$MERGE_BASE --diff-filter=ACMR --name-only --relative -- '*.kt'); \
@@ -23,6 +23,9 @@ ktfmt:          ## ktfmt changed files on this branch
 		ktfmt -F "$$FILE"; \
 	done
 
-ktfmt-all:
+#restore:
+#	git checkout "0ee92ff7689c95381601987653126120008aab9c" -- karabiner.json
+
+ktfmt-all:		## ktfmt all files
 	@echo "--- This script will run ktfmt on all files"
 	@ktfmt -F $(shell find . -name '*.kt')
