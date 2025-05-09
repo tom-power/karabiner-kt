@@ -150,10 +150,10 @@ fun createCapsLockRule(): KarabinerRules {
 fun createVimNavigationManipulators(): List<Manipulator> {
     // VIM_NAV_KEYS and ARROW_KEYS are from Constants.kt
 
-    data class ModifierCombo(val from: List<ModifiersKeys>, val to: List<ModifiersKeys>)
+    data class ModifierCombo(val from: List<ModifiersKeys>, val to: List<ModifiersKeys>?)
 
     val modifierCombos = listOf(
-        ModifierCombo(from = listOf(ModifiersKeys.RIGHT_CONTROL), to = emptyList()),
+        ModifierCombo(from = listOf(ModifiersKeys.RIGHT_CONTROL), to = null),
         ModifierCombo(from = listOf(ModifiersKeys.RIGHT_CONTROL, ModifiersKeys.LEFT_COMMAND), to = listOf(ModifiersKeys.LEFT_COMMAND)),
         ModifierCombo(from = listOf(ModifiersKeys.RIGHT_CONTROL, ModifiersKeys.LEFT_OPTION), to = listOf(ModifiersKeys.LEFT_OPTION)),
         ModifierCombo(from = listOf(ModifiersKeys.RIGHT_CONTROL, ModifiersKeys.LEFT_SHIFT), to = listOf(ModifiersKeys.LEFT_SHIFT)),

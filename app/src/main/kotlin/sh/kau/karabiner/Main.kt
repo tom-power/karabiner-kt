@@ -1,5 +1,6 @@
 package sh.kau.karabiner
 
+import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.modifiers
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -11,11 +12,11 @@ fun main() {
 
   // Create fn function keys
   val fnFunctionKeys = listOf(
-    To(keyCode = KeyCode.MISSION_CONTROL, modifiers = emptyList()),
-    To(keyCode = KeyCode.LAUNCHPAD, modifiers = emptyList()),
-    To(keyCode = KeyCode.ILLUMINATION_DECREMENT, modifiers = emptyList()),
-    To(keyCode = KeyCode.ILLUMINATION_INCREMENT, modifiers = emptyList()),
-    To(keyCode = KeyCode.FASTFORWARD, modifiers = emptyList())
+    To(keyCode = KeyCode.MISSION_CONTROL, modifiers = null),
+    To(keyCode = KeyCode.LAUNCHPAD, modifiers = null),
+    To(keyCode = KeyCode.ILLUMINATION_DECREMENT, modifiers = null),
+    To(keyCode = KeyCode.ILLUMINATION_INCREMENT, modifiers = null),
+    To(keyCode = KeyCode.FASTFORWARD, modifiers = null)
   ).mapIndexed { index, to ->
     FnFunctionKey(
       from = KeyCode.values().find { it.name == "F${index + 3}" } ?: throw IllegalStateException("F${index + 3} key not found"),
