@@ -12,8 +12,8 @@ fun createMainRules(): List<KarabinerRule> {
           "Right Cmd (alone) -> Enter",
           ManipulatorBuilder()
               .from(KeyCode.RIGHT_COMMAND, optionalModifiers = listOf(ModifiersKeys.ANY))
-              .to(KeyCode.RIGHT_CONTROL) // When held
-              .toIfAlone(KeyCode.RETURN_OR_ENTER) // When pressed alone
+              .to(keyCode = KeyCode.RIGHT_CONTROL) // When held
+              .toIfAlone(keyCode = KeyCode.RETURN_OR_ENTER) // When pressed alone
               .withCondition(forAppleKeyboards()) // Only for Apple or built-in keyboards
               .build()),
 
@@ -128,8 +128,8 @@ fun createCapsLockRule(): KarabinerRule {
   manipulators.add(
       ManipulatorBuilder()
           .from(KeyCode.CAPS_LOCK, optionalModifiers = listOf(ModifiersKeys.ANY))
-          .to(KeyCode.RIGHT_CONTROL) // This is the "held" assignment
-          .toIfAlone(KeyCode.ESCAPE) // This is the "alone" assignment
+          .to(keyCode = KeyCode.RIGHT_CONTROL) // This is the "held" assignment
+          .toIfAlone(keyCode = KeyCode.ESCAPE) // This is the "alone" assignment
           .build())
 
   // j with Shift+Ctrl, with app-specific conditions
@@ -138,7 +138,7 @@ fun createCapsLockRule(): KarabinerRule {
           .from(
               KeyCode.J,
               mandatoryModifiers = listOf(ModifiersKeys.LEFT_SHIFT, ModifiersKeys.RIGHT_CONTROL))
-          .to(KeyCode.DOWN_ARROW, modifiers = listOf(ModifiersKeys.LEFT_SHIFT))
+          .to(keyCode = KeyCode.DOWN_ARROW, modifiers = listOf(ModifiersKeys.LEFT_SHIFT))
           .withCondition(unlessApp("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$"))
           .build())
   manipulators.add(
@@ -146,7 +146,7 @@ fun createCapsLockRule(): KarabinerRule {
           .from(
               KeyCode.J,
               mandatoryModifiers = listOf(ModifiersKeys.LEFT_SHIFT, ModifiersKeys.RIGHT_CONTROL))
-          .to(KeyCode.J, modifiers = listOf(ModifiersKeys.LEFT_CONTROL, ModifiersKeys.LEFT_SHIFT))
+          .to(keyCode = KeyCode.J, modifiers = listOf(ModifiersKeys.LEFT_CONTROL, ModifiersKeys.LEFT_SHIFT))
           .withCondition(forApp("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$"))
           .build())
 
@@ -164,7 +164,7 @@ fun createCapsLockRule(): KarabinerRule {
         manipulators.add(
             ManipulatorBuilder()
                 .from(key, mandatoryModifiers = listOf(ModifiersKeys.RIGHT_CONTROL))
-                .to(To(mouseKey = mouseKeyValue))
+                .to(mouseKey = mouseKeyValue)
                 .build())
       }
 
@@ -172,7 +172,7 @@ fun createCapsLockRule(): KarabinerRule {
   manipulators.add(
       ManipulatorBuilder()
           .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(ModifiersKeys.RIGHT_CONTROL))
-          .to(To(pointingButton = "button1"))
+          .to(pointingButton = "button1")
           .build())
 
   manipulators.add(
@@ -180,7 +180,7 @@ fun createCapsLockRule(): KarabinerRule {
           .from(
               KeyCode.RETURN_OR_ENTER,
               mandatoryModifiers = listOf(ModifiersKeys.LEFT_COMMAND, ModifiersKeys.RIGHT_CONTROL))
-          .to(To(pointingButton = "button2"))
+          .to(pointingButton = "button2")
           .build())
 
   return KarabinerRule("Caps Lock -> Escape (alone) | Ctrl (simple)", manipulators)
@@ -222,7 +222,7 @@ fun createVimNavigationManipulators(): List<Manipulator> {
         VIM_NAV_KEYS.mapIndexed { index, keyChar ->
           ManipulatorBuilder()
               .from(keyChar, mandatoryModifiers = combo.from)
-              .to(ARROW_KEYS[index], modifiers = combo.to)
+              .to(keyCode = ARROW_KEYS[index], modifiers = combo.to)
               .build()
         }
       }

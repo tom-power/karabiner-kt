@@ -17,6 +17,7 @@ fun unlessApp(vararg bundleIdentifiers: String): Condition {
   return FrontmostApplicationUnlessCondition(bundleIdentifiers = bundleIdentifiers.toList())
 }
 
+
 class ManipulatorBuilder {
   private var type: String = "basic"
   private var from: From? = null
@@ -50,29 +51,56 @@ class ManipulatorBuilder {
     this.from = From(simultaneous = simultaneousKeys, simultaneousOptions = simultaneousOptions)
   }
 
+  fun to(
+      keyCode: KeyCode? = null,
+      modifiers: List<ModifiersKeys>? = null,
+      setVariable: SetVariable? = null,
+      toObj: To? = null,
+      mouseKey: MouseKey? = null,
+      pointingButton: String? = null,
+      type: ToType = ToType.NORMAL
+  ): ManipulatorBuilder {
+    val nSet = listOfNotNull(keyCode, setVariable, toObj, mouseKey, pointingButton).size
+    if (nSet == 0)
+        throw IllegalArgumentException(
+            "You must specify one of toObj, keyCode, setVariable, mouseKey, or pointingButton")
+    if (listOfNotNull(toObj).isNotEmpty() &&
+        listOfNotNull(keyCode, setVariable, mouseKey, pointingButton).isNotEmpty()) {
+      throw IllegalArgumentException(
+          "Specify only one of toObj, keyCode, setVariable, mouseKey, or pointingButton")
+    }
+    val toEvent =
+        toObj
+            ?: To(
+                keyCode = keyCode,
+                modifiers = modifiers,
+                setVariable = setVariable,
+                mouseKey = mouseKey,
+                pointingButton = pointingButton)
+    when (type) {
+      ToType.NORMAL -> addToEventList(this.to, toEvent)
+      ToType.IF_ALONE -> addToEventList(this.toIfAlone, toEvent)
+      ToType.AFTER_KEY_UP -> addToEventList(this.toAfterKeyUp, toEvent)
+      ToType.IF_HELD_DOWN -> addToEventList(this.toIfHeldDown, toEvent)
+    }
+    return this
+  }
+
+
+  fun toIfAlone(
+      keyCode: KeyCode? = null,
+      modifiers: List<ModifiersKeys>? = null,
+      setVariable: SetVariable? = null,
+      toObj: To? = null,
+      mouseKey: MouseKey? = null,
+      pointingButton: String? = null,
+  ): ManipulatorBuilder =
+      to(keyCode, modifiers, setVariable, toObj, mouseKey, pointingButton, ToType.IF_ALONE)
+
   private fun addToEventList(eventList: MutableList<To>, command: To): ManipulatorBuilder = apply {
     eventList.add(command)
   }
 
-  fun to(command: To): ManipulatorBuilder = addToEventList(this.to, command)
-
-  fun to(
-      keyCode: KeyCode,
-      modifiers: List<ModifiersKeys>? = null,
-  ): ManipulatorBuilder = to(To(keyCode = keyCode, modifiers = modifiers))
-
-  fun toSetVariable(name: String, value: Number): ManipulatorBuilder =
-      to(To(setVariable = SetVariable(name, JsonPrimitive(value))))
-
-  fun toIfAlone(command: To): ManipulatorBuilder = addToEventList(this.toIfAlone, command)
-
-  fun toIfAlone(keyCode: KeyCode, modifiers: List<ModifiersKeys>?): ManipulatorBuilder =
-      toIfAlone(To(keyCode = keyCode, modifiers = modifiers))
-
-  fun toIfAlone(keyCode: KeyCode, vararg modifiers: ModifiersKeys): ManipulatorBuilder {
-    val modifiersList = if (modifiers.isEmpty()) null else modifiers.toList()
-    return toIfAlone(keyCode, modifiers = modifiersList)
-  }
 
   fun withCondition(condition: Condition): ManipulatorBuilder = apply {
     this.conditions.add(condition)
@@ -183,12 +211,14 @@ private fun createLayerManipulators(
 
   val toOutput = To(keyCode = layerBinding.targetKey, modifiers = layerBinding.targetModifiers)
 
-  // 1. Mode-based manipulator (e.g., if "f-mode" is 1, then j -> paren)
   val modeManipulatorBuilder =
       ManipulatorBuilder()
           .from(sourceKey)
-          .to(toOutput)
-          .ifVariable(variableName, 1) // Assuming variable value is Int/Long for mode
+          .to(
+              keyCode = layerBinding.targetKey,
+              modifiers = layerBinding.targetModifiers,
+              type = ToType.NORMAL)
+          .ifVariable(variableName, 1)
 
   layerConditions.forEach { modeManipulatorBuilder.withCondition(it) }
   applyAppTargetCondition(modeManipulatorBuilder, layerBinding.appTarget)
@@ -207,8 +237,8 @@ private fun createLayerManipulators(
                       keyUpWhen = "any",
                       toAfterKeyUp =
                           listOf(To(setVariable = SetVariable(variableName, JsonPrimitive(0))))))
-          .toSetVariable(variableName, 1) // Set mode to 1
-          .to(toOutput) // Then perform the action
+          .to(setVariable = SetVariable(variableName, JsonPrimitive(1)), type = ToType.NORMAL)
+          .to(toObj = toOutput, type = ToType.NORMAL)
           .withParameters(
               Parameters(
                   simultaneousThresholdMilliseconds = simultaneousThreshold,
@@ -232,9 +262,5 @@ private fun applyAppTargetCondition(builder: ManipulatorBuilder, appTarget: Stri
 
     "other" ->
         builder.withCondition(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))
-  // Add more app targets if needed
   }
 }
-
-// TODO: Review ARROW_KEYS and VIM_NAV_KEYS constants - might be better as part of a companion
-// object or top-level consts if needed.

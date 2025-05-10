@@ -53,6 +53,13 @@ data class To(
     // `hold_down_milliseconds` is sometimes seen with `to` events. Add if needed.
 )
 
+enum class ToType {
+  NORMAL,
+  IF_ALONE,
+  AFTER_KEY_UP,
+  IF_HELD_DOWN
+}
+
 @Serializable
 data class Parameters(
     @SerialName("basic.simultaneous_threshold_milliseconds")
