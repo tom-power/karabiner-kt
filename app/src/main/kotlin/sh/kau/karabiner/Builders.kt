@@ -1,11 +1,37 @@
 package sh.kau.karabiner
 
+import java.lang.ProcessBuilder.Redirect.to
+import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.parameters
 import kotlinx.serialization.json.JsonPrimitive
 import sh.kau.karabiner.Condition.FrontmostApplicationIfCondition
 import sh.kau.karabiner.Condition.FrontmostApplicationUnlessCondition
 import sh.kau.karabiner.Condition.VariableIfCondition
 
 typealias ShellCmd = String
+
+fun FromKeyWithAnyModifier(keycode: KeyCode): From =
+    From(keycode, modifiers = Modifiers(optional = listOf(ModifiersKeys.ANY)))
+
+fun buildToDownCommand(to: To, variableName: String) =
+    listOf(
+        To(setVariable = SetVariable(variableName, JsonPrimitive(1))),
+        to,
+    )
+
+fun buildUpCommand(variableName: String) =
+    listOf(To(setVariable = SetVariable(variableName, JsonPrimitive(0))))
+
+fun buildIfLayerCondition(variableName: String) =
+    listOf(VariableIfCondition(variableName, JsonPrimitive(1)))
+
+fun buildSimultaneousOptions(variableName: String) =
+    SimultaneousOptions(
+        detectKeyDownUninterruptedly = true,
+        keyDownOrder = "strict",
+        keyUpOrder = "strict_inverse",
+        keyUpWhen = "any",
+        toAfterKeyUp = buildUpCommand(variableName),
+    )
 
 fun karabinerRule(description: String, vararg manipulators: Manipulator): KarabinerRule {
   return KarabinerRule(description, manipulators.toList())
@@ -24,12 +50,9 @@ fun karabinerRule(
 
       val manipulator1 =
           Manipulator(
-              from =
-                  From(
-                      builder.fromKey!!,
-                      modifiers = Modifiers(optional = listOf(ModifiersKeys.ANY))),
+              from = FromKeyWithAnyModifier(builder.fromKey!!),
               to = listOf(toShelCmd),
-              conditions = listOf(VariableIfCondition(variableName, JsonPrimitive(1))),
+              conditions = buildIfLayerCondition(variableName),
           )
 
       val manipulator2 =
@@ -37,24 +60,9 @@ fun karabinerRule(
               from =
                   From(
                       simultaneous = listOf(builder.layerKey!!, builder.fromKey!!),
-                      simultaneousOptions =
-                          SimultaneousOptions(
-                              detectKeyDownUninterruptedly = true,
-                              keyDownOrder = "strict",
-                              keyUpOrder = "strict_inverse",
-                              keyUpWhen = "any",
-                              toAfterKeyUp =
-                                  listOf(
-                                      To(
-                                          setVariable =
-                                              SetVariable(variableName, JsonPrimitive(0)))),
-                          ),
+                      simultaneousOptions = buildSimultaneousOptions(variableName),
                   ),
-              to =
-                  listOf(
-                      To(setVariable = SetVariable(variableName, JsonPrimitive(1))),
-                      toShelCmd,
-                  ),
+              to = buildToDownCommand(toShelCmd, variableName),
               parameters = Parameters(simultaneousThresholdMilliseconds = 250))
 
       KarabinerRule(

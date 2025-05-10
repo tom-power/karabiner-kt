@@ -18,6 +18,7 @@ fun createMainRules(): List<KarabinerRule> {
               .build()),
       createCapsLockRules(),
       *createLayerKeyRules(),
+
       karabinerRule {
         description = "O + 0 -> Raycast Confetti"
         layerKey = KeyCode.O
