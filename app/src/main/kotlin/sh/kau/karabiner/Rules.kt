@@ -19,12 +19,39 @@ fun createMainRules(): List<KarabinerRule> {
       createCapsLockRules(),
       *createLayerKeyRules(),
       karabinerRule {
-        description = "O + P -> Raycast Confetti"
+        description = "O + 0 -> Raycast Confetti"
         layerKey = KeyCode.O
-        fromKey = KeyCode.P
+        fromKey = KeyCode.NUM_0
         shellCommand = "open raycast://extensions/raycast/raycast/confetti"
       },
-  )
+      karabinerRule {
+          description = "O + 1 -> Obsidian"
+          layerKey = KeyCode.O
+          fromKey = KeyCode.NUM_1
+          shellCommand = "open -a Obsidian.app"
+      },
+      karabinerRule {
+        description = "O + 2 -> Google Chrome"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.NUM_2
+        shellCommand = "open -a 'Google Chrome.app'"
+      },
+
+      karabinerRule {
+          description = "O + 3 -> Warp"
+          layerKey = KeyCode.O
+          fromKey = KeyCode.NUM_3
+          shellCommand = "open -a 'Warp.app'"
+      },
+
+      karabinerRule {
+          description = "O + 4 -> Cursor"
+          layerKey = KeyCode.O
+          fromKey = KeyCode.NUM_4
+          shellCommand = "open -a 'Cursor.app'"
+      },
+
+      )
 }
 
 /** --- Caps Lock -> Escape (alone) -> Ctrl (on hold) -> hold + Vim keys -> Arrow/Mouse */
