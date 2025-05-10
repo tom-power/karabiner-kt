@@ -1,13 +1,11 @@
 package sh.kau.karabiner
 
-import sh.kau.karabiner.Condition.DeviceIfCondition
 import java.lang.ProcessBuilder.Redirect.to
+import sh.kau.karabiner.Condition.DeviceIfCondition
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
 fun createMainRules(): List<KarabinerRule> {
-
-
 
   return listOf(
       karabinerRule(
@@ -20,20 +18,11 @@ fun createMainRules(): List<KarabinerRule> {
               .build()),
       createCapsLockRules(),
       *createLayerKeyRules(),
-//      karabinerRule(
-//          "O layer raycast confetti",
-//          *ManipulatorBuilder()
-//              .layerKey(KeyCode.O)
-//              .from(KeyCode.P, optionalModifiers = listOf(ModifiersKeys.ANY))
-//              .to(ShellCommand("open raycast://extensions/raycast/raycast/confetti"))
-//              .buildLayer()
-//              .toTypedArray()
-//      ),
       karabinerRule {
-          description = "O + P -> Raycast Confetti"
-          layerKey = KeyCode.O
-          fromKey = KeyCode.P
-          shellCommand = "open raycast://extensions/raycast/raycast/confetti"
+        description = "O + P -> Raycast Confetti"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.P
+        shellCommand = "open raycast://extensions/raycast/raycast/confetti"
       },
   )
 }

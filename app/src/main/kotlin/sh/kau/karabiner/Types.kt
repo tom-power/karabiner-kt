@@ -66,7 +66,8 @@ data class Parameters(
     val simultaneousThresholdMilliseconds: Long? = null,
     @SerialName("basic.to_delayed_action_delay_milliseconds")
     val toDelayedActionDelayMilliseconds: Long? = null,
-    @SerialName("basic.to_if_alone_timeout_milliseconds") val toIfAloneTimeoutMilliseconds: Long? = null,
+    @SerialName("basic.to_if_alone_timeout_milliseconds")
+    val toIfAloneTimeoutMilliseconds: Long? = null,
     @SerialName("basic.to_if_held_down_threshold_milliseconds")
     val toIfHeldDownThresholdMilliseconds: Long? = null,
     // Potentially add other parameters if they exist, or allow for a map
@@ -525,7 +526,8 @@ data class Profile(
     val name: String,
     @SerialName("complex_modifications") val complexModifications: ComplexModifications,
     @SerialName("fn_function_keys") val fnFunctionKeys: List<FnFunctionKey>? = null,
-//    @SerialName("simple_modifications") val simpleModifications: List<SimpleModification>? = null,
+    //    @SerialName("simple_modifications") val simpleModifications: List<SimpleModification>? =
+    // null,
     val selected: Boolean? = null,
     @SerialName("virtual_hid_keyboard")
     val virtualHidKeyboard: VirtualHidKeyboard = VirtualHidKeyboard(),

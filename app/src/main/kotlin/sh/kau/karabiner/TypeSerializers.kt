@@ -12,8 +12,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-
-//region Simultaneous Key List
+// region Simultaneous Key List
 object SimultaneousKeyCodeListSerializer : KSerializer<List<KeyCode>> {
   override val descriptor = ListSerializer(KeyCode.serializer()).descriptor
 
@@ -68,4 +67,4 @@ object SimultaneousKeyCodeSerializer : KSerializer<KeyCode> {
     return KeyCode.valueOf(keyCodeValue!!.uppercase())
   }
 }
-//endregion
+// endregion
