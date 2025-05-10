@@ -17,7 +17,6 @@ fun unlessApp(vararg bundleIdentifiers: String): Condition {
   return FrontmostApplicationUnlessCondition(bundleIdentifiers = bundleIdentifiers.toList())
 }
 
-
 class ManipulatorBuilder {
   private var type: String = "basic"
   private var from: From? = null
@@ -28,6 +27,16 @@ class ManipulatorBuilder {
   private var parameters: Parameters? = null
   private val conditions: MutableList<Condition> = mutableListOf()
   private var description: String? = null
+
+  // --- LayerKey additions ---
+  private var layerTriggerKey: KeyCode? = null
+  private var layerSimultaneousThreshold: Long = 250L
+
+  fun layerKey(triggerKey: KeyCode, simultaneousThreshold: Long = 250L): ManipulatorBuilder =
+      apply {
+        this.layerTriggerKey = triggerKey
+        this.layerSimultaneousThreshold = simultaneousThreshold
+      }
 
   fun from(
       keyCode: KeyCode,
@@ -42,13 +51,6 @@ class ManipulatorBuilder {
           Modifiers(optional = listOf(ModifiersKeys.ANY))
         }
     this.from = From(keyCode = keyCode, modifiers = mods)
-  }
-
-  fun from(
-      simultaneousKeys: List<KeyCode>,
-      simultaneousOptions: SimultaneousOptions? = null
-  ): ManipulatorBuilder = apply {
-    this.from = From(simultaneous = simultaneousKeys, simultaneousOptions = simultaneousOptions)
   }
 
   fun to(
@@ -86,7 +88,6 @@ class ManipulatorBuilder {
     return this
   }
 
-
   fun toIfAlone(
       keyCode: KeyCode? = null,
       modifiers: List<ModifiersKeys>? = null,
@@ -101,7 +102,6 @@ class ManipulatorBuilder {
     eventList.add(command)
   }
 
-
   fun withCondition(condition: Condition): ManipulatorBuilder = apply {
     this.conditions.add(condition)
   }
@@ -114,153 +114,78 @@ class ManipulatorBuilder {
   }
 
   fun build(): Manipulator {
-    return Manipulator(
-        type = this.type,
-        from = this.from ?: throw IllegalStateException("Manipulator 'from' must be defined."),
-        to = if (this.to.isNotEmpty()) this.to.toList() else null,
-        toIfAlone = if (this.toIfAlone.isNotEmpty()) this.toIfAlone.toList() else null,
-        toAfterKeyUp = if (this.toAfterKeyUp.isNotEmpty()) this.toAfterKeyUp.toList() else null,
-        toIfHeldDown = if (this.toIfHeldDown.isNotEmpty()) this.toIfHeldDown.toList() else null,
-        parameters = this.parameters,
-        conditions = if (this.conditions.isNotEmpty()) this.conditions.toList() else null,
-        description = this.description)
-  }
-}
-
-// Define these similar to how they were in builders.ts if needed for Layer logic
-// For now, assuming they are not directly used by the LayerBuilder structure itself
-// but might be used in the rule definitions later.
-// const val ARROW_KEYS: List<KeyCode> = listOf(KeyCode.LEFT_ARROW, KeyCode.DOWN_ARROW,
-// KeyCode.UP_ARROW, KeyCode.RIGHT_ARROW)
-// const val VIM_NAV_KEYS: List<KeyCode> = listOf(KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L)
-
-fun layer(triggerKey: KeyCode): LayerBuilder {
-  return LayerBuilder(triggerKey)
-}
-
-/** Represents a binding for a key within a layer. */
-data class LayerBinding(
-    val targetKey: KeyCode,
-    val targetModifiers: List<ModifiersKeys>?,
-    val appTarget: String? = null // e.g., "terminal", "other"
-)
-
-class LayerBuilder(private val triggerKey: KeyCode) {
-  private val bindings =
-      mutableMapOf<String, LayerBinding>() // Key is "sourceKey_appTarget" or "sourceKey"
-  private val conditions = mutableListOf<Condition>()
-  private var threshold: Long = 250L // ms
-
-  inner class LayerKeyBinder(private val sourceKey: KeyCode) {
-    fun to(
-        targetKey: KeyCode,
-        targetModifiers: List<ModifiersKeys>?,
-        appTarget: String? = null
-    ): LayerBuilder {
-      val bindingKey = appTarget?.let { "${sourceKey.name}_${it}" } ?: sourceKey.name
-      bindings[bindingKey] = LayerBinding(targetKey, targetModifiers, appTarget)
-      return this@LayerBuilder
+    // If not a layerKey, return a single manipulator as before
+    if (layerTriggerKey == null) {
+      return Manipulator(
+          type = this.type,
+          from = this.from ?: throw IllegalStateException("Manipulator 'from' must be defined."),
+          to = if (this.to.isNotEmpty()) this.to.toList() else null,
+          toIfAlone = if (this.toIfAlone.isNotEmpty()) this.toIfAlone.toList() else null,
+          toAfterKeyUp = if (this.toAfterKeyUp.isNotEmpty()) this.toAfterKeyUp.toList() else null,
+          toIfHeldDown = if (this.toIfHeldDown.isNotEmpty()) this.toIfHeldDown.toList() else null,
+          parameters = this.parameters,
+          conditions = if (this.conditions.isNotEmpty()) this.conditions.toList() else null,
+          description = this.description)
     }
-
-    fun to(
-        targetKey: KeyCode,
-        vararg targetModifiers: ModifiersKeys,
-        appTarget: String? = null
-    ): LayerBuilder {
-      val modifierList = if (targetModifiers.isEmpty()) null else targetModifiers.toList()
-      return to(targetKey, modifierList, appTarget)
-    }
+    throw IllegalStateException("Use buildLayer() for layerKey usage")
   }
 
-  fun bind(sourceKey: KeyCode): LayerKeyBinder {
-    return LayerKeyBinder(sourceKey)
-  }
-
-  fun build(): List<Manipulator> {
-    val result = mutableListOf<Manipulator>()
-
-    bindings.forEach { (bindingKey, binding) ->
-      val sourceKeyName = bindingKey.split("_")[0]
-      val sourceKeyCode = KeyCode.valueOf(sourceKeyName) // Assumes sourceKeyName matches enum entry
-
-      result.addAll(
-          createLayerManipulators(
-              triggerKey = triggerKey,
-              sourceKey = sourceKeyCode,
-              layerBinding = binding,
-              layerConditions = conditions,
-              simultaneousThreshold = threshold))
-    }
-    return result.toList()
-  }
-}
-
-/**
- * Internal helper to create manipulators for a single layer binding. This combines the logic from
- * the original createKeyLayer and parts of LayerBuilder.build().
- */
-private fun createLayerManipulators(
-    triggerKey: KeyCode,
-    sourceKey: KeyCode,
-    layerBinding: LayerBinding,
-    layerConditions: List<Condition>,
-    simultaneousThreshold: Long
-): List<Manipulator> {
-  val variableName = "${triggerKey.name.lowercase()}-mode"
-  val manipulators = mutableListOf<Manipulator>()
-
-  val toOutput = To(keyCode = layerBinding.targetKey, modifiers = layerBinding.targetModifiers)
-
-  val modeManipulatorBuilder =
-      ManipulatorBuilder()
-          .from(sourceKey)
-          .to(
-              keyCode = layerBinding.targetKey,
-              modifiers = layerBinding.targetModifiers,
-              type = ToType.NORMAL)
-          .ifVariable(variableName, 1)
-
-  layerConditions.forEach { modeManipulatorBuilder.withCondition(it) }
-  applyAppTargetCondition(modeManipulatorBuilder, layerBinding.appTarget)
-  manipulators.add(modeManipulatorBuilder.build())
-
-  // 2. Simultaneous manipulator (e.g., f+j simultaneously -> paren and set "f-mode" = 1)
-  val simultaneousManipulatorBuilder =
-      ManipulatorBuilder()
-          .from(
-              simultaneousKeys = listOf(triggerKey, sourceKey),
-              simultaneousOptions =
-                  SimultaneousOptions(
-                      detectKeyDownUninterruptedly = true,
-                      keyDownOrder = "strict",
-                      keyUpOrder = "strict_inverse",
-                      keyUpWhen = "any",
-                      toAfterKeyUp =
-                          listOf(To(setVariable = SetVariable(variableName, JsonPrimitive(0))))))
-          .to(setVariable = SetVariable(variableName, JsonPrimitive(1)), type = ToType.NORMAL)
-          .to(toObj = toOutput, type = ToType.NORMAL)
-          .withParameters(
-              Parameters(
-                  simultaneousThresholdMilliseconds = simultaneousThreshold,
-                  toDelayedActionDelayMilliseconds = 10,
-                  toIfAloneTimeoutMilliseconds = 250,
-                  toIfHeldDownThresholdMilliseconds = 500))
-
-  layerConditions.forEach { simultaneousManipulatorBuilder.withCondition(it) }
-  applyAppTargetCondition(simultaneousManipulatorBuilder, layerBinding.appTarget)
-  manipulators.add(simultaneousManipulatorBuilder.build())
-
-  return manipulators.toList()
-}
-
-/** Helper to apply app-specific conditions based on appTarget string. */
-private fun applyAppTargetCondition(builder: ManipulatorBuilder, appTarget: String?) {
-  appTarget ?: return
-  when (appTarget.lowercase()) {
-    "terminal" ->
-        builder.withCondition(forApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))
-
-    "other" ->
-        builder.withCondition(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))
+  fun buildLayer(): List<Manipulator> {
+    if (layerTriggerKey == null)
+        throw IllegalStateException("buildLayer() requires layerKey to be set")
+    val triggerKey = layerTriggerKey!!
+    val variableName = "${triggerKey.name.lowercase()}-mode"
+    val fromKey =
+        this.from?.keyCode
+            ?: throw IllegalStateException("'from' keyCode must be set for layerKey usage")
+    val fromModifiers = this.from?.modifiers
+    val toList = if (this.to.isNotEmpty()) this.to.toList() else null
+    val toIfAloneList = if (this.toIfAlone.isNotEmpty()) this.toIfAlone.toList() else null
+    val toAfterKeyUpList = if (this.toAfterKeyUp.isNotEmpty()) this.toAfterKeyUp.toList() else null
+    val toIfHeldDownList = if (this.toIfHeldDown.isNotEmpty()) this.toIfHeldDown.toList() else null
+    val params = this.parameters
+    val conds = if (this.conditions.isNotEmpty()) this.conditions.toList() else null
+    // 1. Mode manipulator (when variable is set)
+    val modeManipulator =
+        Manipulator(
+            type = this.type,
+            from = From(keyCode = fromKey, modifiers = fromModifiers),
+            to = toList,
+            toIfAlone = toIfAloneList,
+            toAfterKeyUp = toAfterKeyUpList,
+            toIfHeldDown = toIfHeldDownList,
+            parameters = params,
+            conditions =
+                (conds ?: emptyList()) +
+                    listOf(Condition.VariableIfCondition(variableName, JsonPrimitive(1))),
+            description = this.description)
+    // 2. Simultaneous manipulator (triggerKey + fromKey)
+    val simOptions =
+        SimultaneousOptions(
+            detectKeyDownUninterruptedly = true,
+            keyDownOrder = "strict",
+            keyUpOrder = "strict_inverse",
+            keyUpWhen = "any",
+            toAfterKeyUp = listOf(To(setVariable = SetVariable(variableName, JsonPrimitive(0)))))
+    val simFrom = From(simultaneous = listOf(triggerKey, fromKey), simultaneousOptions = simOptions)
+    val simTo = mutableListOf<To>(To(setVariable = SetVariable(variableName, JsonPrimitive(1))))
+    if (toList != null) simTo.addAll(toList)
+    val simManipulator =
+        Manipulator(
+            type = this.type,
+            from = simFrom,
+            to = simTo,
+            toIfAlone = toIfAloneList,
+            toAfterKeyUp = toAfterKeyUpList,
+            toIfHeldDown = toIfHeldDownList,
+            parameters =
+                Parameters(
+                    simultaneousThresholdMilliseconds = layerSimultaneousThreshold,
+                    toDelayedActionDelayMilliseconds = 10,
+                    toIfAloneTimeoutMilliseconds = 250,
+                    toIfHeldDownThresholdMilliseconds = 500),
+            conditions = conds,
+            description = this.description)
+    return listOf(modeManipulator, simManipulator)
   }
 }

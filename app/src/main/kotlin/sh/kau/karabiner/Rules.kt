@@ -21,103 +21,55 @@ fun createMainRules(): List<KarabinerRule> {
       createCapsLockRule(),
 
       // --- Special characters enabled with shift + numkey ---
-      KarabinerRule(
+      karabinerRule(
           "special characters enabled with shift + numkey",
-          layer(KeyCode.F)
-              .bind(KeyCode.I)
-              .to(KeyCode.NUM_8, ModifiersKeys.LEFT_SHIFT) // *
-              .bind(KeyCode.U)
-              .to(KeyCode.NUM_7, ModifiersKeys.LEFT_SHIFT) // &
-              .bind(KeyCode.Y)
-              .to(KeyCode.NUM_6, ModifiersKeys.LEFT_SHIFT) // ^
-              .bind(KeyCode.O)
-              .to(KeyCode.BACKSLASH) // \
-              .bind(KeyCode.L)
-              .to(KeyCode.HYPHEN) // -
-              .bind(KeyCode.SEMICOLON)
-              .to(KeyCode.EQUAL_SIGN, ModifiersKeys.LEFT_SHIFT) // +
-              .bind(KeyCode.QUOTE)
-              .to(KeyCode.EQUAL_SIGN) // =
-              .build()),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.I, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_8, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.U, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_7, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.Y, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_6, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.O, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.BACKSLASH).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.L, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.HYPHEN).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.SEMICOLON, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.EQUAL_SIGN, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.QUOTE, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.EQUAL_SIGN).buildLayer().toTypedArray(),
+      ),
 
       // --- J-key special character combinations ---
-      KarabinerRule(
+      karabinerRule(
           "J-key special character combinations",
-          layer(KeyCode.J)
-              .bind(KeyCode.T)
-              .to(KeyCode.NUM_5, ModifiersKeys.LEFT_SHIFT) // %
-              .bind(KeyCode.R)
-              .to(KeyCode.NUM_4, ModifiersKeys.LEFT_SHIFT) // $
-              .bind(KeyCode.E)
-              .to(KeyCode.NUM_3, ModifiersKeys.LEFT_SHIFT) // #
-              .bind(KeyCode.W)
-              .to(KeyCode.NUM_2, ModifiersKeys.LEFT_SHIFT) // @
-              .bind(KeyCode.Q)
-              .to(KeyCode.NUM_1, ModifiersKeys.LEFT_SHIFT) // !
-              .build()),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.T, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_5, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.R, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_4, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.E, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_3, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.W, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_2, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.Q, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_1, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+      ),
 
       // --- Bracket combinations ---
-      KarabinerRule(
+      karabinerRule(
           "bracket combos",
-          layer(KeyCode.F)
-              .bind(KeyCode.J)
-              .to(KeyCode.NUM_9, ModifiersKeys.LEFT_SHIFT) // (
-              .bind(KeyCode.K)
-              .to(KeyCode.NUM_0, ModifiersKeys.LEFT_SHIFT) // )
-              .bind(KeyCode.M)
-              .to(KeyCode.OPEN_BRACKET) // [
-              .bind(KeyCode.COMMA)
-              .to(KeyCode.CLOSE_BRACKET) // ]
-              .bind(KeyCode.PERIOD)
-              .to(KeyCode.OPEN_BRACKET, ModifiersKeys.LEFT_SHIFT) // {
-              .bind(KeyCode.SLASH)
-              .to(KeyCode.CLOSE_BRACKET, ModifiersKeys.LEFT_SHIFT) // }
-              .build()),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.J, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_9, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.K, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.NUM_0, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.M, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.OPEN_BRACKET).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.COMMA, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.CLOSE_BRACKET).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.PERIOD, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.OPEN_BRACKET, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.F).from(KeyCode.SLASH, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.CLOSE_BRACKET, modifiers = listOf(ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+      ),
 
       // --- Delete sequences ---
-      KarabinerRule(
+      karabinerRule(
           "delete sequences",
-          layer(KeyCode.J)
-              // J key combinations for terminal and other apps
-              .bind(KeyCode.S)
-              .to(
-                  KeyCode.U,
-                  ModifiersKeys.LEFT_CONTROL,
-                  appTarget = "terminal") // Clear line in terminal
-              .bind(KeyCode.S)
-              .to(
-                  KeyCode.DELETE_OR_BACKSPACE,
-                  ModifiersKeys.LEFT_COMMAND,
-                  appTarget = "other") // Delete to line start in other apps
-              .bind(KeyCode.D)
-              .to(
-                  KeyCode.W,
-                  ModifiersKeys.LEFT_CONTROL,
-                  appTarget = "terminal") // Delete word in terminal
-              .bind(KeyCode.D)
-              .to(
-                  KeyCode.DELETE_OR_BACKSPACE,
-                  ModifiersKeys.LEFT_OPTION,
-                  appTarget = "other") // Delete word in other apps
-              .bind(KeyCode.F)
-              .to(KeyCode.DELETE_OR_BACKSPACE) // Delete character (all apps)
-              .build()),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.S, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.U, modifiers = listOf(ModifiersKeys.LEFT_CONTROL)).withCondition(forApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.S, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.DELETE_OR_BACKSPACE, modifiers = listOf(ModifiersKeys.LEFT_COMMAND)).withCondition(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.D, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.W, modifiers = listOf(ModifiersKeys.LEFT_CONTROL)).withCondition(forApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.D, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.DELETE_OR_BACKSPACE, modifiers = listOf(ModifiersKeys.LEFT_OPTION)).withCondition(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.F, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.DELETE_OR_BACKSPACE).buildLayer().toTypedArray(),
+      ),
 
       // --- Command next/prev tab ---
-      KarabinerRule(
+      karabinerRule(
           "cmd next/prev tab",
-          layer(KeyCode.J)
-              .bind(KeyCode.X)
-              .to(
-                  KeyCode.OPEN_BRACKET,
-                  ModifiersKeys.LEFT_COMMAND,
-                  ModifiersKeys.LEFT_SHIFT) // previous tab
-              .bind(KeyCode.C)
-              .to(
-                  KeyCode.CLOSE_BRACKET,
-                  ModifiersKeys.LEFT_COMMAND,
-                  ModifiersKeys.LEFT_SHIFT) // next tab
-              .build()))
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.X, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.OPEN_BRACKET, modifiers = listOf(ModifiersKeys.LEFT_COMMAND, ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+          *ManipulatorBuilder().layerKey(KeyCode.J).from(KeyCode.C, optionalModifiers = listOf(ModifiersKeys.ANY)).to(KeyCode.CLOSE_BRACKET, modifiers = listOf(ModifiersKeys.LEFT_COMMAND, ModifiersKeys.LEFT_SHIFT)).buildLayer().toTypedArray(),
+      ),
+  )
 }
 
 /** Creates the Caps Lock rule with vim navigation */
