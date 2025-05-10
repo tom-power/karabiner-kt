@@ -47,10 +47,7 @@ class ManipulatorBuilder {
       simultaneousKeys: List<KeyCode>,
       simultaneousOptions: SimultaneousOptions? = null
   ): ManipulatorBuilder = apply {
-    this.from =
-        From(
-            simultaneous = simultaneousKeys.map { SimultaneousFrom(it) },
-            simultaneousOptions = simultaneousOptions)
+    this.from = From(simultaneous = simultaneousKeys, simultaneousOptions = simultaneousOptions)
   }
 
   // Convenience for single mandatory modifier

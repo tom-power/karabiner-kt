@@ -26,38 +26,12 @@ data class Manipulator(
 )
 
 @Serializable
-data class Parameters(
-    @SerialName("basic.simultaneous_threshold_milliseconds")
-    val simultaneousThresholdMilliseconds: Long?,
-    @SerialName("basic.to_delayed_action_delay_milliseconds")
-    val toDelayedActionDelayMilliseconds: Long?,
-    @SerialName("basic.to_if_alone_timeout_milliseconds") val toIfAloneTimeoutMilliseconds: Long?,
-    @SerialName("basic.to_if_held_down_threshold_milliseconds")
-    val toIfHeldDownThresholdMilliseconds: Long?,
-    // Potentially add other parameters if they exist, or allow for a map
-    // For now, sticking to explicitly defined ones from your JSON.
-)
-
-@Serializable
 data class From(
     @SerialName("key_code") val keyCode: KeyCode? = null,
-    val simultaneous: List<SimultaneousFrom>? = null,
+    val modifiers: Modifiers? = null,
+    @Serializable(with = SimultaneousKeyCodeListSerializer::class)
+    val simultaneous: List<KeyCode>? = null,
     @SerialName("simultaneous_options") val simultaneousOptions: SimultaneousOptions? = null,
-    val modifiers: Modifiers? = null
-)
-
-@Serializable data class SimultaneousFrom(@SerialName("key_code") val keyCode: KeyCode)
-
-@Serializable
-data class SimultaneousOptions(
-    @SerialName("key_down_order")
-    val keyDownOrder: String? = null, // Consider enum: "insensitive", "strict", "strict_inverse"
-    @SerialName("detect_key_down_uninterruptedly")
-    val detectKeyDownUninterruptedly: Boolean? = null,
-    @SerialName("key_up_order")
-    val keyUpOrder: String? = null, // Consider enum: "insensitive", "strict", "strict_inverse"
-    @SerialName("key_up_when") val keyUpWhen: String? = null, // Consider enum: "any", "all"
-    @SerialName("to_after_key_up") val toAfterKeyUp: List<To>? = null
 )
 
 @Serializable
@@ -77,6 +51,31 @@ data class To(
     @SerialName("pointing_button") val pointingButton: String? = null,
     @SerialName("software_function") val softwareFunction: SoftwareFunction? = null
     // `hold_down_milliseconds` is sometimes seen with `to` events. Add if needed.
+)
+
+@Serializable
+data class Parameters(
+    @SerialName("basic.simultaneous_threshold_milliseconds")
+    val simultaneousThresholdMilliseconds: Long?,
+    @SerialName("basic.to_delayed_action_delay_milliseconds")
+    val toDelayedActionDelayMilliseconds: Long?,
+    @SerialName("basic.to_if_alone_timeout_milliseconds") val toIfAloneTimeoutMilliseconds: Long?,
+    @SerialName("basic.to_if_held_down_threshold_milliseconds")
+    val toIfHeldDownThresholdMilliseconds: Long?,
+    // Potentially add other parameters if they exist, or allow for a map
+    // For now, sticking to explicitly defined ones
+)
+
+@Serializable
+data class SimultaneousOptions(
+    @SerialName("key_down_order")
+    val keyDownOrder: String? = null, // Consider enum: "insensitive", "strict", "strict_inverse"
+    @SerialName("detect_key_down_uninterruptedly")
+    val detectKeyDownUninterruptedly: Boolean? = null,
+    @SerialName("key_up_order")
+    val keyUpOrder: String? = null, // Consider enum: "insensitive", "strict", "strict_inverse"
+    @SerialName("key_up_when") val keyUpWhen: String? = null, // Consider enum: "any", "all"
+    @SerialName("to_after_key_up") val toAfterKeyUp: List<To>? = null
 )
 
 @Serializable data class SetVariable(val name: String, val value: JsonPrimitive)
