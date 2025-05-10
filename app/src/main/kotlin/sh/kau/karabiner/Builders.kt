@@ -1,13 +1,74 @@
 package sh.kau.karabiner
 
+import java.lang.ProcessBuilder.Redirect.to
 import kotlinx.serialization.json.JsonPrimitive
 import sh.kau.karabiner.Condition.FrontmostApplicationIfCondition
 import sh.kau.karabiner.Condition.FrontmostApplicationUnlessCondition
 import sh.kau.karabiner.Condition.VariableIfCondition
+import sun.security.util.SignatureUtil.fromKey
+
+typealias ShellCmd = String
 
 fun karabinerRule(description: String, vararg manipulators: Manipulator): KarabinerRule {
   return KarabinerRule(description, manipulators.toList())
 }
+
+fun karabinerRule(
+    block: SimpleRuleBuilder.() -> Unit,
+): KarabinerRule {
+
+  val builder = SimpleRuleBuilder().apply(block)
+
+  if (builder.layerKey != null) {
+    val variableName = "${builder.layerKey!!.name.lowercase()}-layer"
+
+    return KarabinerRule(
+        builder.description,
+        listOf(
+            Manipulator(
+                from =
+                    From(
+                        builder.fromKey!!,
+                        modifiers = Modifiers(optional = listOf(ModifiersKeys.ANY))),
+                to = listOf(To(shellCommand = builder.shellCommand)),
+                conditions = listOf(VariableIfCondition(variableName, JsonPrimitive(1))),
+            ),
+            Manipulator(
+                from =
+                    From(
+                        simultaneous = listOf(builder.layerKey!!, builder.fromKey!!),
+                        simultaneousOptions =
+                            SimultaneousOptions(
+                                detectKeyDownUninterruptedly = true,
+                                keyDownOrder = "strict",
+                                keyUpOrder = "strict_inverse",
+                                keyUpWhen = "any",
+                                toAfterKeyUp =
+                                    listOf(
+                                        To(
+                                            setVariable =
+                                                SetVariable(variableName, JsonPrimitive(0)))),
+                            ),
+                    ),
+                to =
+                    listOf(
+                        To(setVariable = SetVariable(variableName, JsonPrimitive(1))),
+                        To(shellCommand = builder.shellCommand),
+                    ),
+                parameters = Parameters(simultaneousThresholdMilliseconds = 250)
+            ),
+        ))
+  }
+
+  throw IllegalStateException("Not implemented")
+}
+
+class SimpleRuleBuilder(
+    var description: String = "",
+    var layerKey: KeyCode? = null,
+    var fromKey: KeyCode? = null,
+    var shellCommand: ShellCmd? = null,
+)
 
 fun forApp(vararg bundleIdentifiers: String): Condition {
   return FrontmostApplicationIfCondition(bundleIdentifiers = bundleIdentifiers.toList())
@@ -16,6 +77,9 @@ fun forApp(vararg bundleIdentifiers: String): Condition {
 fun unlessApp(vararg bundleIdentifiers: String): Condition {
   return FrontmostApplicationUnlessCondition(bundleIdentifiers = bundleIdentifiers.toList())
 }
+
+/** Represents a shell command to be executed by Karabiner. */
+data class ShellCommand(val cmd: String)
 
 class ManipulatorBuilder {
   private var type: String = "basic"
@@ -85,6 +149,14 @@ class ManipulatorBuilder {
       ToType.AFTER_KEY_UP -> addToEventList(this.toAfterKeyUp, toEvent)
       ToType.IF_HELD_DOWN -> addToEventList(this.toIfHeldDown, toEvent)
     }
+    return this
+  }
+
+  fun to(
+      shellCommand: ShellCommand,
+  ): ManipulatorBuilder {
+    val toEvent = To(shellCommand = shellCommand.cmd)
+    addToEventList(this.to, toEvent)
     return this
   }
 

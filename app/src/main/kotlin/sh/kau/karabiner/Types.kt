@@ -63,12 +63,12 @@ enum class ToType {
 @Serializable
 data class Parameters(
     @SerialName("basic.simultaneous_threshold_milliseconds")
-    val simultaneousThresholdMilliseconds: Long?,
+    val simultaneousThresholdMilliseconds: Long? = null,
     @SerialName("basic.to_delayed_action_delay_milliseconds")
-    val toDelayedActionDelayMilliseconds: Long?,
-    @SerialName("basic.to_if_alone_timeout_milliseconds") val toIfAloneTimeoutMilliseconds: Long?,
+    val toDelayedActionDelayMilliseconds: Long? = null,
+    @SerialName("basic.to_if_alone_timeout_milliseconds") val toIfAloneTimeoutMilliseconds: Long? = null,
     @SerialName("basic.to_if_held_down_threshold_milliseconds")
-    val toIfHeldDownThresholdMilliseconds: Long?,
+    val toIfHeldDownThresholdMilliseconds: Long? = null,
     // Potentially add other parameters if they exist, or allow for a map
     // For now, sticking to explicitly defined ones
 )
@@ -525,7 +525,7 @@ data class Profile(
     val name: String,
     @SerialName("complex_modifications") val complexModifications: ComplexModifications,
     @SerialName("fn_function_keys") val fnFunctionKeys: List<FnFunctionKey>? = null,
-    @SerialName("simple_modifications") val simpleModifications: List<SimpleModification>? = null,
+//    @SerialName("simple_modifications") val simpleModifications: List<SimpleModification>? = null,
     val selected: Boolean? = null,
     @SerialName("virtual_hid_keyboard")
     val virtualHidKeyboard: VirtualHidKeyboard = VirtualHidKeyboard(),

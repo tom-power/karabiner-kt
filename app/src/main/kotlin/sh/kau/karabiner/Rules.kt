@@ -1,13 +1,15 @@
 package sh.kau.karabiner
 
 import sh.kau.karabiner.Condition.DeviceIfCondition
+import java.lang.ProcessBuilder.Redirect.to
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
 fun createMainRules(): List<KarabinerRule> {
 
+
+
   return listOf(
-      // --- Right Cmd (alone) -> Enter ---
       karabinerRule(
           "Right Cmd (alone) -> Enter",
           ManipulatorBuilder()
@@ -16,17 +18,27 @@ fun createMainRules(): List<KarabinerRule> {
               .toIfAlone(keyCode = KeyCode.RETURN_OR_ENTER) // When pressed alone
               .withCondition(forAppleKeyboards()) // Only for Apple or built-in keyboards
               .build()),
-
       createCapsLockRules(),
-      *createLayerKeyRules())
+      *createLayerKeyRules(),
+//      karabinerRule(
+//          "O layer raycast confetti",
+//          *ManipulatorBuilder()
+//              .layerKey(KeyCode.O)
+//              .from(KeyCode.P, optionalModifiers = listOf(ModifiersKeys.ANY))
+//              .to(ShellCommand("open raycast://extensions/raycast/raycast/confetti"))
+//              .buildLayer()
+//              .toTypedArray()
+//      ),
+      karabinerRule {
+          description = "O + P -> Raycast Confetti"
+          layerKey = KeyCode.O
+          fromKey = KeyCode.P
+          shellCommand = "open raycast://extensions/raycast/raycast/confetti"
+      },
+  )
 }
 
-/**
- * --- Caps Lock -> Escape (alone)
- *               -> Ctrl   (on hold)
- *               -> hold + Vim keys -> Arrow/Mouse
- *
- * */
+/** --- Caps Lock -> Escape (alone) -> Ctrl (on hold) -> hold + Vim keys -> Arrow/Mouse */
 fun createCapsLockRules(): KarabinerRule {
   val manipulators = mutableListOf<Manipulator>()
 
