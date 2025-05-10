@@ -50,10 +50,6 @@ class ManipulatorBuilder {
     this.from = From(simultaneous = simultaneousKeys, simultaneousOptions = simultaneousOptions)
   }
 
-  // Convenience for single mandatory modifier
-  fun from(keyCode: KeyCode, mandatoryModifier: ModifiersKeys): ManipulatorBuilder =
-      from(keyCode, mandatoryModifiers = listOf(mandatoryModifier))
-
   private fun addToEventList(eventList: MutableList<To>, command: To): ManipulatorBuilder = apply {
     eventList.add(command)
   }

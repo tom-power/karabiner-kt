@@ -163,7 +163,7 @@ fun createCapsLockRule(): KarabinerRule {
       .forEach { (key, mouseKeyValue) ->
         manipulators.add(
             ManipulatorBuilder()
-                .from(key, mandatoryModifier = ModifiersKeys.RIGHT_CONTROL)
+                .from(key, mandatoryModifiers = listOf(ModifiersKeys.RIGHT_CONTROL))
                 .to(To(mouseKey = mouseKeyValue))
                 .build())
       }
@@ -171,7 +171,7 @@ fun createCapsLockRule(): KarabinerRule {
   // Add return_or_enter + right_control to click mouse buttons
   manipulators.add(
       ManipulatorBuilder()
-          .from(KeyCode.RETURN_OR_ENTER, mandatoryModifier = ModifiersKeys.RIGHT_CONTROL)
+          .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(ModifiersKeys.RIGHT_CONTROL))
           .to(To(pointingButton = "button1"))
           .build())
 
