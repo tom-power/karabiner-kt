@@ -1,7 +1,5 @@
 package sh.kau.karabiner
 
-import java.lang.ProcessBuilder.Redirect.to
-import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.parameters
 import kotlinx.serialization.json.JsonPrimitive
 import sh.kau.karabiner.Condition.FrontmostApplicationIfCondition
 import sh.kau.karabiner.Condition.FrontmostApplicationUnlessCondition

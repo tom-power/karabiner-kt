@@ -341,26 +341,13 @@ enum class ModifiersKeys {
 }
 
 @Serializable
-data class Identifiers(
-    @SerialName("vendor_id") val vendorId: Long? = null,
-    @SerialName("product_id") val productId: Long? = null,
-    @SerialName("location_id") val locationId: Long? = null,
-    @SerialName("is_keyboard") val isKeyboard: Boolean? = null,
-    @SerialName("is_pointing_device") val isPointingDevice: Boolean? = null,
-    @SerialName("is_touch_bar") val isTouchBar: Boolean? = null,
-    @SerialName("is_built_in_keyboard") val isBuiltInKeyboard: Boolean? = null
-)
-
-@Serializable
 sealed interface Condition {
-  val description: String?
 
   @Serializable
   @SerialName("frontmost_application_if")
   data class FrontmostApplicationIfCondition(
       @SerialName("bundle_identifiers") val bundleIdentifiers: List<String>? = null,
       @SerialName("file_paths") val filePaths: List<String>? = null,
-      override val description: String? = null
   ) : Condition
 
   @Serializable
@@ -368,49 +355,42 @@ sealed interface Condition {
   data class FrontmostApplicationUnlessCondition(
       @SerialName("bundle_identifiers") val bundleIdentifiers: List<String>? = null,
       @SerialName("file_paths") val filePaths: List<String>? = null,
-      override val description: String? = null
   ) : Condition
 
   @Serializable
   @SerialName("device_if")
   data class DeviceIfCondition(
-      val identifiers: List<Identifiers>,
-      override val description: String? = null
+      val identifiers: List<DeviceIdentifier>,
   ) : Condition
 
   @Serializable
   @SerialName("device_unless")
   data class DeviceUnlessCondition(
-      val identifiers: List<Identifiers>,
-      override val description: String? = null
+      val identifiers: List<DeviceIdentifier>,
   ) : Condition
 
   @Serializable
   @SerialName("device_exists_if")
   data class DeviceExistsIfCondition(
-      val identifiers: List<Identifiers>,
-      override val description: String? = null
+      val identifiers: List<DeviceIdentifier>,
   ) : Condition
 
   @Serializable
   @SerialName("device_exists_unless")
   data class DeviceExistsUnlessCondition(
-      val identifiers: List<Identifiers>,
-      override val description: String? = null
+      val identifiers: List<DeviceIdentifier>,
   ) : Condition
 
   @Serializable
   @SerialName("keyboard_type_if")
   data class KeyboardTypeIfCondition(
       @SerialName("keyboard_types") val keyboardTypes: List<String>,
-      override val description: String? = null
   ) : Condition
 
   @Serializable
   @SerialName("keyboard_type_unless")
   data class KeyboardTypeUnlessCondition(
       @SerialName("keyboard_types") val keyboardTypes: List<String>,
-      override val description: String? = null
   ) : Condition
 
   @Serializable
@@ -424,14 +404,12 @@ sealed interface Condition {
   @SerialName("input_source_if")
   data class InputSourceIfCondition(
       @SerialName("input_sources") val inputSources: List<InputSourceSpec>,
-      override val description: String? = null
   ) : Condition
 
   @Serializable
   @SerialName("input_source_unless")
   data class InputSourceUnlessCondition(
       @SerialName("input_sources") val inputSources: List<InputSourceSpec>,
-      override val description: String? = null
   ) : Condition
 
   @Serializable
@@ -439,7 +417,6 @@ sealed interface Condition {
   data class VariableIfCondition(
       val name: String,
       val value: JsonPrimitive,
-      override val description: String? = null
   ) : Condition
 
   @Serializable
@@ -447,62 +424,96 @@ sealed interface Condition {
   data class VariableUnlessCondition(
       val name: String,
       val value: JsonPrimitive,
-      override val description: String? = null
   ) : Condition
 
   @Serializable
   @SerialName("event_changed_if")
-  data class EventChangedIfCondition(val value: Boolean, override val description: String? = null) :
-      Condition
+  data class EventChangedIfCondition(
+      val value: Boolean,
+  ) : Condition
 
   @Serializable
   @SerialName("event_changed_unless")
   data class EventChangedUnlessCondition(
       val value: Boolean,
-      override val description: String? = null
   ) : Condition
 }
 
-object DEVICE {
-  val APPLE_BUILT_IN = Identifiers(isBuiltInKeyboard = true)
-  val APPLE = Identifiers(vendorId = 1452L) // Kotlin Long for vendorId/productId
-  val KEYCHRON = Identifiers(vendorId = 76L)
+@Serializable
+data class DeviceConfiguration(
+    @SerialName("device_id") val deviceId: Long? = null,
+    val identifiers: DeviceIdentifier, // not the same as above
+    @SerialName("is_apple") val isApple: Boolean? = null,
+    @SerialName("is_built_in_pointing_device") val isBuiltInPointingDevice: Boolean? = null,
+    @SerialName("manufacturer") val manufacturer: String? = null,
+    @SerialName("product") val product: String? = null,
+    @SerialName("transport") val transport: String? = null,
+    //
+    @SerialName("fn_function_keys") val fnFunctionKeys: List<FnFunctionKey>? = null,
+    @SerialName("ignore") val ignore: Boolean? = null,
+    @SerialName("manipulate_caps_lock_led") val manipulateCapsLockLed: Boolean? = null,
+    @SerialName("simple_modifications") val simpleModifications: List<SimpleModification>? = null,
+    @SerialName("treat_as_built_in_keyboard") val treatAsBuiltInKeyboard: Boolean? = null,
+    @SerialName("disable_built_in_keyboard_if_exists")
+    val disableBuiltInKeyboardIfExists: Boolean? = null,
+) {
+  companion object {
+    //    val APPLE_BUILTIN_KEYBOARD =
+    //        DeviceConfiguration(
+    //            identifiers = DeviceIdentifier(isKeyboard = true),
+    //            isApple = true,
+    //            manufacturer = "Apple",
+    //            product = "Apple Internal Keyboard / Trackpad",
+    //            transport = "FIFO",
+    //        )
+    //    val APPLE_BUILTIN_TRACKPAD =
+    //        DeviceConfiguration(
+    //            identifiers = DeviceIdentifier(isPointingDevice = true),
+    //            isApple = true,
+    //            isBuiltInPointingDevice = true,
+    //            manufacturer = "Apple",
+    //            product = "Apple Internal Keyboard / Trackpad",
+    //            transport = "FIFO",
+    //        )
+  }
+}
 
-  val ANNE_PRO2 = Identifiers(vendorId = 1241L, productId = 41618L)
-  val MS_SCULPT = Identifiers(vendorId = 1118L, productId = 1957L)
-  val TADA68 = Identifiers(vendorId = 65261L, productId = 4611L)
-  val KINESIS = Identifiers(vendorId = 10730L)
-  val LOGITECH_G915 = Identifiers(vendorId = 1133L)
+@Serializable
+data class DeviceIdentifier(
+    // karabiner docs are not great here
+    // https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/device/
+    // confirmed the below to work from experience
+    @SerialName("description") val Description: String? = null,
+    @SerialName("vendor_id") val vendorId: Long? = null,
+    @SerialName("product_id") val productId: Long? = null,
+    @SerialName("is_built_in_keyboard") val isBuiltInKeyboard: Boolean? = null,
+    @SerialName("is_keyboard") val isKeyboard: Boolean? = null,
+    @SerialName("is_pointing_device") val isPointingDevice: Boolean? = null,
+    @SerialName("is_touch_bar") val isTouchBar: Boolean? = null,
+    // @SerialName("is_virtual_device") val isVirtualDevice: Boolean? = null,
 
-  val LOGITECH_DEVICE =
-      Identifiers(isKeyboard = true, isPointingDevice = true, productId = 45919L, vendorId = 1133L)
+    /** device_address will change when you replace the hardware */
+    @SerialName("device_address") val deviceAddress: String? = null,
 
-  val POINTING_DEVICE = Identifiers(isPointingDevice = true)
+    /** location_id will change when you change USB port */
+    @SerialName("location_id") val locationId: Long? = null,
+) {
+  companion object {
 
-  val LOGITECH_IGNORED = Identifiers(isKeyboard = true, productId = 50475L, vendorId = 1133L)
+    val APPLE_KEYBOARDS =
+        listOf(
+            DeviceIdentifier(vendorId = 1452, isKeyboard = true),
+            DeviceIdentifier(vendorId = 76, isKeyboard = true),
+            DeviceIdentifier(isBuiltInKeyboard = true),
+        )
 
-  val APPLE_ALL = listOf(DEVICE.APPLE, DEVICE.KEYCHRON, DEVICE.APPLE_BUILT_IN)
-
-  val ALL_KEYBOARDS =
-      listOf(
-          DEVICE.APPLE,
-          DEVICE.KEYCHRON,
-          DEVICE.APPLE_BUILT_IN,
-          DEVICE.ANNE_PRO2,
-          DEVICE.MS_SCULPT,
-          DEVICE.TADA68,
-          DEVICE.KINESIS,
-          DEVICE.LOGITECH_G915)
-
-  val ALL_EXCEPT_KINESIS =
-      listOf(
-          DEVICE.APPLE,
-          DEVICE.KEYCHRON,
-          DEVICE.APPLE_BUILT_IN,
-          DEVICE.ANNE_PRO2,
-          DEVICE.MS_SCULPT,
-          DEVICE.TADA68,
-          DEVICE.LOGITECH_G915)
+    val ANNE_PRO_2 = DeviceIdentifier(vendorId = 1241L, productId = 41618L)
+    val MS_SCULPT = DeviceIdentifier(vendorId = 1118L, productId = 1957L)
+    val TADA68 = DeviceIdentifier(vendorId = 65261L, productId = 4611L)
+    val KINESIS = DeviceIdentifier(vendorId = 10730L)
+    val LOGITECH_G915 = DeviceIdentifier(vendorId = 1133L)
+    val KEYCHRON = DeviceIdentifier(vendorId = 76L)
+  }
 }
 
 // Root structure for the final JSON (approximated from karabiner.json)
@@ -531,7 +542,7 @@ data class Profile(
     val selected: Boolean? = null,
     @SerialName("virtual_hid_keyboard")
     val virtualHidKeyboard: VirtualHidKeyboard = VirtualHidKeyboard(),
-    @SerialName("devices") val devices: List<DeviceSpecificSettings>? = null,
+    @SerialName("devices") val devices: List<DeviceConfiguration>? = null,
     @SerialName("parameters") val parameters: Parameters? = null,
 )
 
@@ -549,18 +560,6 @@ data class VirtualHidKeyboard(
     val indicateStickyModifierKeysState: Boolean? = null,
     @SerialName("keyboard_type_v2") // Original TS used keyboard_type_v2, JSON uses keyboard_type
     val keyboardType: String = "ansi" // e.g., "ansi"
-)
-
-@Serializable
-data class DeviceSpecificSettings(
-    val identifiers: Identifiers,
-    @SerialName("disable_built_in_keyboard_if_exists")
-    val disableBuiltInKeyboardIfExists: Boolean? = null,
-    @SerialName("fn_function_keys") val fnFunctionKeys: List<FnFunctionKey>? = null,
-    @SerialName("ignore") val ignore: Boolean? = null,
-    @SerialName("manipulate_caps_lock_led") val manipulateCapsLockLed: Boolean? = null,
-    @SerialName("simple_modifications") val simpleModifications: List<SimpleModification>? = null,
-    @SerialName("treat_as_built_in_keyboard") val treatAsBuiltInKeyboard: Boolean? = null
 )
 
 @Serializable data class FromFnKey(@SerialName("key_code") val keyCode: KeyCode)

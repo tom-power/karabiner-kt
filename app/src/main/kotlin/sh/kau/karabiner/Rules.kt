@@ -1,6 +1,5 @@
 package sh.kau.karabiner
 
-import java.lang.ProcessBuilder.Redirect.to
 import sh.kau.karabiner.Condition.DeviceIfCondition
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
@@ -14,11 +13,11 @@ fun createMainRules(): List<KarabinerRule> {
               .from(KeyCode.RIGHT_COMMAND, optionalModifiers = listOf(ModifiersKeys.ANY))
               .to(keyCode = KeyCode.RIGHT_CONTROL) // When held
               .toIfAlone(keyCode = KeyCode.RETURN_OR_ENTER) // When pressed alone
-              .withCondition(forAppleKeyboards()) // Only for Apple or built-in keyboards
-              .build()),
+              .withCondition(onlyAppleKeyboards()) // Only for Apple or built-in keyboards
+              .build(),
+      ),
       createCapsLockRules(),
       *createLayerKeyRules(),
-
       karabinerRule {
         description = "O + 0 -> Raycast Confetti"
         layerKey = KeyCode.O
@@ -26,10 +25,10 @@ fun createMainRules(): List<KarabinerRule> {
         shellCommand = "open raycast://extensions/raycast/raycast/confetti"
       },
       karabinerRule {
-          description = "O + 1 -> Obsidian"
-          layerKey = KeyCode.O
-          fromKey = KeyCode.NUM_1
-          shellCommand = "open -a Obsidian.app"
+        description = "O + 1 -> Obsidian"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.NUM_1
+        shellCommand = "open -a Obsidian.app"
       },
       karabinerRule {
         description = "O + 2 -> Google Chrome"
@@ -37,22 +36,19 @@ fun createMainRules(): List<KarabinerRule> {
         fromKey = KeyCode.NUM_2
         shellCommand = "open -a 'Google Chrome.app'"
       },
-
       karabinerRule {
-          description = "O + 3 -> Warp"
-          layerKey = KeyCode.O
-          fromKey = KeyCode.NUM_3
-          shellCommand = "open -a 'Warp.app'"
+        description = "O + 3 -> Warp"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.NUM_3
+        shellCommand = "open -a 'Warp.app'"
       },
-
       karabinerRule {
-          description = "O + 4 -> Cursor"
-          layerKey = KeyCode.O
-          fromKey = KeyCode.NUM_4
-          shellCommand = "open -a 'Cursor.app'"
+        description = "O + 4 -> Cursor"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.NUM_4
+        shellCommand = "open -a 'Cursor.app'"
       },
-
-      )
+  )
 }
 
 /** --- Caps Lock -> Escape (alone) -> Ctrl (on hold) -> hold + Vim keys -> Arrow/Mouse */
@@ -327,11 +323,6 @@ fun createVimNavigationManipulators(): List<Manipulator> {
 }
 
 /** Creates a condition for Apple keyboards or built-in keyboards */
-fun forAppleKeyboards(): Condition {
-  return DeviceIfCondition(
-      identifiers =
-          listOf(
-              Identifiers(vendorId = 1452L), // Apple
-              Identifiers(vendorId = 76L), // Another Apple keyboard ID
-              Identifiers(isBuiltInKeyboard = true)))
+fun onlyAppleKeyboards(): Condition {
+  return DeviceIfCondition(identifiers = DeviceIdentifier.APPLE_KEYBOARDS)
 }
