@@ -1,6 +1,7 @@
 package sh.kau.karabiner
 
 import sh.kau.karabiner.Condition.DeviceIfCondition
+import sun.security.util.SignatureUtil.fromKey
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
@@ -121,15 +122,17 @@ fun createCapsLockRules(): KarabinerRule {
 }
 
 fun createLayerKeyRules(): Array<KarabinerRule> {
+
+  val rules = mutableListOf<KarabinerRule>()
+
   data class LKM(
       val fromKey: KeyCode,
       val toKey: KeyCode,
-      val toModifiers: List<ModifiersKeys>? = null,
+      val toModifiers: List<ModifiersKeys?>? = null,
       val conditions: List<Condition>? = null
   )
 
-  val fLayerMappings =
-      listOf(
+  listOf(
           // --- mapped to right hand side Shift num keys -
           //   Y U I
           //   ^ & *
@@ -146,10 +149,7 @@ fun createLayerKeyRules(): Array<KarabinerRule> {
           LKM(KeyCode.L, KeyCode.HYPHEN, null),
           LKM(KeyCode.SEMICOLON, KeyCode.EQUAL_SIGN, listOf(ModifiersKeys.LEFT_SHIFT)),
           LKM(KeyCode.QUOTE, KeyCode.EQUAL_SIGN, null),
-      )
 
-  val bracketMappings =
-      listOf(
           // J K
           // ( )
           LKM(KeyCode.J, KeyCode.NUM_9, listOf(ModifiersKeys.LEFT_SHIFT)),
@@ -163,18 +163,23 @@ fun createLayerKeyRules(): Array<KarabinerRule> {
           LKM(KeyCode.PERIOD, KeyCode.OPEN_BRACKET, listOf(ModifiersKeys.LEFT_SHIFT)),
           LKM(KeyCode.SLASH, KeyCode.CLOSE_BRACKET, listOf(ModifiersKeys.LEFT_SHIFT)),
       )
+      .forEach { (fromKeyP, toKeyP, mods) ->
+        rules.add(
+            karabinerRule {
+              layerKey = KeyCode.F
+              fromKey = fromKeyP
+              toKey = toKeyP
+              toKeyModifiers = mods
+            },
+        )
+      }
 
-  val jLayerSpecialChars =
-      listOf(
+  listOf(
           LKM(KeyCode.T, KeyCode.NUM_5, listOf(ModifiersKeys.LEFT_SHIFT)),
           LKM(KeyCode.R, KeyCode.NUM_4, listOf(ModifiersKeys.LEFT_SHIFT)),
           LKM(KeyCode.E, KeyCode.NUM_3, listOf(ModifiersKeys.LEFT_SHIFT)),
           LKM(KeyCode.W, KeyCode.NUM_2, listOf(ModifiersKeys.LEFT_SHIFT)),
           LKM(KeyCode.Q, KeyCode.NUM_1, listOf(ModifiersKeys.LEFT_SHIFT)),
-      )
-
-  val deleteMappings =
-      listOf(
           LKM(
               KeyCode.S,
               KeyCode.U,
@@ -196,10 +201,6 @@ fun createLayerKeyRules(): Array<KarabinerRule> {
               listOf(ModifiersKeys.LEFT_OPTION),
               listOf(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))),
           LKM(KeyCode.F, KeyCode.DELETE_OR_BACKSPACE),
-      )
-
-  val cmdTabMappings =
-      listOf(
           LKM(
               KeyCode.X,
               KeyCode.OPEN_BRACKET,
@@ -209,75 +210,19 @@ fun createLayerKeyRules(): Array<KarabinerRule> {
               KeyCode.CLOSE_BRACKET,
               listOf(ModifiersKeys.LEFT_COMMAND, ModifiersKeys.LEFT_SHIFT)),
       )
+      .forEach { (fromKeyP, toKeyP, mods, conditionsP) ->
+        rules.add(
+            karabinerRule {
+              layerKey = KeyCode.J
+              fromKey = fromKeyP
+              toKey = toKeyP
+              toKeyModifiers = mods
+              conditions = conditionsP
+            },
+        )
+      }
 
-  return arrayOf(
-      karabinerRule(
-          "F layer Key mappings",
-          *fLayerMappings
-              .flatMap { (fromKey, toKey, mods) ->
-                ManipulatorBuilder()
-                    .layerKey(KeyCode.F)
-                    .from(fromKey, optionalModifiers = listOf(ModifiersKeys.ANY))
-                    .to(toKey, modifiers = mods)
-                    .buildLayer()
-                    .toList()
-              }
-              .toTypedArray(),
-      ),
-      karabinerRule(
-          "bracket combos",
-          *bracketMappings
-              .flatMap { (fromKey, toKey, mods) ->
-                ManipulatorBuilder()
-                    .layerKey(KeyCode.F)
-                    .from(fromKey, optionalModifiers = listOf(ModifiersKeys.ANY))
-                    .to(toKey, modifiers = mods)
-                    .buildLayer()
-                    .toList()
-              }
-              .toTypedArray(),
-      ),
-      karabinerRule(
-          "J-key special character combinations",
-          *jLayerSpecialChars
-              .flatMap { (fromKey, toKey, mods) ->
-                ManipulatorBuilder()
-                    .layerKey(KeyCode.J)
-                    .from(fromKey, optionalModifiers = listOf(ModifiersKeys.ANY))
-                    .to(toKey, modifiers = mods)
-                    .buildLayer()
-                    .toList()
-              }
-              .toTypedArray(),
-      ),
-      karabinerRule(
-          "delete sequences",
-          *deleteMappings
-              .flatMap { mapping ->
-                ManipulatorBuilder()
-                    .layerKey(KeyCode.J)
-                    .from(mapping.fromKey, optionalModifiers = listOf(ModifiersKeys.ANY))
-                    .to(mapping.toKey, modifiers = mapping.toModifiers)
-                    .apply { mapping.conditions?.forEach { withCondition(it) } }
-                    .buildLayer()
-                    .toList()
-              }
-              .toTypedArray(),
-      ),
-      karabinerRule(
-          "cmd next/prev tab",
-          *cmdTabMappings
-              .flatMap { (fromKey, toKey, mods) ->
-                ManipulatorBuilder()
-                    .layerKey(KeyCode.J)
-                    .from(fromKey, optionalModifiers = listOf(ModifiersKeys.ANY))
-                    .to(toKey, modifiers = mods)
-                    .buildLayer()
-                    .toList()
-              }
-              .toTypedArray(),
-      ),
-  )
+  return rules.toTypedArray()
 }
 
 /** Creates manipulators for vim-style navigation with various modifier combinations */

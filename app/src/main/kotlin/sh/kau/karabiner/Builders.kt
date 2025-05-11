@@ -1,11 +1,84 @@
 package sh.kau.karabiner
 
+import java.util.stream.Collectors.toList
 import kotlinx.serialization.json.JsonPrimitive
 import sh.kau.karabiner.Condition.FrontmostApplicationIfCondition
 import sh.kau.karabiner.Condition.FrontmostApplicationUnlessCondition
 import sh.kau.karabiner.Condition.VariableIfCondition
 
 typealias ShellCmd = String
+
+class SimpleRuleBuilder(
+    var description: String = "",
+    var layerKey: KeyCode? = null,
+    var fromKey: KeyCode? = null,
+    //
+    var shellCommand: ShellCmd? = null,
+    var toKey: KeyCode? = null,
+) {
+  var toKeyModifiers: List<ModifiersKeys?>? = null
+  var conditions: List<Condition>? = null
+
+  fun toKeyModifiers(vararg modifiers: ModifiersKeys) {
+    if (modifiers.size == 0) return
+    toKeyModifiers = modifiers.toList()
+  }
+
+  fun conditions(vararg conditions: Condition) {
+    this.conditions = conditions.toList()
+  }
+}
+
+fun karabinerRule(description: String, vararg manipulators: Manipulator): KarabinerRule {
+  return KarabinerRule(description, manipulators.toList())
+}
+
+fun karabinerRule(
+    block: SimpleRuleBuilder.() -> Unit,
+): KarabinerRule {
+  val builder = SimpleRuleBuilder().apply(block)
+
+  //  if (builder.toKey != null && builder.shellCommand != null)
+  //      throw IllegalStateException("You can't have a shell command and a toKey for layers")
+
+  return when {
+    builder.layerKey != null -> {
+      val manipulators = mutableListOf<Manipulator>()
+      val variableName = "${builder.layerKey!!.name.lowercase()}-layer"
+
+      var toModifier: To? = null
+
+      builder.shellCommand?.let { toModifier = To(shellCommand = builder.shellCommand) }
+      builder.toKey?.let {
+        toModifier = To(keyCode = builder.toKey, modifiers = builder.toKeyModifiers)
+      }
+
+      if (toModifier == null) throw IllegalStateException("You haven't set a proper To instruction")
+
+      // Layer Keys will need an onPress manipulator and an onRelease manipulator
+      manipulators +=
+          Manipulator(
+              from = FromKeyWithAnyModifier(builder.fromKey!!),
+              to = listOf(toModifier),
+              conditions = buildIfLayerCondition(variableName) + builder.conditions.orEmpty())
+
+      manipulators +=
+          Manipulator(
+              from =
+                  From(
+                      simultaneous = listOf(builder.layerKey!!, builder.fromKey!!),
+                      simultaneousOptions = buildSimultaneousOptions(variableName),
+                  ),
+              to = buildToDownCommand(toModifier, variableName),
+              parameters = Parameters(simultaneousThresholdMilliseconds = 250),
+              conditions = builder.conditions.orEmpty())
+
+      KarabinerRule(builder.description, manipulators)
+    }
+
+    else -> throw IllegalStateException("Not implemented")
+  }
+}
 
 fun FromKeyWithAnyModifier(keycode: KeyCode): From =
     From(keycode, modifiers = Modifiers(optional = listOf(ModifiersKeys.ANY)))
@@ -31,57 +104,6 @@ fun buildSimultaneousOptions(variableName: String) =
         toAfterKeyUp = buildUpCommand(variableName),
     )
 
-fun karabinerRule(description: String, vararg manipulators: Manipulator): KarabinerRule {
-  return KarabinerRule(description, manipulators.toList())
-}
-
-fun karabinerRule(
-    block: SimpleRuleBuilder.() -> Unit,
-): KarabinerRule {
-
-  val builder = SimpleRuleBuilder().apply(block)
-
-  return when {
-    builder.layerKey != null -> {
-      val variableName = "${builder.layerKey!!.name.lowercase()}-layer"
-      val toShelCmd = To(shellCommand = builder.shellCommand)
-
-      val manipulator1 =
-          Manipulator(
-              from = FromKeyWithAnyModifier(builder.fromKey!!),
-              to = listOf(toShelCmd),
-              conditions = buildIfLayerCondition(variableName),
-          )
-
-      val manipulator2 =
-          Manipulator(
-              from =
-                  From(
-                      simultaneous = listOf(builder.layerKey!!, builder.fromKey!!),
-                      simultaneousOptions = buildSimultaneousOptions(variableName),
-                  ),
-              to = buildToDownCommand(toShelCmd, variableName),
-              parameters = Parameters(simultaneousThresholdMilliseconds = 250))
-
-      KarabinerRule(
-          builder.description,
-          listOf(
-              manipulator1,
-              manipulator2,
-          ))
-    }
-
-    else -> throw IllegalStateException("Not implemented")
-  }
-}
-
-class SimpleRuleBuilder(
-    var description: String = "",
-    var layerKey: KeyCode? = null,
-    var fromKey: KeyCode? = null,
-    var shellCommand: ShellCmd? = null,
-)
-
 fun forApp(vararg bundleIdentifiers: String): Condition {
   return FrontmostApplicationIfCondition(bundleIdentifiers = bundleIdentifiers.toList())
 }
@@ -89,9 +111,6 @@ fun forApp(vararg bundleIdentifiers: String): Condition {
 fun unlessApp(vararg bundleIdentifiers: String): Condition {
   return FrontmostApplicationUnlessCondition(bundleIdentifiers = bundleIdentifiers.toList())
 }
-
-/** Represents a shell command to be executed by Karabiner. */
-data class ShellCommand(val cmd: String)
 
 class ManipulatorBuilder {
   private var type: String = "basic"
@@ -131,7 +150,7 @@ class ManipulatorBuilder {
 
   fun to(
       keyCode: KeyCode? = null,
-      modifiers: List<ModifiersKeys>? = null,
+      modifiers: List<ModifiersKeys?>? = null,
       setVariable: SetVariable? = null,
       toObj: To? = null,
       mouseKey: MouseKey? = null,

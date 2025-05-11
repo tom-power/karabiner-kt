@@ -43,7 +43,7 @@ data class Modifiers(
 @Serializable
 data class To(
     @SerialName("key_code") val keyCode: KeyCode? = null,
-    val modifiers: List<ModifiersKeys>? = null,
+    val modifiers: List<ModifiersKeys?>? = null,
     @SerialName("consumer_key_code") val consumerKeyCode: String? = null,
     @SerialName("shell_command") val shellCommand: String? = null,
     @SerialName("set_variable") val setVariable: SetVariable? = null,

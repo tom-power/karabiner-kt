@@ -17,7 +17,7 @@ fun main() {
       Profile(
           name = "Default",
           selected = true,
-//          fnFunctionKeys = functionKeys(),
+          //          fnFunctionKeys = functionKeys(),
           complexModifications = ComplexModifications(rules = createMainRules()),
           virtualHidKeyboard = VirtualHidKeyboard(countryCode = 0, keyboardType = "ansi"),
           devices = deviceSpecificConfigs(),
@@ -55,44 +55,35 @@ fun main() {
 
 private fun deviceSpecificConfigs(): List<DeviceConfiguration> {
 
-
-
   return listOf(
-    DeviceConfiguration(
-      identifiers =
-        DeviceIdentifier(
-          isKeyboard = true,
-          isPointingDevice = true,
-          productId = 45919,
-          vendorId = 1133,
-        ),
-      ignore = false,
-      manipulateCapsLockLed = false,
-    ),
-
-    DeviceConfiguration(
-      identifiers = DeviceIdentifier(isPointingDevice = true),
-      simpleModifications =
-        listOf(
-          SimpleModification(
-            from =
-              SimpleModificationKey(
-                keyCode = KeyCode.RIGHT_COMMAND,
+      DeviceConfiguration(
+          identifiers =
+              DeviceIdentifier(
+                  isKeyboard = true,
+                  isPointingDevice = true,
+                  productId = 45919,
+                  vendorId = 1133,
               ),
-            to =
+          ignore = false,
+          manipulateCapsLockLed = false,
+      ),
+      DeviceConfiguration(
+          identifiers = DeviceIdentifier(isPointingDevice = true),
+          simpleModifications =
               listOf(
-                SimpleModificationValue(
-                  keyCode = KeyCode.RIGHT_CONTROL,
-                )
-              )
-          )
-        )
-    ),
-    DeviceConfiguration(
-      identifiers = DeviceIdentifier(isKeyboard = true, productId = 50475, vendorId = 1133),
-      ignore = true
-    )
-  )
+                  SimpleModification(
+                      from =
+                          SimpleModificationKey(
+                              keyCode = KeyCode.RIGHT_COMMAND,
+                          ),
+                      to =
+                          listOf(
+                              SimpleModificationValue(
+                                  keyCode = KeyCode.RIGHT_CONTROL,
+                              ))))),
+      DeviceConfiguration(
+          identifiers = DeviceIdentifier(isKeyboard = true, productId = 50475, vendorId = 1133),
+          ignore = true))
 }
 
 // Create fn function keys
