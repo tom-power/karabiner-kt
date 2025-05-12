@@ -794,12 +794,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -870,12 +865,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -946,12 +936,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1016,12 +1001,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1086,12 +1066,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1156,12 +1131,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1232,12 +1202,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1308,12 +1273,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1384,12 +1344,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1454,12 +1409,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1524,12 +1474,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1600,12 +1545,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1680,7 +1620,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "J-key layer mappings",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -1752,12 +1692,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1828,12 +1763,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1904,12 +1834,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -1980,12 +1905,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -2056,12 +1976,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -2147,12 +2062,7 @@
                                         ]
                                     }
                                 ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -2238,12 +2148,7 @@
                                         ]
                                     }
                                 ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -2329,12 +2234,7 @@
                                         ]
                                     }
                                 ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -2420,12 +2320,7 @@
                                         ]
                                     }
                                 ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -2490,12 +2385,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
@@ -2568,12 +2458,7 @@
                                     "basic.simultaneous_threshold_milliseconds": 250
                                 },
                                 "conditions": []
-                            }
-                        ]
-                    },
-                    {
-                        "description": "",
-                        "manipulators": [
+                            },
                             {
                                 "type": "basic",
                                 "from": {
