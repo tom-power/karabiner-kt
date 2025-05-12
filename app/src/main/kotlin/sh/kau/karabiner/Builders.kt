@@ -1,12 +1,43 @@
 package sh.kau.karabiner
 
-import java.util.stream.Collectors.toList
 import kotlinx.serialization.json.JsonPrimitive
 import sh.kau.karabiner.Condition.FrontmostApplicationIfCondition
 import sh.kau.karabiner.Condition.FrontmostApplicationUnlessCondition
 import sh.kau.karabiner.Condition.VariableIfCondition
 
 typealias ShellCmd = String
+
+@Deprecated("uses more complicated builder")
+fun karabinerRule(description: String, vararg manipulators: Manipulator): KarabinerRule {
+  return KarabinerRule(description, manipulators.toList())
+}
+
+class LayerKeyMapping(
+    var fromKey: KeyCode,
+    var toKey: KeyCode?,
+    var toModifiers: List<ModifiersKeys?>? = null,
+    var conditions: List<Condition>? = null
+)
+
+class LayerKeyRule(
+    var layerKey: KeyCode? = null,
+    var description: String = "",
+    var layerKeyMappings: List<LayerKeyMapping?>? = null
+) {
+  internal var mappings = mutableListOf<LayerKeyMapping>()
+}
+
+fun LayerKeyRule.mappings(intializer: LayerKeyMapping.() -> Unit) {
+//   mappings.add(LayerKeyMapping().apply(intializer)
+   TODO()
+}
+
+fun karabinerRule(
+  initializer: LayerKeyRule.() -> Unit,
+): KarabinerRule {
+  val builder = LayerKeyRule().apply(initializer)
+  TODO()
+}
 
 class SimpleRuleBuilder(
     var description: String = "",
@@ -29,11 +60,7 @@ class SimpleRuleBuilder(
   }
 }
 
-fun karabinerRule(description: String, vararg manipulators: Manipulator): KarabinerRule {
-  return KarabinerRule(description, manipulators.toList())
-}
-
-fun karabinerRule(
+fun karabinerRuleSimple(
     block: SimpleRuleBuilder.() -> Unit,
 ): KarabinerRule {
   val builder = SimpleRuleBuilder().apply(block)
