@@ -15,7 +15,7 @@ data class KarabinerRule(
 data class Manipulator(
     val type: String = "basic", // Typically "basic"
     val from: From,
-    val to: List<To>? = null,
+    @SerialName("to") val to: List<To>? = null,
     @SerialName("to_if_alone") val toIfAlone: List<To>? = null,
     @SerialName("to_after_key_up") val toAfterKeyUp: List<To>? = null,
     @SerialName("to_if_held_down") // This was missing in TS types but present in JSON

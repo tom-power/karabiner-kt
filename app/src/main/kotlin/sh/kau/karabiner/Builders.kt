@@ -1,6 +1,5 @@
 package sh.kau.karabiner
 
-import kotlin.collections.orEmpty
 import kotlinx.serialization.json.JsonPrimitive
 import sh.kau.karabiner.Condition.FrontmostApplicationIfCondition
 import sh.kau.karabiner.Condition.FrontmostApplicationUnlessCondition
@@ -8,10 +7,8 @@ import sh.kau.karabiner.Condition.VariableIfCondition
 
 typealias ShellCmd = String
 
-@Deprecated("uses more complicated builder")
-fun karabinerRule(description: String, vararg manipulators: Manipulator): KarabinerRule {
-  return KarabinerRule(description, manipulators.toList())
-}
+// region Rule Datastructures
+// -----------------------------------------
 
 class LayerKeyRule(
     var layerKey: KeyCode? = null,
@@ -38,6 +35,7 @@ class SimpleRule(
     var fromKey: KeyCode? = null,
     //
     var toKey: KeyCode? = null,
+    var toKeyIfAlone: KeyCode? = null,
     var shellCommand: ShellCmd? = null,
 ) {
   var toKeyModifiers: List<ModifiersKeys?>? = null
@@ -53,7 +51,52 @@ class SimpleRule(
   }
 }
 
+// endregion
+
+// region Karabiner Rule DSL
+// --------------------------
+
+@Deprecated("uses more complicated builder")
+fun karabinerRule(description: String, vararg manipulators: Manipulator): KarabinerRule {
+  return KarabinerRule(description, manipulators.toList())
+}
+
 fun karabinerRule(
+    block: SimpleRule.() -> Unit,
+): KarabinerRule {
+  val simpleRule = SimpleRule().apply(block)
+  return when {
+    simpleRule.layerKey != null -> {
+      karabinerRuleLayer {
+        description = simpleRule.description
+        layerKey = simpleRule.layerKey
+        mapping {
+          fromKey = simpleRule.fromKey
+          toKey = simpleRule.toKey
+          shellCommand = simpleRule.shellCommand
+          toModifiers = simpleRule.toKeyModifiers
+          conditions = simpleRule.conditions
+        }
+      }
+    }
+
+    simpleRule.layerKey == null -> {
+
+      KarabinerRule(
+          simpleRule.description,
+          listOf(
+              Manipulator(
+                  from = buildFromWithAnyModifier(simpleRule.fromKey!!),
+              )),
+      )
+      TODO()
+    }
+
+    else -> throw IllegalStateException("Not implemented")
+  }
+}
+
+fun karabinerRuleLayer(
     initializer: LayerKeyRule.() -> Unit,
 ): KarabinerRule {
   val layerKeyRule = LayerKeyRule().apply(initializer)
@@ -62,109 +105,81 @@ fun karabinerRule(
   val variableName = "${layerKeyRule.layerKey!!.name.lowercase()}-layer"
 
   layerKeyRule.mappings.forEach { keyMapping ->
-
-    var toModifier: To? = null
-
-    keyMapping.shellCommand?.let { toModifier = To(shellCommand = keyMapping.shellCommand) }
-    keyMapping.toKey?.let {
-      toModifier = To(keyCode = keyMapping.toKey, modifiers = keyMapping.toModifiers)
-    }
-
-    if (toModifier == null) throw IllegalStateException("You haven't set a proper To instruction")
+    var toModifier: To =
+        buildToInstruction(
+            keyMapping.shellCommand,
+            keyMapping.toKey,
+            keyMapping.toModifiers,
+        )
 
     // Layer Keys will need an onPress manipulator and an onRelease manipulator
     manipulators +=
-      Manipulator(
-        from = FromKeyWithAnyModifier(keyMapping.fromKey!!),
-        to = listOf(toModifier),
-        conditions = buildIfLayerCondition(variableName) + keyMapping.conditions.orEmpty())
-
+        Manipulator(
+            from = buildFromWithAnyModifier(keyMapping.fromKey!!),
+            to = listOf(toModifier),
+            conditions = ifVarSet(variableName) + keyMapping.conditions.orEmpty())
 
     manipulators +=
-      Manipulator(
-        from =
-          From(
-            simultaneous = listOf(layerKeyRule.layerKey!!, keyMapping.fromKey!!),
-            simultaneousOptions = buildSimultaneousOptions(variableName),
-          ),
-        to = buildToDownCommand(toModifier, variableName),
-        parameters = Parameters(simultaneousThresholdMilliseconds = 250),
-        conditions = keyMapping.conditions.orEmpty())
+        Manipulator(
+            from =
+                From(
+                    simultaneous = listOf(layerKeyRule.layerKey!!, keyMapping.fromKey!!),
+                    simultaneousOptions = buildSimultaneousOptionsVar(variableName),
+                ),
+            to = setVarOn(toModifier, variableName),
+            parameters = Parameters(simultaneousThresholdMilliseconds = 250),
+            conditions = keyMapping.conditions.orEmpty())
   }
 
   return KarabinerRule(layerKeyRule.description, manipulators)
 }
 
-fun karabinerRuleSimple(
-    block: SimpleRule.() -> Unit,
-): KarabinerRule {
-  val simpleRule = SimpleRule().apply(block)
+// endregion
 
-  //  if (builder.toKey != null && builder.shellCommand != null)
-  //      throw IllegalStateException("You can't have a shell command and a toKey for layers")
+// region builder instructions
+// ---------------------------
 
-  return when {
-    simpleRule.layerKey != null -> {
-      val manipulators = mutableListOf<Manipulator>()
-      val variableName = "${simpleRule.layerKey!!.name.lowercase()}-layer"
-
-      var toModifier: To? = null
-
-      simpleRule.shellCommand?.let { toModifier = To(shellCommand = simpleRule.shellCommand) }
-      simpleRule.toKey?.let {
-        toModifier = To(keyCode = simpleRule.toKey, modifiers = simpleRule.toKeyModifiers)
-      }
-
-      if (toModifier == null) throw IllegalStateException("You haven't set a proper To instruction")
-
-      // Layer Keys will need an onPress manipulator and an onRelease manipulator
-      manipulators +=
-          Manipulator(
-              from = FromKeyWithAnyModifier(simpleRule.fromKey!!),
-              to = listOf(toModifier),
-              conditions = buildIfLayerCondition(variableName) + simpleRule.conditions.orEmpty())
-
-      manipulators +=
-          Manipulator(
-              from =
-                  From(
-                      simultaneous = listOf(simpleRule.layerKey!!, simpleRule.fromKey!!),
-                      simultaneousOptions = buildSimultaneousOptions(variableName),
-                  ),
-              to = buildToDownCommand(toModifier, variableName),
-              parameters = Parameters(simultaneousThresholdMilliseconds = 250),
-              conditions = simpleRule.conditions.orEmpty())
-
-      KarabinerRule(simpleRule.description, manipulators)
-    }
-
-    else -> throw IllegalStateException("Not implemented")
-  }
-}
-
-fun FromKeyWithAnyModifier(keycode: KeyCode): From =
+fun buildFromWithAnyModifier(keycode: KeyCode): From =
     From(keycode, modifiers = Modifiers(optional = listOf(ModifiersKeys.ANY)))
 
-fun buildToDownCommand(to: To, variableName: String) =
-    listOf(
-        To(setVariable = SetVariable(variableName, JsonPrimitive(1))),
-        to,
-    )
+fun buildToInstruction(
+    cmd: ShellCmd? = null,
+    toKey: KeyCode? = null,
+    toKeyModifiers: List<ModifiersKeys?>? = null
+): To {
 
-fun buildUpCommand(variableName: String) =
-    listOf(To(setVariable = SetVariable(variableName, JsonPrimitive(0))))
+  if (cmd != null && toKey != null)
+      throw IllegalArgumentException("Cannot have both a key and a shell command")
 
-fun buildIfLayerCondition(variableName: String) =
-    listOf(VariableIfCondition(variableName, JsonPrimitive(1)))
+  if (cmd != null) return To(shellCommand = cmd)
+  if (toKey != null) return To(keyCode = toKey, modifiers = toKeyModifiers)
 
-fun buildSimultaneousOptions(variableName: String) =
+  throw IllegalStateException("Could not build To instruction")
+}
+
+fun buildSimultaneousOptionsVar(variableName: String) =
     SimultaneousOptions(
         detectKeyDownUninterruptedly = true,
         keyDownOrder = "strict",
         keyUpOrder = "strict_inverse",
         keyUpWhen = "any",
-        toAfterKeyUp = buildUpCommand(variableName),
+        toAfterKeyUp = unsetVar(variableName),
     )
+
+fun setVarOn(to: To, variableName: String) =
+  listOf(
+    To(setVariable = SetVariable(variableName, JsonPrimitive(1))),
+    to,
+  )
+
+fun unsetVar(variableName: String) =
+  listOf(To(setVariable = SetVariable(variableName, JsonPrimitive(0))))
+
+fun ifVarSet(variableName: String) =
+  listOf(VariableIfCondition(variableName, JsonPrimitive(1)))
+
+
+// endregion
 
 fun forApp(vararg bundleIdentifiers: String): Condition {
   return FrontmostApplicationIfCondition(bundleIdentifiers = bundleIdentifiers.toList())

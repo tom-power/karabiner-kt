@@ -18,31 +18,31 @@ fun createMainRules(): List<KarabinerRule> {
       ),
       createCapsLockRules(),
       *createLayerKeyRules(),
-      karabinerRuleSimple {
+      karabinerRule {
         description = "O + 0 -> Raycast Confetti"
         layerKey = KeyCode.O
         fromKey = KeyCode.NUM_0
         shellCommand = "open raycast://extensions/raycast/raycast/confetti"
       },
-      karabinerRuleSimple {
+      karabinerRule {
         description = "O + 1 -> Obsidian"
         layerKey = KeyCode.O
         fromKey = KeyCode.NUM_1
         shellCommand = "open -a Obsidian.app"
       },
-      karabinerRuleSimple {
+      karabinerRule {
         description = "O + 2 -> Google Chrome"
         layerKey = KeyCode.O
         fromKey = KeyCode.NUM_2
         shellCommand = "open -a 'Google Chrome.app'"
       },
-      karabinerRuleSimple {
+      karabinerRule {
         description = "O + 3 -> Warp"
         layerKey = KeyCode.O
         fromKey = KeyCode.NUM_3
         shellCommand = "open -a 'Warp.app'"
       },
-      karabinerRuleSimple {
+      karabinerRule {
         description = "O + 4 -> Cursor"
         layerKey = KeyCode.O
         fromKey = KeyCode.NUM_4
@@ -55,7 +55,7 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
     mutableListOf<KarabinerRule>()
         .apply {
           add(
-              karabinerRule {
+              karabinerRuleLayer {
                 description = "F-key layer mappings"
                 layerKey = KeyCode.F
 
@@ -140,7 +140,7 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
               })
 
           add(
-              karabinerRule {
+              karabinerRuleLayer {
                 description = "J-key layer mappings"
                 layerKey = KeyCode.J
 
