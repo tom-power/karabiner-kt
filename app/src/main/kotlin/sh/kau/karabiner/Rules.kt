@@ -62,23 +62,24 @@ fun createLayerKeyRules(): Array<KarabinerRule> {
       val conditions: List<Condition>? = null
   )
 
-//  karabinerRule {
-//    description = "F-key layer mappings"
-//    layerKey = KeyCode.F
-//    mapping {
-//      fromKey = KeyCode.Y
-//      toKey = KeyCode.NUM_6
-//      toModifiers = listOf(ModifiersKeys.LEFT_SHIFT)
-//    }
-//  }
-
   return mutableListOf<KarabinerRule>()
       .apply {
+        add(
+            karabinerRule {
+              description = "F-key layer mappings"
+              layerKey = KeyCode.F
+              mapping {
+                fromKey = KeyCode.Y
+                toKey = KeyCode.NUM_6
+                toModifiers = listOf(ModifiersKeys.LEFT_SHIFT)
+              }
+            })
+
         listOf(
                 // --- mapped to right hand side Shift num keys -
                 //   Y U I
                 //   ^ & *
-                LKM(KeyCode.Y, KeyCode.NUM_6, listOf(ModifiersKeys.LEFT_SHIFT)),
+//                LKM(KeyCode.Y, KeyCode.NUM_6, listOf(ModifiersKeys.LEFT_SHIFT)),
                 LKM(KeyCode.U, KeyCode.NUM_7, listOf(ModifiersKeys.LEFT_SHIFT)),
                 LKM(KeyCode.I, KeyCode.NUM_8, listOf(ModifiersKeys.LEFT_SHIFT)),
 
