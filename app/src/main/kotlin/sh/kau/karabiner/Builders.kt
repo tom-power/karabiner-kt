@@ -13,8 +13,8 @@ fun karabinerRule(description: String, vararg manipulators: Manipulator): Karabi
 }
 
 class LayerKeyMapping(
-    var fromKey: KeyCode,
-    var toKey: KeyCode?,
+    var fromKey: KeyCode? = null,
+    var toKey: KeyCode? = null,
     var toModifiers: List<ModifiersKeys?>? = null,
     var conditions: List<Condition>? = null
 )
@@ -22,22 +22,25 @@ class LayerKeyMapping(
 class LayerKeyRule(
     var layerKey: KeyCode? = null,
     var description: String = "",
-    var layerKeyMappings: List<LayerKeyMapping?>? = null
 ) {
   internal var mappings = mutableListOf<LayerKeyMapping>()
+
+  fun mapping(initializer: LayerKeyMapping.() -> Unit) {
+    mappings.add(LayerKeyMapping().apply(initializer))
+  }
 }
+
 
 fun LayerKeyRule.mappings(intializer: LayerKeyMapping.() -> Unit) {
-//   mappings.add(LayerKeyMapping().apply(intializer)
-   TODO()
+   mappings.add(LayerKeyMapping().apply(intializer))
 }
 
-fun karabinerRule(
-  initializer: LayerKeyRule.() -> Unit,
-): KarabinerRule {
-  val builder = LayerKeyRule().apply(initializer)
-  TODO()
-}
+//fun karabinerRule(
+//  initializer: LayerKeyRule.() -> Unit,
+//): KarabinerRule {
+//  val builder = LayerKeyRule().apply(initializer)
+//  TODO()
+//}
 
 class SimpleRuleBuilder(
     var description: String = "",

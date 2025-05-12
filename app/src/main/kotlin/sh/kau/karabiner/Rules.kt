@@ -1,7 +1,9 @@
 package sh.kau.karabiner
 
+import com.sun.beans.introspect.PropertyInfo.Name.description
 import com.sun.tools.javac.main.Option.O
 import sh.kau.karabiner.Condition.DeviceIfCondition
+import sun.security.util.SignatureUtil.fromKey
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
@@ -53,111 +55,116 @@ fun createMainRules(): List<KarabinerRule> {
 }
 
 fun createLayerKeyRules(): Array<KarabinerRule> {
-
-  val rules = mutableListOf<KarabinerRule>()
-
   data class LKM(
-    val fromKey: KeyCode,
-    val toKey: KeyCode,
-    val toModifiers: List<ModifiersKeys?>? = null,
-    val conditions: List<Condition>? = null
+      val fromKey: KeyCode,
+      val toKey: KeyCode,
+      val toModifiers: List<ModifiersKeys?>? = null,
+      val conditions: List<Condition>? = null
   )
 
 //  karabinerRule {
-//    layerKey =
+//    description = "F-key layer mappings"
+//    layerKey = KeyCode.F
+//    mapping {
+//      fromKey = KeyCode.Y
+//      toKey = KeyCode.NUM_6
+//      toModifiers = listOf(ModifiersKeys.LEFT_SHIFT)
+//    }
 //  }
 
-  listOf(
-    // --- mapped to right hand side Shift num keys -
-    //   Y U I
-    //   ^ & *
-    LKM(KeyCode.Y, KeyCode.NUM_6, listOf(ModifiersKeys.LEFT_SHIFT)),
-    LKM(KeyCode.U, KeyCode.NUM_7, listOf(ModifiersKeys.LEFT_SHIFT)),
-    LKM(KeyCode.I, KeyCode.NUM_8, listOf(ModifiersKeys.LEFT_SHIFT)),
+  return mutableListOf<KarabinerRule>()
+      .apply {
+        listOf(
+                // --- mapped to right hand side Shift num keys -
+                //   Y U I
+                //   ^ & *
+                LKM(KeyCode.Y, KeyCode.NUM_6, listOf(ModifiersKeys.LEFT_SHIFT)),
+                LKM(KeyCode.U, KeyCode.NUM_7, listOf(ModifiersKeys.LEFT_SHIFT)),
+                LKM(KeyCode.I, KeyCode.NUM_8, listOf(ModifiersKeys.LEFT_SHIFT)),
 
-    // special one - \
-    LKM(KeyCode.O, KeyCode.BACKSLASH, null),
+                // special one - \
+                LKM(KeyCode.O, KeyCode.BACKSLASH, null),
 
-    // special ones
-    //  L ; '
-    //  - = +
-    LKM(KeyCode.L, KeyCode.HYPHEN, null),
-    LKM(KeyCode.SEMICOLON, KeyCode.EQUAL_SIGN, null),
-    LKM(KeyCode.QUOTE, KeyCode.EQUAL_SIGN, listOf(ModifiersKeys.LEFT_SHIFT)),
+                // special ones
+                //  L ; '
+                //  - = +
+                LKM(KeyCode.L, KeyCode.HYPHEN, null),
+                LKM(KeyCode.SEMICOLON, KeyCode.EQUAL_SIGN, null),
+                LKM(KeyCode.QUOTE, KeyCode.EQUAL_SIGN, listOf(ModifiersKeys.LEFT_SHIFT)),
 
-    // J K
-    // ( )
-    LKM(KeyCode.J, KeyCode.NUM_9, listOf(ModifiersKeys.LEFT_SHIFT)),
-    LKM(KeyCode.K, KeyCode.NUM_0, listOf(ModifiersKeys.LEFT_SHIFT)),
-    // M ,
-    // [ ]
-    LKM(KeyCode.M, KeyCode.OPEN_BRACKET, null),
-    LKM(KeyCode.COMMA, KeyCode.CLOSE_BRACKET, null),
-    // . /
-    // { }
-    LKM(KeyCode.PERIOD, KeyCode.OPEN_BRACKET, listOf(ModifiersKeys.LEFT_SHIFT)),
-    LKM(KeyCode.SLASH, KeyCode.CLOSE_BRACKET, listOf(ModifiersKeys.LEFT_SHIFT)),
-  )
-    .forEach { (fromKeyP, toKeyP, mods) ->
-      rules.add(
-        karabinerRuleSimple {
-          layerKey = KeyCode.F
-          fromKey = fromKeyP
-          toKey = toKeyP
-          toKeyModifiers = mods
-        },
-      )
-    }
+                // J K
+                // ( )
+                LKM(KeyCode.J, KeyCode.NUM_9, listOf(ModifiersKeys.LEFT_SHIFT)),
+                LKM(KeyCode.K, KeyCode.NUM_0, listOf(ModifiersKeys.LEFT_SHIFT)),
+                // M ,
+                // [ ]
+                LKM(KeyCode.M, KeyCode.OPEN_BRACKET, null),
+                LKM(KeyCode.COMMA, KeyCode.CLOSE_BRACKET, null),
+                // . /
+                // { }
+                LKM(KeyCode.PERIOD, KeyCode.OPEN_BRACKET, listOf(ModifiersKeys.LEFT_SHIFT)),
+                LKM(KeyCode.SLASH, KeyCode.CLOSE_BRACKET, listOf(ModifiersKeys.LEFT_SHIFT)),
+            )
+            .forEach { (fromKeyP, toKeyP, mods) ->
+              add(
+                  karabinerRuleSimple {
+                    layerKey = KeyCode.F
+                    fromKey = fromKeyP
+                    toKey = toKeyP
+                    toKeyModifiers = mods
+                  },
+              )
+            }
 
-  listOf(
-    LKM(KeyCode.T, KeyCode.NUM_5, listOf(ModifiersKeys.LEFT_SHIFT)),
-    LKM(KeyCode.R, KeyCode.NUM_4, listOf(ModifiersKeys.LEFT_SHIFT)),
-    LKM(KeyCode.E, KeyCode.NUM_3, listOf(ModifiersKeys.LEFT_SHIFT)),
-    LKM(KeyCode.W, KeyCode.NUM_2, listOf(ModifiersKeys.LEFT_SHIFT)),
-    LKM(KeyCode.Q, KeyCode.NUM_1, listOf(ModifiersKeys.LEFT_SHIFT)),
-    LKM(
-      KeyCode.S,
-      KeyCode.U,
-      listOf(ModifiersKeys.LEFT_CONTROL),
-      listOf(forApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))),
-    LKM(
-      KeyCode.S,
-      KeyCode.DELETE_OR_BACKSPACE,
-      listOf(ModifiersKeys.LEFT_COMMAND),
-      listOf(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))),
-    LKM(
-      KeyCode.D,
-      KeyCode.W,
-      listOf(ModifiersKeys.LEFT_CONTROL),
-      listOf(forApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))),
-    LKM(
-      KeyCode.D,
-      KeyCode.DELETE_OR_BACKSPACE,
-      listOf(ModifiersKeys.LEFT_OPTION),
-      listOf(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))),
-    LKM(KeyCode.F, KeyCode.DELETE_OR_BACKSPACE),
-    LKM(
-      KeyCode.X,
-      KeyCode.OPEN_BRACKET,
-      listOf(ModifiersKeys.LEFT_COMMAND, ModifiersKeys.LEFT_SHIFT)),
-    LKM(
-      KeyCode.C,
-      KeyCode.CLOSE_BRACKET,
-      listOf(ModifiersKeys.LEFT_COMMAND, ModifiersKeys.LEFT_SHIFT)),
-  )
-    .forEach { (fromKeyP, toKeyP, mods, conditionsP) ->
-      rules.add(
-        karabinerRuleSimple {
-          layerKey = KeyCode.J
-          fromKey = fromKeyP
-          toKey = toKeyP
-          toKeyModifiers = mods
-          conditions = conditionsP
-        },
-      )
-    }
-
-  return rules.toTypedArray()
+        listOf(
+                LKM(KeyCode.T, KeyCode.NUM_5, listOf(ModifiersKeys.LEFT_SHIFT)),
+                LKM(KeyCode.R, KeyCode.NUM_4, listOf(ModifiersKeys.LEFT_SHIFT)),
+                LKM(KeyCode.E, KeyCode.NUM_3, listOf(ModifiersKeys.LEFT_SHIFT)),
+                LKM(KeyCode.W, KeyCode.NUM_2, listOf(ModifiersKeys.LEFT_SHIFT)),
+                LKM(KeyCode.Q, KeyCode.NUM_1, listOf(ModifiersKeys.LEFT_SHIFT)),
+                LKM(
+                    KeyCode.S,
+                    KeyCode.U,
+                    listOf(ModifiersKeys.LEFT_CONTROL),
+                    listOf(forApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))),
+                LKM(
+                    KeyCode.S,
+                    KeyCode.DELETE_OR_BACKSPACE,
+                    listOf(ModifiersKeys.LEFT_COMMAND),
+                    listOf(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))),
+                LKM(
+                    KeyCode.D,
+                    KeyCode.W,
+                    listOf(ModifiersKeys.LEFT_CONTROL),
+                    listOf(forApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))),
+                LKM(
+                    KeyCode.D,
+                    KeyCode.DELETE_OR_BACKSPACE,
+                    listOf(ModifiersKeys.LEFT_OPTION),
+                    listOf(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))),
+                LKM(KeyCode.F, KeyCode.DELETE_OR_BACKSPACE),
+                LKM(
+                    KeyCode.X,
+                    KeyCode.OPEN_BRACKET,
+                    listOf(ModifiersKeys.LEFT_COMMAND, ModifiersKeys.LEFT_SHIFT)),
+                LKM(
+                    KeyCode.C,
+                    KeyCode.CLOSE_BRACKET,
+                    listOf(ModifiersKeys.LEFT_COMMAND, ModifiersKeys.LEFT_SHIFT)),
+            )
+            .forEach { (fromKeyP, toKeyP, mods, conditionsP) ->
+              add(
+                  karabinerRuleSimple {
+                    layerKey = KeyCode.J
+                    fromKey = fromKeyP
+                    toKey = toKeyP
+                    toKeyModifiers = mods
+                    conditions = conditionsP
+                  },
+              )
+            }
+      }
+      .toTypedArray()
 }
 
 /** --- Caps Lock -> Escape (alone) -> Ctrl (on hold) -> hold + Vim keys -> Arrow/Mouse */
