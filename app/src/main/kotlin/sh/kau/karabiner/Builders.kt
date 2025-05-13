@@ -54,6 +54,8 @@ class LayerKeyRule(
   fun mapping(block: MappingRule.() -> Unit) {
     mappings.add(MappingRule().apply(block))
   }
+
+  fun variableName() = "${layerKey!!.name.lowercase()}-layer"
 }
 
 // endregion
@@ -66,86 +68,78 @@ fun karabinerRule(description: String, vararg manipulators: Manipulator): Karabi
   return KarabinerRule(description, manipulators.toList())
 }
 
-fun karabinerRule(
+/**
+ * Just allows for a nicer API (without mapping nesting)
+ * for Single Rules
+ */
+fun karabinerRuleSingle(
     block: SingleRule.() -> Unit,
 ): KarabinerRule {
   val singleRule = SingleRule().apply(block)
-
-  return when {
-    singleRule.layerKey == null -> {
-      KarabinerRule(
-          singleRule.description,
-          listOf(
-              Manipulator(
-                  from =
-                      From.with(
-                          singleRule.fromKey!!,
-                          singleRule.fromModifiers,
-                      ),
-                  to =
-                      To.with(toKey = singleRule.toKey, toKeyModifiers = singleRule.toKeyModifiers),
-                  toIfAlone = To.with(toKey = singleRule.toKeyIfAlone),
-                  conditions =
-                      if (singleRule.conditions.isEmpty()) null else singleRule.conditions)),
-      )
+  return karabinerRule {
+    description = singleRule.description
+    layerKey = singleRule.layerKey
+    mapping {
+      fromKey = singleRule.fromKey
+      toKey = singleRule.toKey
+      toModifiers = singleRule.toKeyModifiers
+      toKeyIfAlone = singleRule.toKeyIfAlone
+      shellCommand = singleRule.shellCommand
+      conditions = singleRule.conditions
     }
-
-    singleRule.layerKey != null -> {
-      // delegate to karabinerRuleLayer
-      karabinerRuleLayer {
-        description = singleRule.description
-        layerKey = singleRule.layerKey
-        mapping {
-          fromKey = singleRule.fromKey
-          toKey = singleRule.toKey
-          shellCommand = singleRule.shellCommand
-          toModifiers = singleRule.toKeyModifiers
-          conditions = singleRule.conditions
-        }
-      }
-    }
-
-    else -> throw IllegalStateException("Not implemented")
   }
 }
 
-fun karabinerRuleLayer(
+fun karabinerRule(
     block: LayerKeyRule.() -> Unit,
 ): KarabinerRule {
   val layerKeyRule = LayerKeyRule().apply(block)
   val manipulators = mutableListOf<Manipulator>()
 
-  val variableName = "${layerKeyRule.layerKey!!.name.lowercase()}-layer"
-
   layerKeyRule.mappings.forEach { keyMapping ->
-    var toModifier =
+    val fromModifier =
+        From.with(
+            keyMapping.fromKey!!,
+            keyMapping.fromModifiers,
+        )
+
+    val toModifier =
         To.with(
             keyMapping.toKey,
             keyMapping.toModifiers,
             keyMapping.shellCommand,
         )
 
-    // Layer Keys will need an onPress manipulator and an onRelease manipulator
-    manipulators +=
-        Manipulator(
-            from =
-                From.with(
-                    keyMapping.fromKey!!,
-                    keyMapping.fromModifiers,
-                ),
-            to = toModifier,
-            conditions = ifVarSet(variableName) + keyMapping.conditions)
+    if (layerKeyRule.layerKey == null) {
+      val toAloneModifer = To.with(keyMapping.toKeyIfAlone)
 
-    manipulators +=
-        Manipulator(
-            from =
-                From(
-                    simultaneous = listOf(layerKeyRule.layerKey!!, keyMapping.fromKey!!),
-                    simultaneousOptions = buildSimultaneousOptionsVar(variableName),
-                ),
-            to = setVarOn(toModifier, variableName),
-            parameters = Parameters(simultaneousThresholdMilliseconds = 250),
-            conditions = keyMapping.conditions)
+      manipulators +=
+          Manipulator(
+              from = fromModifier,
+              to = toModifier,
+              toIfAlone = toAloneModifer,
+              conditions = if (keyMapping.conditions.isEmpty()) null else keyMapping.conditions,
+          )
+    } else {
+      val variableName = layerKeyRule.variableName()
+      // Layer Keys will need an onPress manipulator and an onRelease manipulator
+      manipulators +=
+          Manipulator(
+              from = fromModifier,
+              to = toModifier,
+              conditions = ifVarSet(variableName) + keyMapping.conditions)
+
+      manipulators +=
+          Manipulator(
+              from =
+                  From(
+                      simultaneous = listOf(layerKeyRule.layerKey!!, keyMapping.fromKey!!),
+                      simultaneousOptions = buildSimultaneousOptionsVar(variableName),
+                  ),
+              to = setVarOn(toModifier, variableName),
+              parameters = Parameters(simultaneousThresholdMilliseconds = 250),
+              conditions = keyMapping.conditions)
+    }
   }
 
   return KarabinerRule(layerKeyRule.description, manipulators)
