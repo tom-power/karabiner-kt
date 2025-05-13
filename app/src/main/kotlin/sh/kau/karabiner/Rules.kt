@@ -279,31 +279,33 @@ fun createCapsLockRules(): Array<KarabinerRule> {
 
   // Mouse control with arrow keys
   listOf(
-          Pair(KeyCode.DOWN_ARROW, MouseKey(y = 1536)),
-          Pair(KeyCode.UP_ARROW, MouseKey(y = -1536)),
-          Pair(KeyCode.LEFT_ARROW, MouseKey(x = -1536)),
-          Pair(KeyCode.RIGHT_ARROW, MouseKey(x = 1536)),
-      )
-      .forEach { (key, mouseKeyValue) ->
-        manipulators.add(
-            ManipulatorBuilder()
-                .from(key, mandatoryModifiers = listOf(RIGHT_CONTROL))
-                .to(mouseKey = mouseKeyValue)
-                .build())
-      }
+    Pair(KeyCode.DOWN_ARROW, MouseKey(y = 1536)),
+    Pair(KeyCode.UP_ARROW, MouseKey(y = -1536)),
+    Pair(KeyCode.LEFT_ARROW, MouseKey(x = -1536)),
+    Pair(KeyCode.RIGHT_ARROW, MouseKey(x = 1536)),
+  )
+    .forEach { (key, mouseKeyValue) ->
+      manipulators.add(
+        ManipulatorBuilder()
+          .from(key, mandatoryModifiers = listOf(RIGHT_CONTROL))
+          .to(mouseKey = mouseKeyValue)
+          .build())
+    }
 
   // Add return_or_enter + right_control to click mouse buttons
   manipulators.add(
-      ManipulatorBuilder()
-          .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(RIGHT_CONTROL))
-          .to(pointingButton = "button1")
-          .build())
+    ManipulatorBuilder()
+      .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(RIGHT_CONTROL))
+      .to(pointingButton = "button1")
+      .build())
 
   manipulators.add(
-      ManipulatorBuilder()
-          .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(LEFT_COMMAND, RIGHT_CONTROL))
-          .to(pointingButton = "button2")
-          .build())
+    ManipulatorBuilder()
+      .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(LEFT_COMMAND, RIGHT_CONTROL))
+      .to(pointingButton = "button2")
+      .build())
+
+
 
   rules.add(KarabinerRule("Caps Lock -> Escape (alone) | Ctrl (simple)", manipulators))
 
