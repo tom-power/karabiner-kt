@@ -240,43 +240,39 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
 fun createCapsLockRules(): Array<KarabinerRule> {
   val rules = mutableListOf<KarabinerRule>()
 
-  rules.add(
-      karabinerRuleSingle {
-        description = "Caps Lock alone -> Escape, held -> right_control"
-        fromKey = KeyCode.CAPS_LOCK
-        toKey = KeyCode.RIGHT_CONTROL
-        toKeyIfAlone = KeyCode.ESCAPE
-      })
+  rules.addAll(
+      listOf(
+          karabinerRuleSingle {
+            description = "Caps Lock alone -> Escape, held -> right_control"
+            fromKey = KeyCode.CAPS_LOCK
+            toKey = KeyCode.RIGHT_CONTROL
+            toKeyIfAlone = KeyCode.ESCAPE
+          },
+          // using the right_control mapping above
+          // we map vim movements to it
+          karabinerRuleSingle {
+            description = "CapsLock + Shift + J -> Shift + ↓"
+            fromKey = KeyCode.J
+            fromModifiers = FromModifiers(mandatory = listOf(LEFT_SHIFT, RIGHT_CONTROL))
+            toKey = KeyCode.DOWN_ARROW
+            toModifiers = listOf(LEFT_SHIFT)
+            unlessApp {
+              bundleIds = listOf("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$")
+            }
+          },
+          karabinerRuleSingle {
+            description = "CapsLock + Shift + J -> Shift + ↓"
+            fromKey = KeyCode.J
+            fromModifiers = FromModifiers(mandatory = listOf(LEFT_SHIFT, RIGHT_CONTROL))
+            toKey = KeyCode.J
+            toModifiers = listOf(LEFT_CONTROL, LEFT_SHIFT)
+            forApp {
+              bundleIds = listOf("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$")
+            }
+          },
+      ))
 
   val manipulators = mutableListOf<Manipulator>()
-
-  //  karabinerRule {
-  //    fromKey = KeyCode.J
-  //    fromModifiers = FromModifiers(mandatory = listOf(LEFT_SHIFT, RIGHT_CONTROL))
-  //    toKey = KeyCode.DOWN_ARROW
-  //    toKeyModifiers = listOf(LEFT_SHIFT)
-  //    unlessApp {
-  //      bundleIds = listOf("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$",
-  // "^com\\.googlecode\\.iterm2$")
-  //    }
-  //  }
-
-  manipulators.add(
-      ManipulatorBuilder()
-          .from(
-              KeyCode.J,
-              mandatoryModifiers = listOf(LEFT_SHIFT, RIGHT_CONTROL),
-          )
-          .to(keyCode = KeyCode.DOWN_ARROW, modifiers = listOf(LEFT_SHIFT))
-          .withCondition(unlessApp("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$"))
-          .build())
-
-  manipulators.add(
-      ManipulatorBuilder()
-          .from(KeyCode.J, mandatoryModifiers = listOf(LEFT_SHIFT, RIGHT_CONTROL))
-          .to(keyCode = KeyCode.J, modifiers = listOf(LEFT_CONTROL, LEFT_SHIFT))
-          .withCondition(forApp("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$"))
-          .build())
 
   // CapLock + Vim keys -> quick arrow keys (along with modifier combinations)
   manipulators.addAll(createVimNavigationManipulators())

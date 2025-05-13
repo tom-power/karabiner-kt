@@ -13,7 +13,6 @@ open class MappingRule(
     var fromKey: KeyCode? = null,
     var fromModifiers: FromModifiers? = null, // TODO
     var toKey: KeyCode? = null,
-    var toKeyModifiers: List<ModifierKeyCode?>? = null, // TODO
     var toKeyIfAlone: KeyCode? = null, // TODO
     var shellCommand: ShellCmd? = null,
     var toModifiers: List<ModifierKeyCode?>? = null,
@@ -68,10 +67,7 @@ fun karabinerRule(description: String, vararg manipulators: Manipulator): Karabi
   return KarabinerRule(description, manipulators.toList())
 }
 
-/**
- * Just allows for a nicer API (without mapping nesting)
- * for Single Rules
- */
+/** Just allows for a nicer API (without mapping nesting) for Single Rules */
 fun karabinerRuleSingle(
     block: SingleRule.() -> Unit,
 ): KarabinerRule {
@@ -81,8 +77,9 @@ fun karabinerRuleSingle(
     layerKey = singleRule.layerKey
     mapping {
       fromKey = singleRule.fromKey
+      fromModifiers = singleRule.fromModifiers
       toKey = singleRule.toKey
-      toModifiers = singleRule.toKeyModifiers
+      toModifiers = singleRule.toModifiers
       toKeyIfAlone = singleRule.toKeyIfAlone
       shellCommand = singleRule.shellCommand
       conditions = singleRule.conditions
@@ -111,7 +108,7 @@ fun karabinerRule(
         )
 
     if (layerKeyRule.layerKey == null) {
-      val toAloneModifer = To.with(keyMapping.toKeyIfAlone)
+      val toAloneModifer = keyMapping.toKeyIfAlone?.let { To.with(keyMapping.toKeyIfAlone) }
 
       manipulators +=
           Manipulator(

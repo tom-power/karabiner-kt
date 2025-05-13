@@ -78,7 +78,7 @@
                         ]
                     },
                     {
-                        "description": "Caps Lock -> Escape (alone) | Ctrl (simple)",
+                        "description": "CapsLock + Shift + J -> Shift + ↓",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -108,7 +108,12 @@
                                         ]
                                     }
                                 ]
-                            },
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + Shift + J -> Shift + ↓",
+                        "manipulators": [
                             {
                                 "type": "basic",
                                 "from": {
@@ -138,7 +143,12 @@
                                         ]
                                     }
                                 ]
-                            },
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Caps Lock -> Escape (alone) | Ctrl (simple)",
+                        "manipulators": [
                             {
                                 "type": "basic",
                                 "from": {
