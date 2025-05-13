@@ -1,7 +1,5 @@
 package sh.kau.karabiner
 
-import sh.kau.karabiner.Condition.DeviceIfCondition
-
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
 fun createMainRules(): List<KarabinerRule> {
@@ -12,7 +10,7 @@ fun createMainRules(): List<KarabinerRule> {
         fromKey = KeyCode.RIGHT_COMMAND
         toKey = KeyCode.RIGHT_CONTROL
         toKeyIfAlone = KeyCode.RETURN_OR_ENTER
-        conditions = listOf(onlyAppleKeyboards())
+        forDevice { identifiers = DeviceIdentifier.APPLE_KEYBOARDS }
       },
       createCapsLockRules(),
       *createLayerKeyRules(),
@@ -338,9 +336,4 @@ fun createVimNavigationManipulators(): List<Manipulator> {
               .build()
         }
       }
-}
-
-/** Creates a condition for Apple keyboards or built-in keyboards */
-fun onlyAppleKeyboards(): Condition {
-  return DeviceIfCondition(identifiers = DeviceIdentifier.APPLE_KEYBOARDS)
 }

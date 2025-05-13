@@ -386,13 +386,13 @@ sealed interface Condition {
   @Serializable
   @SerialName("device_if")
   data class DeviceIfCondition(
-      val identifiers: List<DeviceIdentifier>,
+      var identifiers: List<DeviceIdentifier>? = null,
   ) : Condition
 
   @Serializable
   @SerialName("device_unless")
   data class DeviceUnlessCondition(
-      val identifiers: List<DeviceIdentifier>,
+      var identifiers: List<DeviceIdentifier>? = null,
   ) : Condition
 
   @Serializable

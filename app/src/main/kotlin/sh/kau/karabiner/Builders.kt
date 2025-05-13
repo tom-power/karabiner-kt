@@ -39,15 +39,12 @@ class SimpleRule(
     var shellCommand: ShellCmd? = null,
 ) {
   var toKeyModifiers: List<ModifierKeyCode?>? = null
-  var conditions: List<Condition>? = null
+  var conditions = mutableListOf<Condition>()
 
-  fun toKeyModifiers(vararg modifiers: ModifierKeyCode) {
-    if (modifiers.size == 0) return
-    toKeyModifiers = modifiers.toList()
-  }
-
-  fun conditions(vararg conditions: Condition) {
-    this.conditions = conditions.toList()
+  fun forDevice(init: Condition.DeviceIfCondition.() -> Unit) {
+    val cond = Condition.DeviceIfCondition()
+    cond.init()
+    conditions.add(cond)
   }
 }
 
@@ -180,7 +177,8 @@ class ManipulatorBuilder {
 
   // --- LayerKey additions ---
   private var layerTriggerKey: KeyCode? = null
-  private var layerSimultaneousThreshold: Long = 250L
+
+  //  private var layerSimultaneousThreshold: Long = 250L
 
   fun from(
       keyCode: KeyCode,
