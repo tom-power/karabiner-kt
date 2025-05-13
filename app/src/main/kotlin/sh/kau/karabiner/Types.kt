@@ -28,22 +28,29 @@ data class Manipulator(
 @Serializable
 data class From(
     @SerialName("key_code") val keyCode: KeyCode? = null,
-    val modifiers: Modifiers? = null,
+    val modifiers: FromModifiers? = null,
     @Serializable(with = SimultaneousKeyCodeListSerializer::class)
     val simultaneous: List<KeyCode>? = null,
     @SerialName("simultaneous_options") val simultaneousOptions: SimultaneousOptions? = null,
-)
+) {
+  companion object {
+    fun withAnyModifier(fromKeyCode: KeyCode) =
+        From(
+            keyCode = fromKeyCode,
+            modifiers = FromModifiers(optional = listOf(ModifierKeyCode.ANY)))
+  }
+}
 
 @Serializable
-data class Modifiers(
-    val optional: List<ModifiersKeys>? = null,
-    val mandatory: List<ModifiersKeys>? = null
+data class FromModifiers(
+    val optional: List<ModifierKeyCode>? = null,
+    val mandatory: List<ModifierKeyCode>? = null
 )
 
 @Serializable
 data class To(
     @SerialName("key_code") val keyCode: KeyCode? = null,
-    val modifiers: List<ModifiersKeys?>? = null,
+    val modifiers: List<ModifierKeyCode?>? = null,
     @SerialName("consumer_key_code") val consumerKeyCode: String? = null,
     @SerialName("shell_command") val shellCommand: String? = null,
     @SerialName("set_variable") val setVariable: SetVariable? = null,
@@ -51,7 +58,26 @@ data class To(
     @SerialName("pointing_button") val pointingButton: String? = null,
     @SerialName("software_function") val softwareFunction: SoftwareFunction? = null
     // `hold_down_milliseconds` is sometimes seen with `to` events. Add if needed.
-)
+) {
+  companion object {
+    fun from(
+        cmd: ShellCmd? = null,
+        toKey: KeyCode? = null,
+        toKeyModifiers: List<ModifierKeyCode?>? = null
+    ): List<To> {
+
+      val list = mutableListOf<To>()
+
+      if (cmd != null && toKey != null)
+          throw IllegalArgumentException("Cannot have both a key and a shell command")
+
+      if (cmd != null) return list.apply { add(To(shellCommand = cmd)) }
+      if (toKey != null) return list.apply { add(To(keyCode = toKey, modifiers = toKeyModifiers)) }
+
+      throw IllegalStateException("Could not build To instruction")
+    }
+  }
+}
 
 enum class ToType {
   NORMAL,
@@ -318,7 +344,7 @@ enum class KeyCode {
 }
 
 @Serializable
-enum class ModifiersKeys {
+enum class ModifierKeyCode {
   @SerialName("caps_lock") CAPS_LOCK,
   @SerialName("left_command") LEFT_COMMAND,
   @SerialName("left_control") LEFT_CONTROL,
