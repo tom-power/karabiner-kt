@@ -19,13 +19,28 @@ class LayerKeyRule(
       var toKey: KeyCode? = null,
       var shellCommand: ShellCmd? = null,
       var toModifiers: List<ModifierKeyCode?>? = null,
-      var conditions: List<Condition>? = null
-  )
+  ) {
+    var conditions: MutableList<Condition>? = null
+
+    fun forApp(block: FrontmostApplicationIfCondition.() -> Unit) {
+      conditions = conditions ?: mutableListOf()
+      val cond = FrontmostApplicationIfCondition()
+      cond.block()
+      conditions!!.add(cond)
+    }
+
+    fun unlessApp(block: FrontmostApplicationUnlessCondition.() -> Unit) {
+      conditions = conditions ?: mutableListOf()
+      val cond = FrontmostApplicationUnlessCondition()
+      cond.block()
+      conditions!!.add(cond)
+    }
+  }
 
   internal var mappings = mutableListOf<LayerKeyMapping>()
 
-  fun mapping(initializer: LayerKeyMapping.() -> Unit) {
-    mappings.add(LayerKeyMapping().apply(initializer))
+  fun mapping(block: LayerKeyMapping.() -> Unit) {
+    mappings.add(LayerKeyMapping().apply(block))
   }
 }
 
@@ -41,9 +56,9 @@ class SimpleRule(
   var toKeyModifiers: List<ModifierKeyCode?>? = null
   var conditions = mutableListOf<Condition>()
 
-  fun forDevice(init: Condition.DeviceIfCondition.() -> Unit) {
+  fun forDevice(block: Condition.DeviceIfCondition.() -> Unit) {
     val cond = Condition.DeviceIfCondition()
-    cond.init()
+    cond.block()
     conditions.add(cond)
   }
 }
@@ -95,9 +110,9 @@ fun karabinerRule(
 }
 
 fun karabinerRuleLayer(
-    initializer: LayerKeyRule.() -> Unit,
+    block: LayerKeyRule.() -> Unit,
 ): KarabinerRule {
-  val layerKeyRule = LayerKeyRule().apply(initializer)
+  val layerKeyRule = LayerKeyRule().apply(block)
   val manipulators = mutableListOf<Manipulator>()
 
   val variableName = "${layerKeyRule.layerKey!!.name.lowercase()}-layer"
@@ -157,11 +172,11 @@ fun ifVarSet(variableName: String) = listOf(VariableIfCondition(variableName, Js
 // endregion
 
 fun forApp(vararg bundleIdentifiers: String): Condition {
-  return FrontmostApplicationIfCondition(bundleIdentifiers = bundleIdentifiers.toList())
+  return FrontmostApplicationIfCondition(bundleIds = bundleIdentifiers.toList())
 }
 
 fun unlessApp(vararg bundleIdentifiers: String): Condition {
-  return FrontmostApplicationUnlessCondition(bundleIdentifiers = bundleIdentifiers.toList())
+  return FrontmostApplicationUnlessCondition(bundleIds = bundleIdentifiers.toList())
 }
 
 class ManipulatorBuilder {

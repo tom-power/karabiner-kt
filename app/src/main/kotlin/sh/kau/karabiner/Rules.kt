@@ -176,15 +176,17 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                   fromKey = KeyCode.S
                   toKey = KeyCode.U
                   toModifiers = listOf(ModifierKeyCode.LEFT_CONTROL)
-                  conditions =
-                      listOf(forApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))
+                  forApp {
+                    bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
+                  }
                 }
                 mapping {
                   fromKey = KeyCode.S
                   toKey = KeyCode.DELETE_OR_BACKSPACE
                   toModifiers = listOf(ModifierKeyCode.LEFT_COMMAND)
-                  conditions =
-                      listOf(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))
+                  unlessApp {
+                    bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
+                  }
                 }
 
                 // delete word
@@ -192,15 +194,17 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                   fromKey = KeyCode.D
                   toKey = KeyCode.W
                   toModifiers = listOf(ModifierKeyCode.LEFT_CONTROL)
-                  conditions =
-                      listOf(forApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))
+                  forApp {
+                    bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
+                  }
                 }
                 mapping {
                   fromKey = KeyCode.D
                   toKey = KeyCode.DELETE_OR_BACKSPACE
                   toModifiers = listOf(ModifierKeyCode.LEFT_OPTION)
-                  conditions =
-                      listOf(unlessApp("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"))
+                  unlessApp {
+                    bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
+                  }
                 }
 
                 // delete character

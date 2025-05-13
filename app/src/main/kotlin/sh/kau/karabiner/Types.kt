@@ -372,15 +372,15 @@ sealed interface Condition {
   @Serializable
   @SerialName("frontmost_application_if")
   data class FrontmostApplicationIfCondition(
-      @SerialName("bundle_identifiers") val bundleIdentifiers: List<String>? = null,
-      @SerialName("file_paths") val filePaths: List<String>? = null,
+      @SerialName("bundle_identifiers") var bundleIds: List<String>? = null,
+      @SerialName("file_paths") var filePaths: List<String>? = null,
   ) : Condition
 
   @Serializable
   @SerialName("frontmost_application_unless")
   data class FrontmostApplicationUnlessCondition(
-      @SerialName("bundle_identifiers") val bundleIdentifiers: List<String>? = null,
-      @SerialName("file_paths") val filePaths: List<String>? = null,
+      @SerialName("bundle_identifiers") var bundleIds: List<String>? = null,
+      @SerialName("file_paths") var filePaths: List<String>? = null,
   ) : Condition
 
   @Serializable
