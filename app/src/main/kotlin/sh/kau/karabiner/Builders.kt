@@ -9,49 +9,14 @@ typealias ShellCmd = String
 
 // region Rule Datastructures
 // -----------------------------------------
-
-class LayerKeyRule(
-    var layerKey: KeyCode? = null,
-    var description: String = "",
-) {
-  class LayerKeyMapping(
-      var fromKey: KeyCode? = null,
-      var toKey: KeyCode? = null,
-      var shellCommand: ShellCmd? = null,
-      var toModifiers: List<ModifierKeyCode?>? = null,
-  ) {
-    var conditions = mutableListOf<Condition>()
-
-    fun forApp(block: FrontmostApplicationIfCondition.() -> Unit) {
-      val cond = FrontmostApplicationIfCondition()
-      cond.block()
-      conditions.add(cond)
-    }
-
-    fun unlessApp(block: FrontmostApplicationUnlessCondition.() -> Unit) {
-      val cond = FrontmostApplicationUnlessCondition()
-      cond.block()
-      conditions.add(cond)
-    }
-  }
-
-  internal var mappings = mutableListOf<LayerKeyMapping>()
-
-  fun mapping(block: LayerKeyMapping.() -> Unit) {
-    mappings.add(LayerKeyMapping().apply(block))
-  }
-}
-
-class SimpleRule(
-    var description: String = "",
-    var layerKey: KeyCode? = null,
+open class MappingRule(
     var fromKey: KeyCode? = null,
-    var fromModifiers: FromModifiers? = null,
-    //
+    var fromModifiers: FromModifiers? = null, // TODO
     var toKey: KeyCode? = null,
-    var toKeyModifiers: List<ModifierKeyCode?>? = null,
-    var toKeyIfAlone: KeyCode? = null,
+    var toKeyModifiers: List<ModifierKeyCode?>? = null, // TODO
+    var toKeyIfAlone: KeyCode? = null, // TODO
     var shellCommand: ShellCmd? = null,
+    var toModifiers: List<ModifierKeyCode?>? = null,
 ) {
   var conditions = mutableListOf<Condition>()
 
@@ -59,6 +24,35 @@ class SimpleRule(
     val cond = Condition.DeviceIfCondition()
     cond.block()
     conditions.add(cond)
+  }
+
+  fun forApp(block: FrontmostApplicationIfCondition.() -> Unit) {
+    val cond = FrontmostApplicationIfCondition()
+    cond.block()
+    conditions.add(cond)
+  }
+
+  fun unlessApp(block: FrontmostApplicationUnlessCondition.() -> Unit) {
+    val cond = FrontmostApplicationUnlessCondition()
+    cond.block()
+    conditions.add(cond)
+  }
+}
+
+class SingleRule(
+    var description: String = "",
+    var layerKey: KeyCode? = null,
+) : MappingRule()
+
+/** Notice Layer Key Rule allows nested [mappings] whereas [SingleRule] allows just one mapping */
+class LayerKeyRule(
+    var description: String = "",
+    var layerKey: KeyCode? = null,
+) {
+  internal var mappings = mutableListOf<MappingRule>()
+
+  fun mapping(block: MappingRule.() -> Unit) {
+    mappings.add(MappingRule().apply(block))
   }
 }
 
@@ -73,37 +67,42 @@ fun karabinerRule(description: String, vararg manipulators: Manipulator): Karabi
 }
 
 fun karabinerRule(
-    block: SimpleRule.() -> Unit,
+    block: SingleRule.() -> Unit,
 ): KarabinerRule {
-  val simpleRule = SimpleRule().apply(block)
+  val singleRule = SingleRule().apply(block)
+
   return when {
-    simpleRule.layerKey != null -> {
-      karabinerRuleLayer {
-        description = simpleRule.description
-        layerKey = simpleRule.layerKey
-        mapping {
-          fromKey = simpleRule.fromKey
-          toKey = simpleRule.toKey
-          shellCommand = simpleRule.shellCommand
-          toModifiers = simpleRule.toKeyModifiers
-          conditions = simpleRule.conditions
-        }
-      }
-    }
-
-    simpleRule.layerKey == null -> {
-
+    singleRule.layerKey == null -> {
       KarabinerRule(
-          simpleRule.description,
+          singleRule.description,
           listOf(
               Manipulator(
-                  from = From.with(simpleRule.fromKey!!, simpleRule.fromModifiers),
+                  from =
+                      From.with(
+                          singleRule.fromKey!!,
+                          singleRule.fromModifiers,
+                      ),
                   to =
-                      To.from(toKey = simpleRule.toKey, toKeyModifiers = simpleRule.toKeyModifiers),
-                  toIfAlone = To.from(toKey = simpleRule.toKeyIfAlone),
+                      To.with(toKey = singleRule.toKey, toKeyModifiers = singleRule.toKeyModifiers),
+                  toIfAlone = To.with(toKey = singleRule.toKeyIfAlone),
                   conditions =
-                      if (simpleRule.conditions.isEmpty()) null else simpleRule.conditions)),
+                      if (singleRule.conditions.isEmpty()) null else singleRule.conditions)),
       )
+    }
+
+    singleRule.layerKey != null -> {
+      // delegate to karabinerRuleLayer
+      karabinerRuleLayer {
+        description = singleRule.description
+        layerKey = singleRule.layerKey
+        mapping {
+          fromKey = singleRule.fromKey
+          toKey = singleRule.toKey
+          shellCommand = singleRule.shellCommand
+          toModifiers = singleRule.toKeyModifiers
+          conditions = singleRule.conditions
+        }
+      }
     }
 
     else -> throw IllegalStateException("Not implemented")
@@ -120,16 +119,20 @@ fun karabinerRuleLayer(
 
   layerKeyRule.mappings.forEach { keyMapping ->
     var toModifier =
-        To.from(
-            keyMapping.shellCommand,
+        To.with(
             keyMapping.toKey,
             keyMapping.toModifiers,
+            keyMapping.shellCommand,
         )
 
     // Layer Keys will need an onPress manipulator and an onRelease manipulator
     manipulators +=
         Manipulator(
-            from = From.with(keyMapping.fromKey!!),
+            from =
+                From.with(
+                    keyMapping.fromKey!!,
+                    keyMapping.fromModifiers,
+                ),
             to = toModifier,
             conditions = ifVarSet(variableName) + keyMapping.conditions)
 

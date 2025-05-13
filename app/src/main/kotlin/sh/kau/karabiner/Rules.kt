@@ -18,6 +18,7 @@ fun createMainRules(): List<KarabinerRule> {
         toKeyIfAlone = KeyCode.RETURN_OR_ENTER
         forDevice { identifiers = DeviceIdentifier.APPLE_KEYBOARDS }
       },
+
       *createCapsLockRules(),
       *createLayerKeyRules(),
       karabinerRule {

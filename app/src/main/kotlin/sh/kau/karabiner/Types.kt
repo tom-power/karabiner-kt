@@ -64,10 +64,10 @@ data class To(
     // `hold_down_milliseconds` is sometimes seen with `to` events. Add if needed.
 ) {
   companion object {
-    fun from(
-        cmd: ShellCmd? = null,
+    fun with(
         toKey: KeyCode? = null,
-        toKeyModifiers: List<ModifierKeyCode?>? = null
+        toKeyModifiers: List<ModifierKeyCode?>? = null,
+        cmd: ShellCmd? = null
     ): List<To> {
 
       val list = mutableListOf<To>()
