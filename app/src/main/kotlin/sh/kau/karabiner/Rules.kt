@@ -270,10 +270,6 @@ fun createCapsLockRules(): Array<KarabinerRule> {
           },
       ))
 
-  val manipulators = mutableListOf<Manipulator>()
-
-  // CapLock + Vim keys -> quick arrow keys (along with modifier combinations)
-  manipulators.addAll(createVimNavigationManipulators())
 
   // Mouse control with arrow keys
   listOf(
@@ -282,27 +278,35 @@ fun createCapsLockRules(): Array<KarabinerRule> {
           Pair(KeyCode.LEFT_ARROW, MouseKey(x = -1536)),
           Pair(KeyCode.RIGHT_ARROW, MouseKey(x = 1536)),
       )
-      .forEach { (key, mouseKeyValue) ->
-        manipulators.add(
-            ManipulatorBuilder()
-                .from(key, mandatoryModifiers = listOf(RIGHT_CONTROL))
-                .to(mouseKey = mouseKeyValue)
-                .build())
+      .forEach { (fromKey, mouseKeyValue) ->
+        rules.add(
+            karabinerRuleSingle {
+              description = "CapsLock + ${fromKey.name} -> Move Mouse Cursor"
+              this.fromKey = fromKey
+              fromModifiers = FromModifiers(mandatory = listOf(RIGHT_CONTROL))
+              mouseKey = mouseKeyValue
+            },
+        )
       }
 
-  // Add return_or_enter + right_control to click mouse buttons
-  manipulators.add(
-      ManipulatorBuilder()
-          .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(RIGHT_CONTROL))
-          .to(pointingButton = "button1")
-          .build())
+  rules.add(
+      karabinerRule {
+        description = "CapsLock (+ Command) +  Enter -> Mouse (Secondary) Click Buttons"
+        mapping {
+          fromKey = KeyCode.RETURN_OR_ENTER
+          fromModifiers = FromModifiers(mandatory = listOf(RIGHT_CONTROL))
+          pointingButton = "button1"
+        }
+        mapping {
+          fromKey = KeyCode.RETURN_OR_ENTER
+          fromModifiers = FromModifiers(mandatory = listOf(LEFT_COMMAND, RIGHT_CONTROL))
+          pointingButton = "button2"
+        }
+      })
 
-  manipulators.add(
-      ManipulatorBuilder()
-          .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(LEFT_COMMAND, RIGHT_CONTROL))
-          .to(pointingButton = "button2")
-          .build())
-
+  val manipulators = mutableListOf<Manipulator>()
+  // CapLock + Vim keys -> quick arrow keys (along with modifier combinations)
+  manipulators.addAll(createVimNavigationManipulators())
   rules.add(KarabinerRule("Caps Lock -> Escape (alone) | Ctrl (simple)", manipulators))
 
   return rules.toTypedArray()

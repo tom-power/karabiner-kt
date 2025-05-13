@@ -69,16 +69,18 @@ data class To(
         toKeyModifiers: List<ModifierKeyCode?>? = null,
         cmd: ShellCmd? = null,
         mouseKey: MouseKey? = null,
+        pointingButton: String? = null,
     ): List<To> {
 
       val list = mutableListOf<To>()
 
-      if (arrayOf(cmd, toKey, mouseKey).count { it != null } == 2)
+      if (arrayOf(cmd, toKey, mouseKey, pointingButton).count { it != null } == 2)
           throw IllegalArgumentException("Cannot have two of these instructions set simultaneously")
 
       if (cmd != null) return list.apply { add(To(shellCommand = cmd)) }
       if (toKey != null) return list.apply { add(To(keyCode = toKey, modifiers = toKeyModifiers)) }
       if (mouseKey != null) return list.apply { add(To(mouseKey = mouseKey)) }
+      if (pointingButton != null) return list.apply { add(To(pointingButton = pointingButton)) }
 
       throw IllegalStateException("Could not build To instruction")
     }
