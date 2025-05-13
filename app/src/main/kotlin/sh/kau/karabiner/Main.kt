@@ -1,24 +1,18 @@
 package sh.kau.karabiner
 
-import java.io.File
 import kotlinx.serialization.json.Json
+import java.io.File
 
 fun main() {
 
-  val jsonEncoder by lazy {
-    Json {
-      prettyPrint = true
-      encodeDefaults = true
-      explicitNulls = false // Don't serialize null values
-    }
-  }
+  val mainRules = createMainRules()
 
   val defaultProfile =
       Profile(
           name = "Default",
           selected = true,
-          //          fnFunctionKeys = functionKeys(),
-          complexModifications = ComplexModifications(rules = createMainRules()),
+          // fnFunctionKeys = functionKeys(),
+          complexModifications = ComplexModifications(rules = mainRules),
           virtualHidKeyboard = VirtualHidKeyboard(countryCode = 0, keyboardType = "ansi"),
           devices = deviceSpecificConfigs(),
           parameters =
@@ -30,6 +24,12 @@ fun main() {
               ),
       )
 
+  val jsonEncoder = Json {
+    prettyPrint = true
+    encodeDefaults = true
+    explicitNulls = false // Don't serialize null values
+  }
+
   val karabinerJson =
       jsonEncoder.encodeToString(
           KarabinerConfig(
@@ -38,13 +38,8 @@ fun main() {
           ),
       )
 
-  // This will be relative to where it's run (project root for gradle run)
-  // To ensure it's in karabiner-kt, you might want to adjust the path if running from workspace
-  // root
-  // For now, let's assume it's run from karabiner-kt directory or handled by gradle paths.
-  val outputFile = File("karabiner.json")
-
   try {
+    val outputFile = File("karabiner.json")
     outputFile.writeText(karabinerJson)
     println("Successfully wrote karabiner.json to ${outputFile.absolutePath}")
   } catch (e: Exception) {

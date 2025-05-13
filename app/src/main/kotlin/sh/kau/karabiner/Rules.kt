@@ -8,52 +8,50 @@ import sh.kau.karabiner.ModifierKeyCode.RIGHT_CONTROL
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
-fun createMainRules(): List<KarabinerRule> {
-
-  return listOf(
-      karabinerRule {
-        description = "Right Cmd (alone) -> Enter"
-        mapping {
-          fromKey = KeyCode.RIGHT_COMMAND
-          toKey = KeyCode.RIGHT_CONTROL
-          toKeyIfAlone = KeyCode.RETURN_OR_ENTER
-          forDevice { identifiers = DeviceIdentifier.APPLE_KEYBOARDS }
-        }
-      },
-      *createCapsLockRules(),
-      *createLayerKeyRules(),
-      karabinerRuleSingle {
-        description = "O + 0 -> Raycast Confetti"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.NUM_0
-        shellCommand = "open raycast://extensions/raycast/raycast/confetti"
-      },
-      karabinerRuleSingle {
-        description = "O + 1 -> Obsidian"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.NUM_1
-        shellCommand = "open -a Obsidian.app"
-      },
-      karabinerRuleSingle {
-        description = "O + 2 -> Google Chrome"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.NUM_2
-        shellCommand = "open -a 'Google Chrome.app'"
-      },
-      karabinerRuleSingle {
-        description = "O + 3 -> Warp"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.NUM_3
-        shellCommand = "open -a 'Warp.app'"
-      },
-      karabinerRuleSingle {
-        description = "O + 4 -> Cursor"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.NUM_4
-        shellCommand = "open -a 'Cursor.app'"
-      },
-  )
-}
+fun createMainRules(): List<KarabinerRule> = listOf(
+  karabinerRule {
+      description = "Right Cmd (alone) -> Enter"
+      mapping {
+        fromKey = KeyCode.RIGHT_COMMAND
+        toKey = KeyCode.RIGHT_CONTROL
+        toKeyIfAlone = KeyCode.RETURN_OR_ENTER
+        forDevice { identifiers = DeviceIdentifier.APPLE_KEYBOARDS }
+      }
+    },
+    *createCapsLockRules(),
+    *createLayerKeyRules(),
+    *createVimNavigationRules(),
+    karabinerRuleSingle {
+      description = "O + 0 -> Raycast Confetti"
+      layerKey = KeyCode.O
+      fromKey = KeyCode.NUM_0
+      shellCommand = "open raycast://extensions/raycast/raycast/confetti"
+    },
+    karabinerRuleSingle {
+      description = "O + 1 -> Obsidian"
+      layerKey = KeyCode.O
+      fromKey = KeyCode.NUM_1
+      shellCommand = "open -a Obsidian.app"
+    },
+    karabinerRuleSingle {
+      description = "O + 2 -> Google Chrome"
+      layerKey = KeyCode.O
+      fromKey = KeyCode.NUM_2
+      shellCommand = "open -a 'Google Chrome.app'"
+    },
+    karabinerRuleSingle {
+      description = "O + 3 -> Warp"
+      layerKey = KeyCode.O
+      fromKey = KeyCode.NUM_3
+      shellCommand = "open -a 'Warp.app'"
+    },
+    karabinerRuleSingle {
+      description = "O + 4 -> Cursor"
+      layerKey = KeyCode.O
+      fromKey = KeyCode.NUM_4
+      shellCommand = "open -a 'Cursor.app'"
+    },
+)
 
 fun createLayerKeyRules(): Array<KarabinerRule> =
     mutableListOf<KarabinerRule>()
@@ -270,7 +268,6 @@ fun createCapsLockRules(): Array<KarabinerRule> {
           },
       ))
 
-
   // Mouse control with arrow keys
   listOf(
           Pair(KeyCode.DOWN_ARROW, MouseKey(y = 1536)),
@@ -304,17 +301,15 @@ fun createCapsLockRules(): Array<KarabinerRule> {
         }
       })
 
-  val manipulators = mutableListOf<Manipulator>()
-  // CapLock + Vim keys -> quick arrow keys (along with modifier combinations)
-  manipulators.addAll(createVimNavigationManipulators())
-  rules.add(KarabinerRule("Caps Lock -> Escape (alone) | Ctrl (simple)", manipulators))
-
   return rules.toTypedArray()
 }
 
 /** Creates manipulators for vim-style navigation with various modifier combinations */
-fun createVimNavigationManipulators(): List<Manipulator> {
-  // VIM_NAV_KEYS and ARROW_KEYS are from Constants.kt
+fun createVimNavigationRules(): Array<KarabinerRule> {
+  val ARROW_KEYS: List<KeyCode> =
+      listOf(KeyCode.LEFT_ARROW, KeyCode.DOWN_ARROW, KeyCode.UP_ARROW, KeyCode.RIGHT_ARROW)
+
+  val VIM_NAV_KEYS: List<KeyCode> = listOf(KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L)
 
   data class ModifierCombo(val from: List<ModifierKeyCode>, val to: List<ModifierKeyCode>?)
 
@@ -332,10 +327,13 @@ fun createVimNavigationManipulators(): List<Manipulator> {
       )
       .flatMap { combo ->
         VIM_NAV_KEYS.mapIndexed { index, keyChar ->
-          ManipulatorBuilder()
-              .from(keyChar, mandatoryModifiers = combo.from)
-              .to(keyCode = ARROW_KEYS[index], modifiers = combo.to)
-              .build()
+          karabinerRuleSingle {
+            fromKey = keyChar
+            fromModifiers = FromModifiers(mandatory = combo.from)
+            toKey = ARROW_KEYS[index]
+            toModifiers = combo.to
+          }
         }
       }
+      .toTypedArray()
 }
