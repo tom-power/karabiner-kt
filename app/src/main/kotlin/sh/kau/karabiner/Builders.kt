@@ -11,11 +11,12 @@ typealias ShellCmd = String
 // -----------------------------------------
 open class MappingRule(
     var fromKey: KeyCode? = null,
-    var fromModifiers: FromModifiers? = null, // TODO
+    var fromModifiers: FromModifiers? = null,
     var toKey: KeyCode? = null,
-    var toKeyIfAlone: KeyCode? = null, // TODO
+    var toKeyIfAlone: KeyCode? = null,
     var shellCommand: ShellCmd? = null,
     var toModifiers: List<ModifierKeyCode?>? = null,
+    var mouseKey: MouseKey? = null,
 ) {
   var conditions = mutableListOf<Condition>()
 
@@ -82,6 +83,7 @@ fun karabinerRuleSingle(
       toModifiers = singleRule.toModifiers
       toKeyIfAlone = singleRule.toKeyIfAlone
       shellCommand = singleRule.shellCommand
+      mouseKey = singleRule.mouseKey
       conditions = singleRule.conditions
     }
   }
@@ -105,6 +107,7 @@ fun karabinerRule(
             keyMapping.toKey,
             keyMapping.toModifiers,
             keyMapping.shellCommand,
+            keyMapping.mouseKey,
         )
 
     if (layerKeyRule.layerKey == null) {
