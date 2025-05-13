@@ -34,10 +34,14 @@ data class From(
     @SerialName("simultaneous_options") val simultaneousOptions: SimultaneousOptions? = null,
 ) {
   companion object {
-    fun withAnyModifier(fromKeyCode: KeyCode) =
+    fun with(
+        fromKeyCode: KeyCode,
+        modifiers: FromModifiers? = null,
+    ) =
         From(
             keyCode = fromKeyCode,
-            modifiers = FromModifiers(optional = listOf(ModifierKeyCode.ANY)))
+            modifiers = modifiers ?: FromModifiers(optional = listOf(ModifierKeyCode.ANY)),
+        )
   }
 }
 

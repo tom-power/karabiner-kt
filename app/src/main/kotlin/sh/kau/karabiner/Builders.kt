@@ -20,20 +20,18 @@ class LayerKeyRule(
       var shellCommand: ShellCmd? = null,
       var toModifiers: List<ModifierKeyCode?>? = null,
   ) {
-    var conditions: MutableList<Condition>? = null
+    var conditions = mutableListOf<Condition>()
 
     fun forApp(block: FrontmostApplicationIfCondition.() -> Unit) {
-      conditions = conditions ?: mutableListOf()
       val cond = FrontmostApplicationIfCondition()
       cond.block()
-      conditions!!.add(cond)
+      conditions.add(cond)
     }
 
     fun unlessApp(block: FrontmostApplicationUnlessCondition.() -> Unit) {
-      conditions = conditions ?: mutableListOf()
       val cond = FrontmostApplicationUnlessCondition()
       cond.block()
-      conditions!!.add(cond)
+      conditions.add(cond)
     }
   }
 
@@ -48,12 +46,13 @@ class SimpleRule(
     var description: String = "",
     var layerKey: KeyCode? = null,
     var fromKey: KeyCode? = null,
+    var fromModifiers: FromModifiers? = null,
     //
     var toKey: KeyCode? = null,
+    var toKeyModifiers: List<ModifierKeyCode?>? = null,
     var toKeyIfAlone: KeyCode? = null,
     var shellCommand: ShellCmd? = null,
 ) {
-  var toKeyModifiers: List<ModifierKeyCode?>? = null
   var conditions = mutableListOf<Condition>()
 
   fun forDevice(block: Condition.DeviceIfCondition.() -> Unit) {
@@ -93,15 +92,17 @@ fun karabinerRule(
     }
 
     simpleRule.layerKey == null -> {
+
       KarabinerRule(
           simpleRule.description,
           listOf(
               Manipulator(
-                  from = From.withAnyModifier(simpleRule.fromKey!!),
-                  to = To.from(toKey = simpleRule.toKey),
+                  from = From.with(simpleRule.fromKey!!, simpleRule.fromModifiers),
+                  to =
+                      To.from(toKey = simpleRule.toKey, toKeyModifiers = simpleRule.toKeyModifiers),
                   toIfAlone = To.from(toKey = simpleRule.toKeyIfAlone),
-                  conditions = simpleRule.conditions,
-              )),
+                  conditions =
+                      if (simpleRule.conditions.isEmpty()) null else simpleRule.conditions)),
       )
     }
 
@@ -128,9 +129,9 @@ fun karabinerRuleLayer(
     // Layer Keys will need an onPress manipulator and an onRelease manipulator
     manipulators +=
         Manipulator(
-            from = From.withAnyModifier(keyMapping.fromKey!!),
+            from = From.with(keyMapping.fromKey!!),
             to = toModifier,
-            conditions = ifVarSet(variableName) + keyMapping.conditions.orEmpty())
+            conditions = ifVarSet(variableName) + keyMapping.conditions)
 
     manipulators +=
         Manipulator(
@@ -141,7 +142,7 @@ fun karabinerRuleLayer(
                 ),
             to = setVarOn(toModifier, variableName),
             parameters = Parameters(simultaneousThresholdMilliseconds = 250),
-            conditions = keyMapping.conditions.orEmpty())
+            conditions = keyMapping.conditions)
   }
 
   return KarabinerRule(layerKeyRule.description, manipulators)
@@ -245,15 +246,15 @@ class ManipulatorBuilder {
     return this
   }
 
-  fun toIfAlone(
-      keyCode: KeyCode? = null,
-      modifiers: List<ModifierKeyCode>? = null,
-      setVariable: SetVariable? = null,
-      toObj: To? = null,
-      mouseKey: MouseKey? = null,
-      pointingButton: String? = null,
-  ): ManipulatorBuilder =
-      to(keyCode, modifiers, setVariable, toObj, mouseKey, pointingButton, ToType.IF_ALONE)
+  //  fun toIfAlone(
+  //      keyCode: KeyCode? = null,
+  //      modifiers: List<ModifierKeyCode>? = null,
+  //      setVariable: SetVariable? = null,
+  //      toObj: To? = null,
+  //      mouseKey: MouseKey? = null,
+  //      pointingButton: String? = null,
+  //  ): ManipulatorBuilder =
+  //      to(keyCode, modifiers, setVariable, toObj, mouseKey, pointingButton, ToType.IF_ALONE)
 
   private fun addToEventList(eventList: MutableList<To>, command: To): ManipulatorBuilder = apply {
     eventList.add(command)

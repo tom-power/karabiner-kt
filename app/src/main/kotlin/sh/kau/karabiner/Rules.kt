@@ -1,5 +1,11 @@
 package sh.kau.karabiner
 
+import sh.kau.karabiner.ModifierKeyCode.LEFT_COMMAND
+import sh.kau.karabiner.ModifierKeyCode.LEFT_CONTROL
+import sh.kau.karabiner.ModifierKeyCode.LEFT_OPTION
+import sh.kau.karabiner.ModifierKeyCode.LEFT_SHIFT
+import sh.kau.karabiner.ModifierKeyCode.RIGHT_CONTROL
+
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
 fun createMainRules(): List<KarabinerRule> {
@@ -12,7 +18,7 @@ fun createMainRules(): List<KarabinerRule> {
         toKeyIfAlone = KeyCode.RETURN_OR_ENTER
         forDevice { identifiers = DeviceIdentifier.APPLE_KEYBOARDS }
       },
-      createCapsLockRules(),
+      *createCapsLockRules(),
       *createLayerKeyRules(),
       karabinerRule {
         description = "O + 0 -> Raycast Confetti"
@@ -61,17 +67,17 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.Y
                   toKey = KeyCode.NUM_6
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
                 mapping {
                   fromKey = KeyCode.U
                   toKey = KeyCode.NUM_7
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
                 mapping {
                   fromKey = KeyCode.I
                   toKey = KeyCode.NUM_8
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
 
                 // special one - \
@@ -94,7 +100,7 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.QUOTE
                   toKey = KeyCode.EQUAL_SIGN
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
 
                 // J K
@@ -102,12 +108,12 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.J
                   toKey = KeyCode.NUM_9
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
                 mapping {
                   fromKey = KeyCode.K
                   toKey = KeyCode.NUM_0
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
 
                 // M ,
@@ -126,12 +132,12 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.PERIOD
                   toKey = KeyCode.OPEN_BRACKET
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
                 mapping {
                   fromKey = KeyCode.SLASH
                   toKey = KeyCode.CLOSE_BRACKET
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
               })
 
@@ -145,28 +151,28 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.T
                   toKey = KeyCode.NUM_5
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
                 mapping {
                   fromKey = KeyCode.R
                   toKey = KeyCode.NUM_4
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
                 mapping {
                   fromKey = KeyCode.E
                   toKey = KeyCode.NUM_3
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
 
                 mapping {
                   fromKey = KeyCode.W
                   toKey = KeyCode.NUM_2
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
                 mapping {
                   fromKey = KeyCode.Q
                   toKey = KeyCode.NUM_1
-                  toModifiers = listOf(ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
 
                 // Delete sequences
@@ -175,7 +181,7 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.S
                   toKey = KeyCode.U
-                  toModifiers = listOf(ModifierKeyCode.LEFT_CONTROL)
+                  toModifiers = listOf(LEFT_CONTROL)
                   forApp {
                     bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
                   }
@@ -183,7 +189,7 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.S
                   toKey = KeyCode.DELETE_OR_BACKSPACE
-                  toModifiers = listOf(ModifierKeyCode.LEFT_COMMAND)
+                  toModifiers = listOf(LEFT_COMMAND)
                   unlessApp {
                     bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
                   }
@@ -193,7 +199,7 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.D
                   toKey = KeyCode.W
-                  toModifiers = listOf(ModifierKeyCode.LEFT_CONTROL)
+                  toModifiers = listOf(LEFT_CONTROL)
                   forApp {
                     bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
                   }
@@ -201,7 +207,7 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.D
                   toKey = KeyCode.DELETE_OR_BACKSPACE
-                  toModifiers = listOf(ModifierKeyCode.LEFT_OPTION)
+                  toModifiers = listOf(LEFT_OPTION)
                   unlessApp {
                     bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
                   }
@@ -217,37 +223,50 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.X
                   toKey = KeyCode.OPEN_BRACKET
-                  toModifiers = listOf(ModifierKeyCode.LEFT_COMMAND, ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_COMMAND, LEFT_SHIFT)
                 }
                 mapping {
                   fromKey = KeyCode.C
                   toKey = KeyCode.CLOSE_BRACKET
-                  toModifiers = listOf(ModifierKeyCode.LEFT_COMMAND, ModifierKeyCode.LEFT_SHIFT)
+                  toModifiers = listOf(LEFT_COMMAND, LEFT_SHIFT)
                 }
               })
         }
         .toTypedArray()
 
 /** --- Caps Lock -> Escape (alone) -> Ctrl (on hold) -> hold + Vim keys -> Arrow/Mouse */
-fun createCapsLockRules(): KarabinerRule {
+fun createCapsLockRules(): Array<KarabinerRule> {
+  val rules = mutableListOf<KarabinerRule>()
+
+  rules.add(
+      karabinerRule {
+        description = "Caps Lock alone -> Escape, held -> right_control"
+        fromKey = KeyCode.CAPS_LOCK
+        toKey = KeyCode.RIGHT_CONTROL
+        toKeyIfAlone = KeyCode.ESCAPE
+      })
+
   val manipulators = mutableListOf<Manipulator>()
 
-  // Caps Lock alone -> Escape, held -> right_control
-  manipulators.add(
-      ManipulatorBuilder()
-          .from(KeyCode.CAPS_LOCK, optionalModifiers = listOf(ModifierKeyCode.ANY))
-          .to(keyCode = KeyCode.RIGHT_CONTROL) // This is the "held" assignment
-          .toIfAlone(keyCode = KeyCode.ESCAPE) // This is the "alone" assignment
-          .build())
+
+//  karabinerRule {
+//    fromKey = KeyCode.J
+//    fromModifiers = FromModifiers(mandatory = listOf(LEFT_SHIFT, RIGHT_CONTROL))
+//    toKey = KeyCode.DOWN_ARROW
+//    toKeyModifiers = listOf(LEFT_SHIFT)
+//    unlessApp {
+//      bundleIds = listOf("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$", "^com\\.googlecode\\.iterm2$")
+//    }
+//  }
 
   manipulators.add(
       ManipulatorBuilder()
           .from(
               KeyCode.J,
               mandatoryModifiers =
-                  listOf(ModifierKeyCode.LEFT_SHIFT, ModifierKeyCode.RIGHT_CONTROL),
+                  listOf(LEFT_SHIFT, RIGHT_CONTROL),
           )
-          .to(keyCode = KeyCode.DOWN_ARROW, modifiers = listOf(ModifierKeyCode.LEFT_SHIFT))
+          .to(keyCode = KeyCode.DOWN_ARROW, modifiers = listOf(LEFT_SHIFT))
           .withCondition(unlessApp("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$"))
           .build())
 
@@ -256,10 +275,10 @@ fun createCapsLockRules(): KarabinerRule {
           .from(
               KeyCode.J,
               mandatoryModifiers =
-                  listOf(ModifierKeyCode.LEFT_SHIFT, ModifierKeyCode.RIGHT_CONTROL))
+                  listOf(LEFT_SHIFT, RIGHT_CONTROL))
           .to(
               keyCode = KeyCode.J,
-              modifiers = listOf(ModifierKeyCode.LEFT_CONTROL, ModifierKeyCode.LEFT_SHIFT))
+              modifiers = listOf(LEFT_CONTROL, LEFT_SHIFT))
           .withCondition(forApp("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$"))
           .build())
 
@@ -276,7 +295,7 @@ fun createCapsLockRules(): KarabinerRule {
       .forEach { (key, mouseKeyValue) ->
         manipulators.add(
             ManipulatorBuilder()
-                .from(key, mandatoryModifiers = listOf(ModifierKeyCode.RIGHT_CONTROL))
+                .from(key, mandatoryModifiers = listOf(RIGHT_CONTROL))
                 .to(mouseKey = mouseKeyValue)
                 .build())
       }
@@ -284,7 +303,7 @@ fun createCapsLockRules(): KarabinerRule {
   // Add return_or_enter + right_control to click mouse buttons
   manipulators.add(
       ManipulatorBuilder()
-          .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(ModifierKeyCode.RIGHT_CONTROL))
+          .from(KeyCode.RETURN_OR_ENTER, mandatoryModifiers = listOf(RIGHT_CONTROL))
           .to(pointingButton = "button1")
           .build())
 
@@ -293,11 +312,13 @@ fun createCapsLockRules(): KarabinerRule {
           .from(
               KeyCode.RETURN_OR_ENTER,
               mandatoryModifiers =
-                  listOf(ModifierKeyCode.LEFT_COMMAND, ModifierKeyCode.RIGHT_CONTROL))
+                  listOf(LEFT_COMMAND, RIGHT_CONTROL))
           .to(pointingButton = "button2")
           .build())
 
-  return KarabinerRule("Caps Lock -> Escape (alone) | Ctrl (simple)", manipulators)
+  rules.add(KarabinerRule("Caps Lock -> Escape (alone) | Ctrl (simple)", manipulators))
+
+  return rules.toTypedArray()
 }
 
 /** Creates manipulators for vim-style navigation with various modifier combinations */
@@ -307,30 +328,32 @@ fun createVimNavigationManipulators(): List<Manipulator> {
   data class ModifierCombo(val from: List<ModifierKeyCode>, val to: List<ModifierKeyCode>?)
 
   return listOf(
-          ModifierCombo(from = listOf(ModifierKeyCode.RIGHT_CONTROL), to = null),
+          ModifierCombo(from = listOf(RIGHT_CONTROL), to = null),
           ModifierCombo(
-              from = listOf(ModifierKeyCode.RIGHT_CONTROL, ModifierKeyCode.LEFT_COMMAND),
-              to = listOf(ModifierKeyCode.LEFT_COMMAND)),
+              from = listOf(RIGHT_CONTROL, LEFT_COMMAND),
+              to = listOf(LEFT_COMMAND)),
           ModifierCombo(
-              from = listOf(ModifierKeyCode.RIGHT_CONTROL, ModifierKeyCode.LEFT_OPTION),
-              to = listOf(ModifierKeyCode.LEFT_OPTION)),
+              from = listOf(RIGHT_CONTROL, LEFT_OPTION),
+              to = listOf(LEFT_OPTION)),
           ModifierCombo(
-              from = listOf(ModifierKeyCode.RIGHT_CONTROL, ModifierKeyCode.LEFT_SHIFT),
-              to = listOf(ModifierKeyCode.LEFT_SHIFT)),
-          ModifierCombo(
-              from =
-                  listOf(
-                      ModifierKeyCode.RIGHT_CONTROL,
-                      ModifierKeyCode.LEFT_COMMAND,
-                      ModifierKeyCode.LEFT_OPTION),
-              to = listOf(ModifierKeyCode.LEFT_COMMAND, ModifierKeyCode.LEFT_OPTION)),
+              from = listOf(RIGHT_CONTROL, LEFT_SHIFT),
+              to = listOf(LEFT_SHIFT)),
           ModifierCombo(
               from =
                   listOf(
-                      ModifierKeyCode.RIGHT_CONTROL,
-                      ModifierKeyCode.LEFT_COMMAND,
-                      ModifierKeyCode.LEFT_SHIFT),
-              to = listOf(ModifierKeyCode.LEFT_COMMAND, ModifierKeyCode.LEFT_SHIFT)),
+                    RIGHT_CONTROL,
+                    LEFT_COMMAND,
+                    LEFT_OPTION
+                  ),
+              to = listOf(LEFT_COMMAND, LEFT_OPTION)),
+          ModifierCombo(
+              from =
+                  listOf(
+                    RIGHT_CONTROL,
+                    LEFT_COMMAND,
+                    LEFT_SHIFT
+                  ),
+              to = listOf(LEFT_COMMAND, LEFT_SHIFT)),
       )
       .flatMap { combo ->
         VIM_NAV_KEYS.mapIndexed { index, keyChar ->
