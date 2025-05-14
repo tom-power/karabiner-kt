@@ -96,11 +96,11 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.SEMICOLON
                   toKey = KeyCode.EQUAL_SIGN
+                  toModifiers = listOf(LEFT_SHIFT)
                 }
                 mapping {
                   fromKey = KeyCode.QUOTE
                   toKey = KeyCode.EQUAL_SIGN
-                  toModifiers = listOf(LEFT_SHIFT)
                 }
 
                 // J K
