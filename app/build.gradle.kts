@@ -15,22 +15,18 @@ plugins {
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
 dependencies {
-
-    implementation(platform((libs.pods4k.bom)))
+    implementation(platform(libs.pods4k.bom))
     implementation(libs.bundles.pods4k)
-
-    implementation(libs.kotlinx.serialization.json) // Add the Kotlinx Serialization JSON library
-
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlin.reflect)
     testImplementation(libs.bundles.testing)
     testRuntimeOnly(libs.runtime.junit.platform)
 }
 
-// Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
