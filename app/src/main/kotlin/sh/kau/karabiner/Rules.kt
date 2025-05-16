@@ -10,7 +10,7 @@ import sh.kau.karabiner.ModifierKeyCode.RightControl
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
 fun createMainRules(): List<KarabinerRule> {
-  val newCapsLockModifiers = listOf(RightControl)
+  val newCapsLockModifiers = listOf(LeftControl)
   return listOf(
       karabinerRule {
         description = "Right Cmd (alone) -> Enter"
