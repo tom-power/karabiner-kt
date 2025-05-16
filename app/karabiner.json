@@ -52,7 +52,7 @@
                         ]
                     },
                     {
-                        "description": "Caps Lock alone -> Escape, held -> right_control",
+                        "description": "Caps Lock alone -> Escape, held -> RightControl",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -147,7 +147,7 @@
                         ]
                     },
                     {
-                        "description": "CapsLock + DOWN_ARROW -> Move Mouse Cursor",
+                        "description": "CapsLock + DownArrow -> Move Mouse Cursor",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -170,7 +170,7 @@
                         ]
                     },
                     {
-                        "description": "CapsLock + UP_ARROW -> Move Mouse Cursor",
+                        "description": "CapsLock + UpArrow -> Move Mouse Cursor",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -193,7 +193,7 @@
                         ]
                     },
                     {
-                        "description": "CapsLock + LEFT_ARROW -> Move Mouse Cursor",
+                        "description": "CapsLock + LeftArrow -> Move Mouse Cursor",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -216,7 +216,7 @@
                         ]
                     },
                     {
-                        "description": "CapsLock + RIGHT_ARROW -> Move Mouse Cursor",
+                        "description": "CapsLock + RightArrow -> Move Mouse Cursor",
                         "manipulators": [
                             {
                                 "type": "basic",

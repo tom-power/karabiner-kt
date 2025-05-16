@@ -1,57 +1,59 @@
 package sh.kau.karabiner
 
-import sh.kau.karabiner.ModifierKeyCode.LEFT_COMMAND
-import sh.kau.karabiner.ModifierKeyCode.LEFT_CONTROL
-import sh.kau.karabiner.ModifierKeyCode.LEFT_OPTION
-import sh.kau.karabiner.ModifierKeyCode.LEFT_SHIFT
-import sh.kau.karabiner.ModifierKeyCode.RIGHT_CONTROL
+import sh.kau.karabiner.ModifierKeyCode.LeftCommand
+import sh.kau.karabiner.ModifierKeyCode.LeftControl
+import sh.kau.karabiner.ModifierKeyCode.LeftOption
+import sh.kau.karabiner.ModifierKeyCode.LeftShift
+import sh.kau.karabiner.ModifierKeyCode.RightCommand
+import sh.kau.karabiner.ModifierKeyCode.RightControl
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
-fun createMainRules(): List<KarabinerRule> = listOf(
-  karabinerRule {
-      description = "Right Cmd (alone) -> Enter"
-      mapping {
-        fromKey = KeyCode.RIGHT_COMMAND
-        toKey = KeyCode.RIGHT_CONTROL
-        toKeyIfAlone = KeyCode.RETURN_OR_ENTER
-        forDevice { identifiers = DeviceIdentifier.APPLE_KEYBOARDS }
-      }
-    },
-    *createCapsLockRules(),
-    *createLayerKeyRules(),
-    *createVimNavigationRules(),
-    karabinerRuleSingle {
-      description = "O + 0 -> Raycast Confetti"
-      layerKey = KeyCode.O
-      fromKey = KeyCode.NUM_0
-      shellCommand = "open raycast://extensions/raycast/raycast/confetti"
-    },
-    karabinerRuleSingle {
-      description = "O + 1 -> Obsidian"
-      layerKey = KeyCode.O
-      fromKey = KeyCode.NUM_1
-      shellCommand = "open -a Obsidian.app"
-    },
-    karabinerRuleSingle {
-      description = "O + 2 -> Google Chrome"
-      layerKey = KeyCode.O
-      fromKey = KeyCode.NUM_2
-      shellCommand = "open -a 'Google Chrome.app'"
-    },
-    karabinerRuleSingle {
-      description = "O + 3 -> Warp"
-      layerKey = KeyCode.O
-      fromKey = KeyCode.NUM_3
-      shellCommand = "open -a 'Warp.app'"
-    },
-    karabinerRuleSingle {
-      description = "O + 4 -> Cursor"
-      layerKey = KeyCode.O
-      fromKey = KeyCode.NUM_4
-      shellCommand = "open -a 'Cursor.app'"
-    },
-)
+fun createMainRules(): List<KarabinerRule> =
+    listOf(
+        karabinerRule {
+          description = "Right Cmd (alone) -> Enter"
+          mapping {
+            fromKey = RightCommand
+            toKey = RightControl
+            toKeyIfAlone = KeyCode.ReturnOrEnter
+            forDevice { identifiers = DeviceIdentifier.APPLE_KEYBOARDS }
+          }
+        },
+        *createCapsLockRules(),
+        *createLayerKeyRules(),
+        *createVimNavigationRules(),
+        karabinerRuleSingle {
+          description = "O + 0 -> Raycast Confetti"
+          layerKey = KeyCode.O
+          fromKey = KeyCode.Num0
+          shellCommand = "open raycast://extensions/raycast/raycast/confetti"
+        },
+        karabinerRuleSingle {
+          description = "O + 1 -> Obsidian"
+          layerKey = KeyCode.O
+          fromKey = KeyCode.Num1
+          shellCommand = "open -a Obsidian.app"
+        },
+        karabinerRuleSingle {
+          description = "O + 2 -> Google Chrome"
+          layerKey = KeyCode.O
+          fromKey = KeyCode.Num2
+          shellCommand = "open -a 'Google Chrome.app'"
+        },
+        karabinerRuleSingle {
+          description = "O + 3 -> Warp"
+          layerKey = KeyCode.O
+          fromKey = KeyCode.Num3
+          shellCommand = "open -a 'Warp.app'"
+        },
+        karabinerRuleSingle {
+          description = "O + 4 -> Cursor"
+          layerKey = KeyCode.O
+          fromKey = KeyCode.Num4
+          shellCommand = "open -a 'Cursor.app'"
+        },
+    )
 
 fun createLayerKeyRules(): Array<KarabinerRule> =
     mutableListOf<KarabinerRule>()
@@ -66,24 +68,24 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 //   ^ & *
                 mapping {
                   fromKey = KeyCode.Y
-                  toKey = KeyCode.NUM_6
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num6
+                  toModifiers = listOf(LeftShift)
                 }
                 mapping {
                   fromKey = KeyCode.U
-                  toKey = KeyCode.NUM_7
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num7
+                  toModifiers = listOf(LeftShift)
                 }
                 mapping {
                   fromKey = KeyCode.I
-                  toKey = KeyCode.NUM_8
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num8
+                  toModifiers = listOf(LeftShift)
                 }
 
                 // special one - \
                 mapping {
                   fromKey = KeyCode.O
-                  toKey = KeyCode.BACKSLASH
+                  toKey = KeyCode.Backslash
                 }
 
                 // special ones
@@ -91,53 +93,53 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 //  - = +
                 mapping {
                   fromKey = KeyCode.L
-                  toKey = KeyCode.HYPHEN
+                  toKey = KeyCode.Hyphen
                 }
                 mapping {
-                  fromKey = KeyCode.SEMICOLON
-                  toKey = KeyCode.EQUAL_SIGN
-                  toModifiers = listOf(LEFT_SHIFT)
+                  fromKey = KeyCode.Semicolon
+                  toKey = KeyCode.EqualSign
+                  toModifiers = listOf(LeftShift)
                 }
                 mapping {
-                  fromKey = KeyCode.QUOTE
-                  toKey = KeyCode.EQUAL_SIGN
+                  fromKey = KeyCode.Quote
+                  toKey = KeyCode.EqualSign
                 }
 
                 // J K
                 // ( )
                 mapping {
                   fromKey = KeyCode.J
-                  toKey = KeyCode.NUM_9
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num9
+                  toModifiers = listOf(LeftShift)
                 }
                 mapping {
                   fromKey = KeyCode.K
-                  toKey = KeyCode.NUM_0
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num0
+                  toModifiers = listOf(LeftShift)
                 }
 
                 // M ,
                 // [ ]
                 mapping {
                   fromKey = KeyCode.M
-                  toKey = KeyCode.OPEN_BRACKET
+                  toKey = KeyCode.OpenBracket
                 }
                 mapping {
-                  fromKey = KeyCode.COMMA
-                  toKey = KeyCode.CLOSE_BRACKET
+                  fromKey = KeyCode.Comma
+                  toKey = KeyCode.CloseBracket
                 }
 
                 // . /
                 // { }
                 mapping {
-                  fromKey = KeyCode.PERIOD
-                  toKey = KeyCode.OPEN_BRACKET
-                  toModifiers = listOf(LEFT_SHIFT)
+                  fromKey = KeyCode.Period
+                  toKey = KeyCode.OpenBracket
+                  toModifiers = listOf(LeftShift)
                 }
                 mapping {
-                  fromKey = KeyCode.SLASH
-                  toKey = KeyCode.CLOSE_BRACKET
-                  toModifiers = listOf(LEFT_SHIFT)
+                  fromKey = KeyCode.Slash
+                  toKey = KeyCode.CloseBracket
+                  toModifiers = listOf(LeftShift)
                 }
               })
 
@@ -150,29 +152,29 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 // % $ # @ !
                 mapping {
                   fromKey = KeyCode.T
-                  toKey = KeyCode.NUM_5
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num5
+                  toModifiers = listOf(LeftShift)
                 }
                 mapping {
                   fromKey = KeyCode.R
-                  toKey = KeyCode.NUM_4
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num4
+                  toModifiers = listOf(LeftShift)
                 }
                 mapping {
                   fromKey = KeyCode.E
-                  toKey = KeyCode.NUM_3
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num3
+                  toModifiers = listOf(LeftShift)
                 }
 
                 mapping {
                   fromKey = KeyCode.W
-                  toKey = KeyCode.NUM_2
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num2
+                  toModifiers = listOf(LeftShift)
                 }
                 mapping {
                   fromKey = KeyCode.Q
-                  toKey = KeyCode.NUM_1
-                  toModifiers = listOf(LEFT_SHIFT)
+                  toKey = KeyCode.Num1
+                  toModifiers = listOf(LeftShift)
                 }
 
                 // Delete sequences
@@ -181,15 +183,15 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.S
                   toKey = KeyCode.U
-                  toModifiers = listOf(LEFT_CONTROL)
+                  toModifiers = listOf(LeftControl)
                   forApp {
                     bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
                   }
                 }
                 mapping {
                   fromKey = KeyCode.S
-                  toKey = KeyCode.DELETE_OR_BACKSPACE
-                  toModifiers = listOf(LEFT_COMMAND)
+                  toKey = KeyCode.DeleteOrBackspace
+                  toModifiers = listOf(LeftCommand)
                   unlessApp {
                     bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
                   }
@@ -199,15 +201,15 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 mapping {
                   fromKey = KeyCode.D
                   toKey = KeyCode.W
-                  toModifiers = listOf(LEFT_CONTROL)
+                  toModifiers = listOf(LeftControl)
                   forApp {
                     bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
                   }
                 }
                 mapping {
                   fromKey = KeyCode.D
-                  toKey = KeyCode.DELETE_OR_BACKSPACE
-                  toModifiers = listOf(LEFT_OPTION)
+                  toKey = KeyCode.DeleteOrBackspace
+                  toModifiers = listOf(LeftOption)
                   unlessApp {
                     bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
                   }
@@ -216,19 +218,19 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
                 // delete character
                 mapping {
                   fromKey = KeyCode.F
-                  toKey = KeyCode.DELETE_OR_BACKSPACE
+                  toKey = KeyCode.DeleteOrBackspace
                 }
 
                 // cmd shift [ + ] - for quick tab switching
                 mapping {
                   fromKey = KeyCode.X
-                  toKey = KeyCode.OPEN_BRACKET
-                  toModifiers = listOf(LEFT_COMMAND, LEFT_SHIFT)
+                  toKey = KeyCode.OpenBracket
+                  toModifiers = listOf(LeftCommand, LeftShift)
                 }
                 mapping {
                   fromKey = KeyCode.C
-                  toKey = KeyCode.CLOSE_BRACKET
-                  toModifiers = listOf(LEFT_COMMAND, LEFT_SHIFT)
+                  toKey = KeyCode.CloseBracket
+                  toModifiers = listOf(LeftCommand, LeftShift)
                 }
               })
         }
@@ -241,19 +243,19 @@ fun createCapsLockRules(): Array<KarabinerRule> {
   rules.addAll(
       listOf(
           karabinerRuleSingle {
-            description = "Caps Lock alone -> Escape, held -> right_control"
-            fromKey = KeyCode.CAPS_LOCK
-            toKey = KeyCode.RIGHT_CONTROL
-            toKeyIfAlone = KeyCode.ESCAPE
+            description = "Caps Lock alone -> Escape, held -> RightControl"
+            fromKey = KeyCode.CapsLock
+            toKey = RightControl
+            toKeyIfAlone = KeyCode.Escape
           },
-          // using the right_control mapping above
+          // using the RightControl mapping above
           // we map vim movements to it
           karabinerRuleSingle {
             description = "CapsLock + Shift + J -> Shift + ↓"
             fromKey = KeyCode.J
-            fromModifiers = FromModifiers(mandatory = listOf(LEFT_SHIFT, RIGHT_CONTROL))
-            toKey = KeyCode.DOWN_ARROW
-            toModifiers = listOf(LEFT_SHIFT)
+            fromModifiers = FromModifiers(mandatory = listOf(LeftShift, RightControl))
+            toKey = KeyCode.DownArrow
+            toModifiers = listOf(LeftShift)
             unlessApp {
               bundleIds = listOf("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$")
             }
@@ -261,26 +263,26 @@ fun createCapsLockRules(): Array<KarabinerRule> {
           karabinerRuleSingle {
             description = "CapsLock + Shift + J -> Shift + ↓"
             fromKey = KeyCode.J
-            fromModifiers = FromModifiers(mandatory = listOf(LEFT_SHIFT, RIGHT_CONTROL))
+            fromModifiers = FromModifiers(mandatory = listOf(LeftShift, RightControl))
             toKey = KeyCode.J
-            toModifiers = listOf(LEFT_CONTROL, LEFT_SHIFT)
+            toModifiers = listOf(LeftControl, LeftShift)
             forApp { bundleIds = listOf("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$") }
           },
       ))
 
   // Mouse control with arrow keys
   listOf(
-          Pair(KeyCode.DOWN_ARROW, MouseKey(y = 1536)),
-          Pair(KeyCode.UP_ARROW, MouseKey(y = -1536)),
-          Pair(KeyCode.LEFT_ARROW, MouseKey(x = -1536)),
-          Pair(KeyCode.RIGHT_ARROW, MouseKey(x = 1536)),
+          Pair(KeyCode.DownArrow, MouseKey(y = 1536)),
+          Pair(KeyCode.UpArrow, MouseKey(y = -1536)),
+          Pair(KeyCode.LeftArrow, MouseKey(x = -1536)),
+          Pair(KeyCode.RightArrow, MouseKey(x = 1536)),
       )
       .forEach { (fromKey, mouseKeyValue) ->
         rules.add(
             karabinerRuleSingle {
               description = "CapsLock + ${fromKey.name} -> Move Mouse Cursor"
               this.fromKey = fromKey
-              fromModifiers = FromModifiers(mandatory = listOf(RIGHT_CONTROL))
+              fromModifiers = FromModifiers(mandatory = listOf(RightControl))
               mouseKey = mouseKeyValue
             },
         )
@@ -290,13 +292,13 @@ fun createCapsLockRules(): Array<KarabinerRule> {
       karabinerRule {
         description = "CapsLock (+ Command) +  Enter -> Mouse (Secondary) Click Buttons"
         mapping {
-          fromKey = KeyCode.RETURN_OR_ENTER
-          fromModifiers = FromModifiers(mandatory = listOf(RIGHT_CONTROL))
+          fromKey = KeyCode.ReturnOrEnter
+          fromModifiers = FromModifiers(mandatory = listOf(RightControl))
           pointingButton = "button1"
         }
         mapping {
-          fromKey = KeyCode.RETURN_OR_ENTER
-          fromModifiers = FromModifiers(mandatory = listOf(LEFT_COMMAND, RIGHT_CONTROL))
+          fromKey = KeyCode.ReturnOrEnter
+          fromModifiers = FromModifiers(mandatory = listOf(LeftCommand, RightControl))
           pointingButton = "button2"
         }
       })
@@ -307,23 +309,23 @@ fun createCapsLockRules(): Array<KarabinerRule> {
 /** Creates manipulators for vim-style navigation with various modifier combinations */
 fun createVimNavigationRules(): Array<KarabinerRule> {
   val ARROW_KEYS: List<KeyCode> =
-      listOf(KeyCode.LEFT_ARROW, KeyCode.DOWN_ARROW, KeyCode.UP_ARROW, KeyCode.RIGHT_ARROW)
+      listOf(KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.UpArrow, KeyCode.RightArrow)
 
   val VIM_NAV_KEYS: List<KeyCode> = listOf(KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L)
 
   data class ModifierCombo(val from: List<ModifierKeyCode>, val to: List<ModifierKeyCode>?)
 
   return listOf(
-          ModifierCombo(from = listOf(RIGHT_CONTROL), to = null),
-          ModifierCombo(from = listOf(RIGHT_CONTROL, LEFT_COMMAND), to = listOf(LEFT_COMMAND)),
-          ModifierCombo(from = listOf(RIGHT_CONTROL, LEFT_OPTION), to = listOf(LEFT_OPTION)),
-          ModifierCombo(from = listOf(RIGHT_CONTROL, LEFT_SHIFT), to = listOf(LEFT_SHIFT)),
+          ModifierCombo(from = listOf(RightControl), to = null),
+          ModifierCombo(from = listOf(RightControl, LeftCommand), to = listOf(LeftCommand)),
+          ModifierCombo(from = listOf(RightControl, LeftOption), to = listOf(LeftOption)),
+          ModifierCombo(from = listOf(RightControl, LeftShift), to = listOf(LeftShift)),
           ModifierCombo(
-              from = listOf(RIGHT_CONTROL, LEFT_COMMAND, LEFT_OPTION),
-              to = listOf(LEFT_COMMAND, LEFT_OPTION)),
+              from = listOf(RightControl, LeftCommand, LeftOption),
+              to = listOf(LeftCommand, LeftOption)),
           ModifierCombo(
-              from = listOf(RIGHT_CONTROL, LEFT_COMMAND, LEFT_SHIFT),
-              to = listOf(LEFT_COMMAND, LEFT_SHIFT)),
+              from = listOf(RightControl, LeftCommand, LeftShift),
+              to = listOf(LeftCommand, LeftShift)),
       )
       .flatMap { combo ->
         VIM_NAV_KEYS.mapIndexed { index, keyChar ->

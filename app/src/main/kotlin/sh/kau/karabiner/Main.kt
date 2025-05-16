@@ -1,6 +1,7 @@
 package sh.kau.karabiner
 
 import kotlinx.serialization.json.Json
+import sh.kau.karabiner.ModifierKeyCode.RightCommand
 import java.io.File
 
 fun main() {
@@ -69,12 +70,12 @@ private fun deviceSpecificConfigs(): List<DeviceConfiguration> {
                   SimpleModification(
                       from =
                           SimpleModificationKey(
-                              keyCode = KeyCode.RIGHT_COMMAND,
+                              keyCode = RightCommand,
                           ),
                       to =
                           listOf(
                               SimpleModificationValue(
-                                  keyCode = KeyCode.RIGHT_CONTROL,
+                                  keyCode = ModifierKeyCode.RightControl,
                               ))))),
       DeviceConfiguration(
           identifiers = DeviceIdentifier(isKeyboard = true, productId = 50475, vendorId = 1133),
@@ -85,13 +86,11 @@ private fun deviceSpecificConfigs(): List<DeviceConfiguration> {
 internal fun functionKeys(): List<FnFunctionKey> =
     listOf(
         FnFunctionKey(
-            from = FromFnKey(KeyCode.F3), to = listOf(To(keyCode = KeyCode.MISSION_CONTROL))),
-        FnFunctionKey(from = FromFnKey(KeyCode.F4), to = listOf(To(keyCode = KeyCode.LAUNCHPAD))),
+            from = FromFnKey(KeyCode.F3), to = listOf(To(keyCode = KeyCode.MissionControl))),
+        FnFunctionKey(from = FromFnKey(KeyCode.F4), to = listOf(To(keyCode = KeyCode.Launchpad))),
         FnFunctionKey(
-            from = FromFnKey(KeyCode.F5),
-            to = listOf(To(keyCode = KeyCode.ILLUMINATION_DECREMENT))),
+            from = FromFnKey(KeyCode.F5), to = listOf(To(keyCode = KeyCode.IlluminationDecrement))),
         FnFunctionKey(
-            from = FromFnKey(KeyCode.F6),
-            to = listOf(To(keyCode = KeyCode.ILLUMINATION_INCREMENT))),
+            from = FromFnKey(KeyCode.F6), to = listOf(To(keyCode = KeyCode.IlluminationIncrement))),
         FnFunctionKey(
             from = FromFnKey(KeyCode.F9), to = listOf(To(consumerKeyCode = "fastforward"))))

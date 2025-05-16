@@ -27,6 +27,7 @@ data class Manipulator(
 
 @Serializable
 data class From(
+    @Serializable(with = KeyCodeAsStringSerializer::class)
     @SerialName("key_code") val keyCode: KeyCode? = null,
     val modifiers: FromModifiers? = null,
     @Serializable(with = SimultaneousKeyCodeListSerializer::class)
@@ -40,20 +41,24 @@ data class From(
     ) =
         From(
             keyCode = fromKeyCode,
-            modifiers = modifiers ?: FromModifiers(optional = listOf(ModifierKeyCode.ANY)),
+            modifiers = modifiers ?: FromModifiers(optional = listOf(ModifierKeyCode.Any)),
         )
   }
 }
 
 @Serializable
 data class FromModifiers(
+    @Serializable(with = ModifierKeyCodeListSerializer::class)
     val optional: List<ModifierKeyCode>? = null,
+    @Serializable(with = ModifierKeyCodeListSerializer::class)
     val mandatory: List<ModifierKeyCode>? = null
 )
 
 @Serializable
 data class To(
+    @Serializable(with = KeyCodeAsStringSerializer::class)
     @SerialName("key_code") val keyCode: KeyCode? = null,
+    @Serializable(with = ModifierKeyCodeListSerializer::class)
     val modifiers: List<ModifierKeyCode?>? = null,
     @SerialName("consumer_key_code") val consumerKeyCode: String? = null,
     @SerialName("shell_command") val shellCommand: String? = null,
@@ -137,241 +142,380 @@ data class SoftwareFunction(
     val iokitPowerManagementSleepSystem: JsonObject? = null // Representing an empty object {}
 )
 
-@Serializable
-enum class KeyCode {
-  @SerialName("caps_lock") CAPS_LOCK,
-  @SerialName("left_control") LEFT_CONTROL,
-  @SerialName("left_shift") LEFT_SHIFT,
-  @SerialName("left_option") LEFT_OPTION,
-  @SerialName("left_command") LEFT_COMMAND,
-  @SerialName("right_control") RIGHT_CONTROL,
-  @SerialName("right_shift") RIGHT_SHIFT,
-  @SerialName("right_option") RIGHT_OPTION,
-  @SerialName("right_command") RIGHT_COMMAND,
-  @SerialName("fn") FN,
-  @SerialName("return_or_enter") RETURN_OR_ENTER,
-  @SerialName("escape") ESCAPE,
-  @SerialName("delete_or_backspace") DELETE_OR_BACKSPACE,
-  @SerialName("delete_forward") DELETE_FORWARD,
-  @SerialName("tab") TAB,
-  @SerialName("spacebar") SPACEBAR,
-  @SerialName("hyper") HYPER,
-  @SerialName("hyphen") HYPHEN,
-  @SerialName("equal_sign") EQUAL_SIGN,
-  @SerialName("open_bracket") OPEN_BRACKET,
-  @SerialName("close_bracket") CLOSE_BRACKET,
-  @SerialName("backslash") BACKSLASH,
-  @SerialName("non_us_pound") NON_US_POUND,
-  @SerialName("semicolon") SEMICOLON,
-  @SerialName("quote") QUOTE,
-  @SerialName("grave_accent_and_tilde") GRAVE_ACCENT_AND_TILDE,
-  @SerialName("comma") COMMA,
-  @SerialName("period") PERIOD,
-  @SerialName("slash") SLASH,
-  @SerialName("non_us_backslash") NON_US_BACKSLASH,
-  @SerialName("up_arrow") UP_ARROW,
-  @SerialName("down_arrow") DOWN_ARROW,
-  @SerialName("left_arrow") LEFT_ARROW,
-  @SerialName("right_arrow") RIGHT_ARROW,
-  @SerialName("page_up") PAGE_UP,
-  @SerialName("page_down") PAGE_DOWN,
-  @SerialName("home") HOME,
-  @SerialName("end") END,
-  @SerialName("a") A,
-  @SerialName("b") B,
-  @SerialName("c") C,
-  @SerialName("d") D,
-  @SerialName("e") E,
-  @SerialName("f") F,
-  @SerialName("g") G,
-  @SerialName("h") H,
-  @SerialName("i") I,
-  @SerialName("j") J,
-  @SerialName("k") K,
-  @SerialName("l") L,
-  @SerialName("m") M,
-  @SerialName("n") N,
-  @SerialName("o") O,
-  @SerialName("p") P,
-  @SerialName("q") Q,
-  @SerialName("r") R,
-  @SerialName("s") S,
-  @SerialName("t") T,
-  @SerialName("u") U,
-  @SerialName("v") V,
-  @SerialName("w") W,
-  @SerialName("x") X,
-  @SerialName("y") Y,
-  @SerialName("z") Z,
-  @SerialName("1") NUM_1,
-  @SerialName("2") NUM_2,
-  @SerialName("3") NUM_3,
-  @SerialName("4") NUM_4,
-  @SerialName("5") NUM_5,
-  @SerialName("6") NUM_6,
-  @SerialName("7") NUM_7,
-  @SerialName("8") NUM_8,
-  @SerialName("9") NUM_9,
-  @SerialName("0") NUM_0,
-  @SerialName("f1") F1,
-  @SerialName("f2") F2,
-  @SerialName("f3") F3,
-  @SerialName("f4") F4,
-  @SerialName("f5") F5,
-  @SerialName("f6") F6,
-  @SerialName("f7") F7,
-  @SerialName("f8") F8,
-  @SerialName("f9") F9,
-  @SerialName("f10") F10,
-  @SerialName("f11") F11,
-  @SerialName("f12") F12,
-  @SerialName("f13") F13,
-  @SerialName("f14") F14,
-  @SerialName("f15") F15,
-  @SerialName("f16") F16,
-  @SerialName("f17") F17,
-  @SerialName("f18") F18,
-  @SerialName("f19") F19,
-  @SerialName("f20") F20,
-  @SerialName("f21") F21,
-  @SerialName("f22") F22,
-  @SerialName("f23") F23,
-  @SerialName("f24") F24,
-  @SerialName("display_brightness_decrement") DISPLAY_BRIGHTNESS_DECREMENT,
-  @SerialName("display_brightness_increment") DISPLAY_BRIGHTNESS_INCREMENT,
-  @SerialName("mission_control") MISSION_CONTROL,
-  @SerialName("launchpad") LAUNCHPAD,
-  @SerialName("dashboard") DASHBOARD,
-  @SerialName("illumination_decrement") ILLUMINATION_DECREMENT,
-  @SerialName("illumination_increment") ILLUMINATION_INCREMENT,
-  @SerialName("rewind") REWIND,
-  @SerialName("play_or_pause") PLAY_OR_PAUSE,
-  @SerialName("fastforward") FASTFORWARD,
-  @SerialName("mute") MUTE,
-  @SerialName("volume_decrement") VOLUME_DECREMENT,
-  @SerialName("volume_increment") VOLUME_INCREMENT,
-  @SerialName("eject") EJECT,
-  @SerialName("apple_display_brightness_decrement") APPLE_DISPLAY_BRIGHTNESS_DECREMENT,
-  @SerialName("apple_display_brightness_increment") APPLE_DISPLAY_BRIGHTNESS_INCREMENT,
+@Serializable(with = KeyCodeAsStringSerializer::class)
+sealed class KeyCode {
+  @Serializable @SerialName("caps_lock") object CapsLock : KeyCode()
+
+  @Serializable @SerialName("return_or_enter") object ReturnOrEnter : KeyCode()
+
+  @Serializable @SerialName("escape") object Escape : KeyCode()
+
+  @Serializable @SerialName("delete_or_backspace") object DeleteOrBackspace : KeyCode()
+
+  @Serializable @SerialName("delete_forward") object DeleteForward : KeyCode()
+
+  @Serializable @SerialName("tab") object Tab : KeyCode()
+
+  @Serializable @SerialName("spacebar") object Spacebar : KeyCode()
+
+  @Serializable @SerialName("hyphen") object Hyphen : KeyCode()
+
+  @Serializable @SerialName("equal_sign") object EqualSign : KeyCode()
+
+  @Serializable @SerialName("open_bracket") object OpenBracket : KeyCode()
+
+  @Serializable @SerialName("close_bracket") object CloseBracket : KeyCode()
+
+  @Serializable @SerialName("backslash") object Backslash : KeyCode()
+
+  @Serializable @SerialName("non_us_pound") object NonUsPound : KeyCode()
+
+  @Serializable @SerialName("semicolon") object Semicolon : KeyCode()
+
+  @Serializable @SerialName("quote") object Quote : KeyCode()
+
+  @Serializable @SerialName("grave_accent_and_tilde") object GraveAccentAndTilde : KeyCode()
+
+  @Serializable @SerialName("comma") object Comma : KeyCode()
+
+  @Serializable @SerialName("period") object Period : KeyCode()
+
+  @Serializable @SerialName("slash") object Slash : KeyCode()
+
+  @Serializable @SerialName("non_us_backslash") object NonUsBackslash : KeyCode()
+
+  @Serializable @SerialName("up_arrow") object UpArrow : KeyCode()
+
+  @Serializable @SerialName("down_arrow") object DownArrow : KeyCode()
+
+  @Serializable @SerialName("left_arrow") object LeftArrow : KeyCode()
+
+  @Serializable @SerialName("right_arrow") object RightArrow : KeyCode()
+
+  @Serializable @SerialName("page_up") object PageUp : KeyCode()
+
+  @Serializable @SerialName("page_down") object PageDown : KeyCode()
+
+  @Serializable @SerialName("home") object Home : KeyCode()
+
+  @Serializable @SerialName("end") object End : KeyCode()
+
+  @Serializable @SerialName("a") object A : KeyCode()
+
+  @Serializable @SerialName("b") object B : KeyCode()
+
+  @Serializable @SerialName("c") object C : KeyCode()
+
+  @Serializable @SerialName("d") object D : KeyCode()
+
+  @Serializable @SerialName("e") object E : KeyCode()
+
+  @Serializable @SerialName("f") object F : KeyCode()
+
+  @Serializable @SerialName("g") object G : KeyCode()
+
+  @Serializable @SerialName("h") object H : KeyCode()
+
+  @Serializable @SerialName("i") object I : KeyCode()
+
+  @Serializable @SerialName("j") object J : KeyCode()
+
+  @Serializable @SerialName("k") object K : KeyCode()
+
+  @Serializable @SerialName("l") object L : KeyCode()
+
+  @Serializable @SerialName("m") object M : KeyCode()
+
+  @Serializable @SerialName("n") object N : KeyCode()
+
+  @Serializable @SerialName("o") object O : KeyCode()
+
+  @Serializable @SerialName("p") object P : KeyCode()
+
+  @Serializable @SerialName("q") object Q : KeyCode()
+
+  @Serializable @SerialName("r") object R : KeyCode()
+
+  @Serializable @SerialName("s") object S : KeyCode()
+
+  @Serializable @SerialName("t") object T : KeyCode()
+
+  @Serializable @SerialName("u") object U : KeyCode()
+
+  @Serializable @SerialName("v") object V : KeyCode()
+
+  @Serializable @SerialName("w") object W : KeyCode()
+
+  @Serializable @SerialName("x") object X : KeyCode()
+
+  @Serializable @SerialName("y") object Y : KeyCode()
+
+  @Serializable @SerialName("z") object Z : KeyCode()
+
+  @Serializable @SerialName("1") object Num1 : KeyCode()
+
+  @Serializable @SerialName("2") object Num2 : KeyCode()
+
+  @Serializable @SerialName("3") object Num3 : KeyCode()
+
+  @Serializable @SerialName("4") object Num4 : KeyCode()
+
+  @Serializable @SerialName("5") object Num5 : KeyCode()
+
+  @Serializable @SerialName("6") object Num6 : KeyCode()
+
+  @Serializable @SerialName("7") object Num7 : KeyCode()
+
+  @Serializable @SerialName("8") object Num8 : KeyCode()
+
+  @Serializable @SerialName("9") object Num9 : KeyCode()
+
+  @Serializable @SerialName("0") object Num0 : KeyCode()
+
+  @Serializable @SerialName("f1") object F1 : KeyCode()
+
+  @Serializable @SerialName("f2") object F2 : KeyCode()
+
+  @Serializable @SerialName("f3") object F3 : KeyCode()
+
+  @Serializable @SerialName("f4") object F4 : KeyCode()
+
+  @Serializable @SerialName("f5") object F5 : KeyCode()
+
+  @Serializable @SerialName("f6") object F6 : KeyCode()
+
+  @Serializable @SerialName("f7") object F7 : KeyCode()
+
+  @Serializable @SerialName("f8") object F8 : KeyCode()
+
+  @Serializable @SerialName("f9") object F9 : KeyCode()
+
+  @Serializable @SerialName("f10") object F10 : KeyCode()
+
+  @Serializable @SerialName("f11") object F11 : KeyCode()
+
+  @Serializable @SerialName("f12") object F12 : KeyCode()
+
+  @Serializable @SerialName("f13") object F13 : KeyCode()
+
+  @Serializable @SerialName("f14") object F14 : KeyCode()
+
+  @Serializable @SerialName("f15") object F15 : KeyCode()
+
+  @Serializable @SerialName("f16") object F16 : KeyCode()
+
+  @Serializable @SerialName("f17") object F17 : KeyCode()
+
+  @Serializable @SerialName("f18") object F18 : KeyCode()
+
+  @Serializable @SerialName("f19") object F19 : KeyCode()
+
+  @Serializable @SerialName("f20") object F20 : KeyCode()
+
+  @Serializable @SerialName("f21") object F21 : KeyCode()
+
+  @Serializable @SerialName("f22") object F22 : KeyCode()
+
+  @Serializable @SerialName("f23") object F23 : KeyCode()
+
+  @Serializable @SerialName("f24") object F24 : KeyCode()
+
+  @Serializable
+  @SerialName("display_brightness_decrement")
+  object DisplayBrightnessDecrement : KeyCode()
+
+  @Serializable
+  @SerialName("display_brightness_increment")
+  object DisplayBrightnessIncrement : KeyCode()
+
+  @Serializable @SerialName("mission_control") object MissionControl : KeyCode()
+
+  @Serializable @SerialName("launchpad") object Launchpad : KeyCode()
+
+  @Serializable @SerialName("dashboard") object Dashboard : KeyCode()
+
+  @Serializable @SerialName("illumination_decrement") object IlluminationDecrement : KeyCode()
+
+  @Serializable @SerialName("illumination_increment") object IlluminationIncrement : KeyCode()
+
+  @Serializable @SerialName("rewind") object Rewind : KeyCode()
+
+  @Serializable @SerialName("play_or_pause") object PlayOrPause : KeyCode()
+
+  @Serializable @SerialName("fastforward") object Fastforward : KeyCode()
+
+  @Serializable @SerialName("mute") object Mute : KeyCode()
+
+  @Serializable @SerialName("volume_decrement") object VolumeDecrement : KeyCode()
+
+  @Serializable @SerialName("volume_increment") object VolumeIncrement : KeyCode()
+
+  @Serializable @SerialName("eject") object Eject : KeyCode()
+
+  @Serializable
+  @SerialName("apple_display_brightness_decrement")
+  object AppleDisplayBrightnessDecrement : KeyCode()
+
+  @Serializable
+  @SerialName("apple_display_brightness_increment")
+  object AppleDisplayBrightnessIncrement : KeyCode()
+
+  @Serializable
   @SerialName("apple_top_case_display_brightness_decrement")
-  APPLE_TOP_CASE_DISPLAY_BRIGHTNESS_DECREMENT,
+  object AppleTopCaseDisplayBrightnessDecrement : KeyCode()
+
+  @Serializable
   @SerialName("apple_top_case_display_brightness_increment")
-  APPLE_TOP_CASE_DISPLAY_BRIGHTNESS_INCREMENT,
-  @SerialName("keypad_num_lock") KEYPAD_NUM_LOCK,
-  @SerialName("keypad_slash") KEYPAD_SLASH,
-  @SerialName("keypad_asterisk") KEYPAD_ASTERISK,
-  @SerialName("keypad_hyphen") KEYPAD_HYPHEN,
-  @SerialName("keypad_plus") KEYPAD_PLUS,
-  @SerialName("keypad_enter") KEYPAD_ENTER,
-  @SerialName("keypad_1") KEYPAD_1,
-  @SerialName("keypad_2") KEYPAD_2,
-  @SerialName("keypad_3") KEYPAD_3,
-  @SerialName("keypad_4") KEYPAD_4,
-  @SerialName("keypad_5") KEYPAD_5,
-  @SerialName("keypad_6") KEYPAD_6,
-  @SerialName("keypad_7") KEYPAD_7,
-  @SerialName("keypad_8") KEYPAD_8,
-  @SerialName("keypad_9") KEYPAD_9,
-  @SerialName("keypad_0") KEYPAD_0,
-  @SerialName("keypad_period") KEYPAD_PERIOD,
-  @SerialName("keypad_equal_sign") KEYPAD_EQUAL_SIGN,
-  @SerialName("keypad_comma") KEYPAD_COMMA,
-  @SerialName("vk_none") VK_NONE,
-  @SerialName("print_screen") PRINT_SCREEN,
-  @SerialName("scroll_lock") SCROLL_LOCK,
-  @SerialName("pause") PAUSE,
-  @SerialName("insert") INSERT,
-  @SerialName("application") APPLICATION,
-  @SerialName("help") HELP,
-  @SerialName("power") POWER,
-  @SerialName("execute") EXECUTE,
-  @SerialName("menu") MENU,
-  @SerialName("select") SELECT,
-  @SerialName("stop") STOP,
-  @SerialName("again") AGAIN,
-  @SerialName("undo") UNDO,
-  @SerialName("cut") CUT,
-  @SerialName("copy") COPY,
-  @SerialName("paste") PASTE,
-  @SerialName("find") FIND,
-  @SerialName("international1") INTERNATIONAL1,
-  @SerialName("international2") INTERNATIONAL2,
-  @SerialName("international3") INTERNATIONAL3,
-  @SerialName("international4") INTERNATIONAL4,
-  @SerialName("international5") INTERNATIONAL5,
-  @SerialName("international6") INTERNATIONAL6,
-  @SerialName("international7") INTERNATIONAL7,
-  @SerialName("international8") INTERNATIONAL8,
-  @SerialName("international9") INTERNATIONAL9,
-  @SerialName("lang1") LANG1,
-  @SerialName("lang2") LANG2,
-  @SerialName("lang3") LANG3,
-  @SerialName("lang4") LANG4,
-  @SerialName("lang5") LANG5,
-  @SerialName("lang6") LANG6,
-  @SerialName("lang7") LANG7,
-  @SerialName("lang8") LANG8,
-  @SerialName("lang9") LANG9,
-  @SerialName("japanese_eisuu") JAPANESE_EISUU,
-  @SerialName("japanese_kana") JAPANESE_KANA,
-  @SerialName("japanese_pc_nfer") JAPANESE_PC_NFER,
-  @SerialName("japanese_pc_xfer") JAPANESE_PC_XFER,
-  @SerialName("japanese_pc_katakana") JAPANESE_PC_KATAKANA,
-  @SerialName("keypad_equal_sign_as400") KEYPAD_EQUAL_SIGN_AS400,
-  @SerialName("locking_caps_lock") LOCKING_CAPS_LOCK,
-  @SerialName("locking_num_lock") LOCKING_NUM_LOCK,
-  @SerialName("locking_scroll_lock") LOCKING_SCROLL_LOCK,
-  @SerialName("alternate_erase") ALTERNATE_ERASE,
-  @SerialName("sys_req_or_attention") SYS_REQ_OR_ATTENTION,
-  @SerialName("cancel") CANCEL,
-  @SerialName("clear") CLEAR,
-  @SerialName("prior") PRIOR,
-  @SerialName("return") RETURN,
-  @SerialName("separator") SEPARATOR,
-  @SerialName("out") OUT,
-  @SerialName("oper") OPER,
-  @SerialName("clear_or_again") CLEAR_OR_AGAIN,
-  @SerialName("cr_sel_or_props") CR_SEL_OR_PROPS,
-  @SerialName("ex_sel") EX_SEL,
-  @SerialName("left_alt") LEFT_ALT, // alias for left_option
-  @SerialName("left_gui") LEFT_GUI, // alias for left_command
-  @SerialName("right_alt") RIGHT_ALT, // alias for right_option
-  @SerialName("right_gui") RIGHT_GUI, // alias for right_command
-  @SerialName("vk_consumer_brightness_down") VK_CONSUMER_BRIGHTNESS_DOWN,
-  @SerialName("vk_consumer_brightness_up") VK_CONSUMER_BRIGHTNESS_UP,
-  @SerialName("vk_mission_control") VK_MISSION_CONTROL,
-  @SerialName("vk_launchpad") VK_LAUNCHPAD,
-  @SerialName("vk_dashboard") VK_DASHBOARD,
-  @SerialName("vk_consumer_illumination_down") VK_CONSUMER_ILLUMINATION_DOWN,
-  @SerialName("vk_consumer_illumination_up") VK_CONSUMER_ILLUMINATION_UP,
-  @SerialName("vk_consumer_previous") VK_CONSUMER_PREVIOUS,
-  @SerialName("vk_consumer_play") VK_CONSUMER_PLAY,
-  @SerialName("vk_consumer_next") VK_CONSUMER_NEXT,
-  @SerialName("volume_down") VOLUME_DOWN, // alias for volume_decrement
-  @SerialName("volume_up") VOLUME_UP // alias for volume_increment
+  object AppleTopCaseDisplayBrightnessIncrement : KeyCode()
+
+  @Serializable @SerialName("keypad_num_lock") object KeypadNumLock : KeyCode()
+
+  @Serializable @SerialName("keypad_slash") object KeypadSlash : KeyCode()
+
+  @Serializable @SerialName("keypad_asterisk") object KeypadAsterisk : KeyCode()
+
+  @Serializable @SerialName("keypad_hyphen") object KeypadHyphen : KeyCode()
+
+  @Serializable @SerialName("keypad_plus") object KeypadPlus : KeyCode()
+
+  @Serializable @SerialName("keypad_enter") object KeypadEnter : KeyCode()
+
+  @Serializable @SerialName("keypad_1") object Keypad1 : KeyCode()
+
+  @Serializable @SerialName("keypad_2") object Keypad2 : KeyCode()
+
+  @Serializable @SerialName("keypad_3") object Keypad3 : KeyCode()
+
+  @Serializable @SerialName("keypad_4") object Keypad4 : KeyCode()
+
+  @Serializable @SerialName("keypad_5") object Keypad5 : KeyCode()
+
+  @Serializable @SerialName("keypad_6") object Keypad6 : KeyCode()
+
+  @Serializable @SerialName("keypad_7") object Keypad7 : KeyCode()
+
+  @Serializable @SerialName("keypad_8") object Keypad8 : KeyCode()
+
+  @Serializable @SerialName("keypad_9") object Keypad9 : KeyCode()
+
+  @Serializable @SerialName("keypad_0") object Keypad0 : KeyCode()
+
+  @Serializable @SerialName("keypad_period") object KeypadPeriod : KeyCode()
+
+  @Serializable @SerialName("keypad_equal_sign") object KeypadEqualSign : KeyCode()
+
+  @Serializable @SerialName("keypad_comma") object KeypadComma : KeyCode()
+
+  @Serializable @SerialName("keypad_equal_sign_as400") object KeypadEqualSignAs400 : KeyCode()
+
+  @Serializable @SerialName("locking_caps_lock") object LockingCapsLock : KeyCode()
+
+  @Serializable @SerialName("locking_num_lock") object LockingNumLock : KeyCode()
+
+  @Serializable @SerialName("locking_scroll_lock") object LockingScrollLock : KeyCode()
+
+  @Serializable @SerialName("alternate_erase") object AlternateErase : KeyCode()
+
+  @Serializable @SerialName("sys_req_or_attention") object SysReqOrAttention : KeyCode()
+
+  @Serializable @SerialName("cancel") object Cancel : KeyCode()
+
+  @Serializable @SerialName("clear") object Clear : KeyCode()
+
+  @Serializable @SerialName("prior") object Prior : KeyCode()
+
+  @Serializable @SerialName("return") object Return : KeyCode()
+
+  @Serializable @SerialName("separator") object Separator : KeyCode()
+
+  @Serializable @SerialName("out") object Out : KeyCode()
+
+  @Serializable @SerialName("oper") object Oper : KeyCode()
+
+  @Serializable @SerialName("clear_or_again") object ClearOrAgain : KeyCode()
+
+  @Serializable @SerialName("cr_sel_or_props") object CrSelOrProps : KeyCode()
+
+  @Serializable @SerialName("ex_sel") object ExSel : KeyCode()
+
+  @Serializable
+  @SerialName("vk_consumer_brightness_down")
+  object VkConsumerBrightnessDown : KeyCode()
+
+  @Serializable @SerialName("vk_consumer_brightness_up") object VkConsumerBrightnessUp : KeyCode()
+
+  @Serializable @SerialName("vk_mission_control") object VkMissionControl : KeyCode()
+
+  @Serializable @SerialName("vk_launchpad") object VkLaunchpad : KeyCode()
+
+  @Serializable @SerialName("vk_dashboard") object VkDashboard : KeyCode()
+
+  @Serializable
+  @SerialName("vk_consumer_illumination_down")
+  object VkConsumerIlluminationDown : KeyCode()
+
+  @Serializable
+  @SerialName("vk_consumer_illumination_up")
+  object VkConsumerIlluminationUp : KeyCode()
+
+  @Serializable @SerialName("vk_consumer_previous") object VkConsumerPrevious : KeyCode()
+
+  @Serializable @SerialName("vk_consumer_play") object VkConsumerPlay : KeyCode()
+
+  @Serializable @SerialName("vk_consumer_next") object VkConsumerNext : KeyCode()
+
+  val name = this::class.simpleName ?: error("Unknown key name")
+
+  companion object {
+    fun from(name: String): KeyCode {
+      return KeyCode::class
+          .sealedSubclasses
+          .firstNotNullOfOrNull { it.objectInstance }
+          ?.takeIf { it::class.simpleName.equals(name, ignoreCase = true) }
+          ?: error("Unknown KeyCode: $name")
+    }
+  }
 }
 
-@Serializable
-enum class ModifierKeyCode {
-  @SerialName("caps_lock") CAPS_LOCK,
-  @SerialName("left_command") LEFT_COMMAND,
-  @SerialName("left_control") LEFT_CONTROL,
-  @SerialName("left_option") LEFT_OPTION,
-  @SerialName("left_shift") LEFT_SHIFT,
-  @SerialName("right_command") RIGHT_COMMAND,
-  @SerialName("right_control") RIGHT_CONTROL,
-  @SerialName("right_option") RIGHT_OPTION,
-  @SerialName("right_shift") RIGHT_SHIFT,
-  @SerialName("fn") FN,
-  @SerialName("command") COMMAND,
-  @SerialName("control") CONTROL,
-  @SerialName("option") OPTION,
-  @SerialName("shift") SHIFT,
-  @SerialName("left_alt") LEFT_ALT,
-  @SerialName("left_gui") LEFT_GUI,
-  @SerialName("right_alt") RIGHT_ALT,
-  @SerialName("right_gui") RIGHT_GUI,
-  @SerialName("any") ANY
+@Serializable(with = ModifierKeyCodeAsStringSerializer::class)
+sealed class ModifierKeyCode : KeyCode() {
+  @Serializable @SerialName("hyper") object Hyper : KeyCode()
+
+  @Serializable @SerialName("left_control") object LeftControl : ModifierKeyCode()
+
+  @Serializable @SerialName("left_shift") object LeftShift : ModifierKeyCode()
+
+  @Serializable @SerialName("left_option") object LeftOption : ModifierKeyCode()
+
+  @Serializable @SerialName("left_command") object LeftCommand : ModifierKeyCode()
+
+  @Serializable @SerialName("right_control") object RightControl : ModifierKeyCode()
+
+  @Serializable @SerialName("right_shift") object RightShift : ModifierKeyCode()
+
+  @Serializable @SerialName("right_option") object RightOption : ModifierKeyCode()
+
+  @Serializable @SerialName("right_command") object RightCommand : ModifierKeyCode()
+
+  @Serializable @SerialName("fn") object Fn : ModifierKeyCode()
+
+  @Serializable @SerialName("command") object Command : ModifierKeyCode()
+
+  @Serializable @SerialName("control") object Control : ModifierKeyCode()
+
+  @Serializable @SerialName("option") object Option : ModifierKeyCode()
+
+  @Serializable @SerialName("shift") object Shift : ModifierKeyCode()
+
+  @Serializable @SerialName("left_alt") object LeftAlt : ModifierKeyCode()
+
+  @Serializable @SerialName("left_gui") object LeftGui : ModifierKeyCode()
+
+  @Serializable @SerialName("right_alt") object RightAlt : ModifierKeyCode()
+
+  @Serializable @SerialName("right_gui") object RightGui : ModifierKeyCode()
+
+  @Serializable @SerialName("any") object Any : ModifierKeyCode()
 }
 
 @Serializable
@@ -596,7 +740,10 @@ data class VirtualHidKeyboard(
     val keyboardType: String = "ansi" // e.g., "ansi"
 )
 
-@Serializable data class FromFnKey(@SerialName("key_code") val keyCode: KeyCode)
+@Serializable data class FromFnKey(
+    @Serializable(with = KeyCodeAsStringSerializer::class)
+    @SerialName("key_code") val keyCode: KeyCode
+)
 
 @Serializable data class FnFunctionKey(val from: FromFnKey, val to: List<To>)
 
@@ -606,6 +753,12 @@ data class SimpleModification(
     val to: List<SimpleModificationValue>
 )
 
-@Serializable data class SimpleModificationKey(@SerialName("key_code") val keyCode: KeyCode)
+@Serializable data class SimpleModificationKey(
+    @Serializable(with = KeyCodeAsStringSerializer::class)
+    @SerialName("key_code") val keyCode: KeyCode
+)
 
-@Serializable data class SimpleModificationValue(@SerialName("key_code") val keyCode: KeyCode)
+@Serializable data class SimpleModificationValue(
+    @Serializable(with = KeyCodeAsStringSerializer::class)
+    @SerialName("key_code") val keyCode: KeyCode
+)
