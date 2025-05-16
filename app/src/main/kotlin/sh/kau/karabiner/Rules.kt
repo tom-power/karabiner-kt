@@ -9,51 +9,53 @@ import sh.kau.karabiner.ModifierKeyCode.RightControl
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
-fun createMainRules(): List<KarabinerRule> =
-    listOf(
-        karabinerRule {
-          description = "Right Cmd (alone) -> Enter"
-          mapping {
-            fromKey = RightCommand
-            toKey = RightControl
-            toKeyIfAlone = KeyCode.ReturnOrEnter
-            forDevice { identifiers = DeviceIdentifier.APPLE_KEYBOARDS }
-          }
-        },
-        *createCapsLockRules(),
-        *createLayerKeyRules(),
-        *createVimNavigationRules(),
-        karabinerRuleSingle {
-          description = "O + 0 -> Raycast Confetti"
-          layerKey = KeyCode.O
-          fromKey = KeyCode.Num0
-          shellCommand = "open raycast://extensions/raycast/raycast/confetti"
-        },
-        karabinerRuleSingle {
-          description = "O + 1 -> Obsidian"
-          layerKey = KeyCode.O
-          fromKey = KeyCode.Num1
-          shellCommand = "open -a Obsidian.app"
-        },
-        karabinerRuleSingle {
-          description = "O + 2 -> Google Chrome"
-          layerKey = KeyCode.O
-          fromKey = KeyCode.Num2
-          shellCommand = "open -a 'Google Chrome.app'"
-        },
-        karabinerRuleSingle {
-          description = "O + 3 -> Warp"
-          layerKey = KeyCode.O
-          fromKey = KeyCode.Num3
-          shellCommand = "open -a 'Warp.app'"
-        },
-        karabinerRuleSingle {
-          description = "O + 4 -> Cursor"
-          layerKey = KeyCode.O
-          fromKey = KeyCode.Num4
-          shellCommand = "open -a 'Cursor.app'"
-        },
-    )
+fun createMainRules(): List<KarabinerRule> {
+  val newCapsLockModifiers = listOf(RightControl)
+  return listOf(
+      karabinerRule {
+        description = "Right Cmd (alone) -> Enter"
+        mapping {
+          fromKey = RightCommand
+          toKey = RightControl
+          toKeyIfAlone = KeyCode.ReturnOrEnter
+          forDevice { identifiers = DeviceIdentifier.APPLE_KEYBOARDS }
+        }
+      },
+      *createCapsLockRules(newCapsLockModifiers),
+      *createLayerKeyRules(),
+      *createVimNavigationRules(newCapsLockModifiers),
+      karabinerRuleSingle {
+        description = "O + 0 -> Raycast Confetti"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.Num0
+        shellCommand = "open raycast://extensions/raycast/raycast/confetti"
+      },
+      karabinerRuleSingle {
+        description = "O + 1 -> Obsidian"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.Num1
+        shellCommand = "open -a Obsidian.app"
+      },
+      karabinerRuleSingle {
+        description = "O + 2 -> Google Chrome"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.Num2
+        shellCommand = "open -a 'Google Chrome.app'"
+      },
+      karabinerRuleSingle {
+        description = "O + 3 -> Warp"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.Num3
+        shellCommand = "open -a 'Warp.app'"
+      },
+      karabinerRuleSingle {
+        description = "O + 4 -> Cursor"
+        layerKey = KeyCode.O
+        fromKey = KeyCode.Num4
+        shellCommand = "open -a 'Cursor.app'"
+      },
+  )
+}
 
 fun createLayerKeyRules(): Array<KarabinerRule> =
     mutableListOf<KarabinerRule>()
@@ -237,7 +239,7 @@ fun createLayerKeyRules(): Array<KarabinerRule> =
         .toTypedArray()
 
 /** --- Caps Lock -> Escape (alone) -> Ctrl (on hold) -> hold + Vim keys -> Arrow/Mouse */
-fun createCapsLockRules(): Array<KarabinerRule> {
+fun createCapsLockRules(newCapsLockModifiers: List<ModifierKeyCode>): Array<KarabinerRule> {
   val rules = mutableListOf<KarabinerRule>()
 
   rules.addAll(
@@ -245,15 +247,16 @@ fun createCapsLockRules(): Array<KarabinerRule> {
           karabinerRuleSingle {
             description = "Caps Lock alone -> Escape, held -> RightControl"
             fromKey = KeyCode.CapsLock
-            toKey = RightControl
+            toKey = newCapsLockModifiers.first()
+            toModifiers = newCapsLockModifiers.drop(1).takeIf { it.isNotEmpty() }
             toKeyIfAlone = KeyCode.Escape
           },
-          // using the RightControl mapping above
+          // using the newCapsLockModifier mapping above
           // we map vim movements to it
           karabinerRuleSingle {
             description = "CapsLock + Shift + J -> Shift + ↓"
             fromKey = KeyCode.J
-            fromModifiers = FromModifiers(mandatory = listOf(LeftShift, RightControl))
+            fromModifiers = FromModifiers(mandatory = listOf(LeftShift) + newCapsLockModifiers)
             toKey = KeyCode.DownArrow
             toModifiers = listOf(LeftShift)
             unlessApp {
@@ -263,7 +266,7 @@ fun createCapsLockRules(): Array<KarabinerRule> {
           karabinerRuleSingle {
             description = "CapsLock + Shift + J -> Shift + ↓"
             fromKey = KeyCode.J
-            fromModifiers = FromModifiers(mandatory = listOf(LeftShift, RightControl))
+            fromModifiers = FromModifiers(mandatory = listOf(LeftShift) + newCapsLockModifiers)
             toKey = KeyCode.J
             toModifiers = listOf(LeftControl, LeftShift)
             forApp { bundleIds = listOf("com.google.android.studio", "^com\\\\.jetbrains\\\\..*$") }
@@ -282,7 +285,7 @@ fun createCapsLockRules(): Array<KarabinerRule> {
             karabinerRuleSingle {
               description = "CapsLock + ${fromKey.name} -> Move Mouse Cursor"
               this.fromKey = fromKey
-              fromModifiers = FromModifiers(mandatory = listOf(RightControl))
+              fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
               mouseKey = mouseKeyValue
             },
         )
@@ -293,12 +296,12 @@ fun createCapsLockRules(): Array<KarabinerRule> {
         description = "CapsLock (+ Command) +  Enter -> Mouse (Secondary) Click Buttons"
         mapping {
           fromKey = KeyCode.ReturnOrEnter
-          fromModifiers = FromModifiers(mandatory = listOf(RightControl))
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
           pointingButton = "button1"
         }
         mapping {
           fromKey = KeyCode.ReturnOrEnter
-          fromModifiers = FromModifiers(mandatory = listOf(LeftCommand, RightControl))
+          fromModifiers = FromModifiers(mandatory = listOf(LeftCommand) + newCapsLockModifiers)
           pointingButton = "button2"
         }
       })
@@ -307,7 +310,7 @@ fun createCapsLockRules(): Array<KarabinerRule> {
 }
 
 /** Creates manipulators for vim-style navigation with various modifier combinations */
-fun createVimNavigationRules(): Array<KarabinerRule> {
+fun createVimNavigationRules(newCapsLockModifiers: List<ModifierKeyCode>): Array<KarabinerRule> {
   val ARROW_KEYS: List<KeyCode> =
       listOf(KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.UpArrow, KeyCode.RightArrow)
 
@@ -316,15 +319,15 @@ fun createVimNavigationRules(): Array<KarabinerRule> {
   data class ModifierCombo(val from: List<ModifierKeyCode>, val to: List<ModifierKeyCode>?)
 
   return listOf(
-          ModifierCombo(from = listOf(RightControl), to = null),
-          ModifierCombo(from = listOf(RightControl, LeftCommand), to = listOf(LeftCommand)),
-          ModifierCombo(from = listOf(RightControl, LeftOption), to = listOf(LeftOption)),
-          ModifierCombo(from = listOf(RightControl, LeftShift), to = listOf(LeftShift)),
+          ModifierCombo(from = newCapsLockModifiers, to = null),
+          ModifierCombo(from = newCapsLockModifiers + listOf(LeftCommand), to = listOf(LeftCommand)),
+          ModifierCombo(from = newCapsLockModifiers + listOf(LeftOption), to = listOf(LeftOption)),
+          ModifierCombo(from = newCapsLockModifiers + listOf(LeftShift), to = listOf(LeftShift)),
           ModifierCombo(
-              from = listOf(RightControl, LeftCommand, LeftOption),
+              from = newCapsLockModifiers + listOf(LeftCommand, LeftOption),
               to = listOf(LeftCommand, LeftOption)),
           ModifierCombo(
-              from = listOf(RightControl, LeftCommand, LeftShift),
+              from = newCapsLockModifiers + listOf(LeftCommand, LeftShift),
               to = listOf(LeftCommand, LeftShift)),
       )
       .flatMap { combo ->
