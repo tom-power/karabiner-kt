@@ -1,16 +1,17 @@
 package sh.kau.karabiner
 
-import sh.kau.karabiner.ModifierKeyCode.LeftCommand
-import sh.kau.karabiner.ModifierKeyCode.LeftControl
-import sh.kau.karabiner.ModifierKeyCode.LeftOption
-import sh.kau.karabiner.ModifierKeyCode.LeftShift
-import sh.kau.karabiner.ModifierKeyCode.RightCommand
-import sh.kau.karabiner.ModifierKeyCode.RightControl
+import sh.kau.karabiner.ModifierKeyCode.*
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
 fun createMainRules(): List<KarabinerRule> {
-  val newCapsLockModifiers = listOf(LeftControl)
+
+  // explicitly mapping to right side modifiers
+  // as i find myself using the (left) capslock + left modifiers
+  // if i already use left-modifier for capslock hyper
+  // karabiner won't see those
+  val newCapsLockModifiers = listOf(RightControl, RightCommand, RightOption, RightShift)
+
   return listOf(
       karabinerRule {
         description = "Right Cmd (alone) -> Enter"
@@ -320,7 +321,8 @@ fun createVimNavigationRules(newCapsLockModifiers: List<ModifierKeyCode>): Array
 
   return listOf(
           ModifierCombo(from = newCapsLockModifiers, to = null),
-          ModifierCombo(from = newCapsLockModifiers + listOf(LeftCommand), to = listOf(LeftCommand)),
+          ModifierCombo(
+              from = newCapsLockModifiers + listOf(LeftCommand), to = listOf(LeftCommand)),
           ModifierCombo(from = newCapsLockModifiers + listOf(LeftOption), to = listOf(LeftOption)),
           ModifierCombo(from = newCapsLockModifiers + listOf(LeftShift), to = listOf(LeftShift)),
           ModifierCombo(
