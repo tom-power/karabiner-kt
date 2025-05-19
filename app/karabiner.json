@@ -47,46 +47,14 @@
                         ]
                     },
                     {
-                        "description": "Caps Lock alone -> Escape, held -> Hyper",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + H -> LeftArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
                                 "from": {
-                                    "key_code": "caps_lock",
-                                    "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "right_control",
-                                        "modifiers": [
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift"
-                                        ]
-                                    }
-                                ],
-                                "to_if_alone": [
-                                    {
-                                        "key_code": "escape"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + Shift + J -> Shift + ↓",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "j",
+                                    "key_code": "h",
                                     "modifiers": {
                                         "mandatory": [
-                                            "left_shift",
                                             "right_control",
                                             "right_command",
                                             "right_option",
@@ -96,8 +64,653 @@
                                 },
                                 "to": [
                                     {
+                                        "key_code": "left_arrow"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + J -> DownArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "down_arrow"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + K -> UpArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "up_arrow"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + L -> RightArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "l",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_arrow"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + H -> LeftArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_arrow",
+                                        "modifiers": [
+                                            "left_command"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + J -> DownArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
                                         "key_code": "down_arrow",
                                         "modifiers": [
+                                            "left_command"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + K -> UpArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "up_arrow",
+                                        "modifiers": [
+                                            "left_command"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + L -> RightArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "l",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_arrow",
+                                        "modifiers": [
+                                            "left_command"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + H -> LeftArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_arrow",
+                                        "modifiers": [
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + J -> DownArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "down_arrow",
+                                        "modifiers": [
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + K -> UpArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "up_arrow",
+                                        "modifiers": [
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + L -> RightArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "l",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_arrow",
+                                        "modifiers": [
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + H -> LeftArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_arrow",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + J -> DownArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "down_arrow",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + K -> UpArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "up_arrow",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + L -> RightArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "l",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_arrow",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + H -> LeftArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command",
+                                            "left_option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_arrow",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + J -> DownArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command",
+                                            "left_option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "down_arrow",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + K -> UpArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command",
+                                            "left_option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "up_arrow",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + L -> RightArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "l",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command",
+                                            "left_option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_arrow",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + H -> LeftArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command",
+                                            "left_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_arrow",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_shift"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + J -> DownArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command",
+                                            "left_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "down_arrow",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_shift"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + K -> UpArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command",
+                                            "left_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "up_arrow",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_shift"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + L -> RightArrow",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "l",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_control",
+                                            "right_command",
+                                            "right_option",
+                                            "right_shift",
+                                            "left_command",
+                                            "left_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_arrow",
+                                        "modifiers": [
+                                            "left_command",
                                             "left_shift"
                                         ]
                                     }
@@ -1919,672 +2532,31 @@
                         ]
                     },
                     {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + H -> LeftArrow",
+                        "description": "Caps Lock alone -> Escape, held -> Hyper(♦)",
                         "manipulators": [
                             {
                                 "type": "basic",
                                 "from": {
-                                    "key_code": "h",
+                                    "key_code": "caps_lock",
                                     "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_control",
+                                        "modifiers": [
                                             "right_command",
                                             "right_option",
                                             "right_shift"
                                         ]
                                     }
-                                },
-                                "to": [
+                                ],
+                                "to_if_alone": [
                                     {
-                                        "key_code": "left_arrow"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + J -> DownArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "down_arrow"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + K -> UpArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "up_arrow"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + L -> RightArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "right_arrow"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + H -> LeftArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_arrow",
-                                        "modifiers": [
-                                            "left_command"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + J -> DownArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "down_arrow",
-                                        "modifiers": [
-                                            "left_command"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + K -> UpArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "up_arrow",
-                                        "modifiers": [
-                                            "left_command"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + L -> RightArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "right_arrow",
-                                        "modifiers": [
-                                            "left_command"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + H -> LeftArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_arrow",
-                                        "modifiers": [
-                                            "left_option"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + J -> DownArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "down_arrow",
-                                        "modifiers": [
-                                            "left_option"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + K -> UpArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "up_arrow",
-                                        "modifiers": [
-                                            "left_option"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + L -> RightArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "right_arrow",
-                                        "modifiers": [
-                                            "left_option"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + H -> LeftArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_arrow",
-                                        "modifiers": [
-                                            "left_shift"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + J -> DownArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "down_arrow",
-                                        "modifiers": [
-                                            "left_shift"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + K -> UpArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "up_arrow",
-                                        "modifiers": [
-                                            "left_shift"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + L -> RightArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "right_arrow",
-                                        "modifiers": [
-                                            "left_shift"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + H -> LeftArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_arrow",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_option"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + J -> DownArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "down_arrow",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_option"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + K -> UpArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "up_arrow",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_option"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + L -> RightArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "right_arrow",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_option"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + H -> LeftArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_arrow",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_shift"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + J -> DownArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "down_arrow",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_shift"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + K -> UpArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "up_arrow",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_shift"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + L -> RightArrow",
-                        "manipulators": [
-                            {
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_control",
-                                            "right_command",
-                                            "right_option",
-                                            "right_shift",
-                                            "left_command",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "right_arrow",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_shift"
-                                        ]
+                                        "key_code": "escape"
                                     }
                                 ]
                             }
