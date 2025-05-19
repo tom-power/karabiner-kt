@@ -28,6 +28,7 @@ fun createMainRules(): List<KarabinerRule> {
       },
       *createVimNavigationRules(newCapsLockModifiers),
       *createLayerKeyRules(),
+      // capslock (hyper) keys are different and can't be added as simple layer key rules
       karabinerRuleSingle {
         description = "Caps Lock alone -> Escape, held -> Hyper(♦)"
         fromKey = KeyCode.CapsLock
@@ -35,41 +36,38 @@ fun createMainRules(): List<KarabinerRule> {
         toModifiers = newCapsLockModifiers.drop(1).takeIf { it.isNotEmpty() }
         toKeyIfAlone = KeyCode.Escape
       },
-//      karabinerRuleSingle {
-//        description = "♦ + C -> Raycast Confetti"
-//        layerKey = KeyCode.O
-//        fromKey = KeyCode.Num0
-//        shellCommand = "open raycast://extensions/raycast/raycast/confetti"
-//      },
-      karabinerRuleSingle {
-        description = "O + 0 -> Raycast Confetti"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.Num0
-        shellCommand = "open raycast://extensions/raycast/raycast/confetti"
-      },
-      karabinerRuleSingle {
-        description = "O + 1 -> Obsidian"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.Num1
-        shellCommand = "open -a Obsidian.app"
-      },
-      karabinerRuleSingle {
-        description = "O + 2 -> Google Chrome"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.Num2
-        shellCommand = "open -a 'Google Chrome.app'"
-      },
-      karabinerRuleSingle {
-        description = "O + 3 -> Warp"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.Num3
-        shellCommand = "open -a 'Warp.app'"
-      },
-      karabinerRuleSingle {
-        description = "O + 4 -> Cursor"
-        layerKey = KeyCode.O
-        fromKey = KeyCode.Num4
-        shellCommand = "open -a 'Cursor.app'"
+      karabinerRule {
+        description = "Hyper(♦) Key launches"
+        mapping {
+          fromKey = KeyCode.C
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open raycast://extensions/raycast/raycast/confetti"
+        }
+        mapping {
+          fromKey = KeyCode.Num0
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open -a 'Warp.app'"
+        }
+        mapping {
+          fromKey = KeyCode.Num9
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open -a 'Google Chrome.app'"
+        }
+        mapping {
+          fromKey = KeyCode.O
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open -a Obsidian.app"
+        }
+        mapping {
+          fromKey = KeyCode.U
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open -a 'Cursor.app'"
+        }
+        mapping {
+          fromKey = KeyCode.A
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open -a 'Android Studio.app'"
+        }
       },
   )
 }
