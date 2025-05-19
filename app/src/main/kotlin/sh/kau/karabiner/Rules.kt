@@ -244,8 +244,8 @@ fun createVimNavigationRules(newCapsLockModifiers: List<ModifierKeyCode>): Array
   val rules = mutableListOf<KarabinerRule>()
 
   // important for position in list between the two
-  val ARROW_KEYS: List<KeyCode> = listOf(LeftArrow, DownArrow, UpArrow, RightArrow)
-  val VIM_NAV_KEYS: List<KeyCode> = listOf(KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L)
+  val arrowKeys: List<KeyCode> = listOf(LeftArrow, DownArrow, UpArrow, RightArrow)
+  val vimNavKeys: List<KeyCode> = listOf(KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L)
 
   // map capsLock + (below list of modifier combo) + vim keys
   //     capsLock + (below list of modifier combo) + arrow keys
@@ -258,19 +258,19 @@ fun createVimNavigationRules(newCapsLockModifiers: List<ModifierKeyCode>): Array
           listOf(LeftCommand, LeftShift),
       )
       .forEach { modifiers ->
-        VIM_NAV_KEYS.forEachIndexed { index, vimKey ->
+        vimNavKeys.forEachIndexed { index, vimKey ->
           val fromModifierList = newCapsLockModifiers + (modifiers ?: emptyList<ModifierKeyCode>())
           val fromModifierListDesc =
               fromModifierList.joinToString(" + ") { it::class.simpleName.toString() }
           val desc =
-              "CapsLock + $fromModifierListDesc + ${vimKey::class.simpleName} -> ${ARROW_KEYS[index]::class.simpleName}"
+              "CapsLock + $fromModifierListDesc + ${vimKey::class.simpleName} -> ${arrowKeys[index]::class.simpleName}"
 
           rules.add(
               karabinerRuleSingle {
                 description = desc
                 fromKey = vimKey
                 fromModifiers = FromModifiers(mandatory = fromModifierList)
-                toKey = ARROW_KEYS[index]
+                toKey = arrowKeys[index]
                 toModifiers = modifiers
               },
           )
