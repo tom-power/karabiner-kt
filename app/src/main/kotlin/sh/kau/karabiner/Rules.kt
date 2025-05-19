@@ -27,7 +27,6 @@ fun createMainRules(): List<KarabinerRule> {
         }
       },
       *createVimNavigationRules(newCapsLockModifiers),
-      *createLayerKeyRules(),
       // capslock (hyper) keys are different and can't be added as simple layer key rules
       karabinerRuleSingle {
         description = "Caps Lock alone -> Escape, held -> Hyper(♦)"
@@ -67,6 +66,174 @@ fun createMainRules(): List<KarabinerRule> {
           fromKey = KeyCode.A
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
           shellCommand = "open -a 'Android Studio.app'"
+        }
+      },
+      karabinerRule {
+        description = "F-key layer mappings"
+        layerKey = KeyCode.F
+
+        // --- mapped to right hand side Shift num keys -
+        //   Y U I
+        //   ^ & *
+        mapping {
+          fromKey = KeyCode.Y
+          toKey = KeyCode.Num6
+          toModifiers = listOf(LeftShift)
+        }
+        mapping {
+          fromKey = KeyCode.U
+          toKey = KeyCode.Num7
+          toModifiers = listOf(LeftShift)
+        }
+        mapping {
+          fromKey = KeyCode.I
+          toKey = KeyCode.Num8
+          toModifiers = listOf(LeftShift)
+        }
+
+        // special one - \
+        mapping {
+          fromKey = KeyCode.O
+          toKey = KeyCode.Backslash
+        }
+
+        // special ones
+        //  L ; '
+        //  - = +
+        mapping {
+          fromKey = KeyCode.L
+          toKey = KeyCode.Hyphen
+        }
+        mapping {
+          fromKey = KeyCode.Semicolon
+          toKey = KeyCode.EqualSign
+          toModifiers = listOf(LeftShift)
+        }
+        mapping {
+          fromKey = KeyCode.Quote
+          toKey = KeyCode.EqualSign
+        }
+
+        // J K
+        // ( )
+        mapping {
+          fromKey = KeyCode.J
+          toKey = KeyCode.Num9
+          toModifiers = listOf(LeftShift)
+        }
+        mapping {
+          fromKey = KeyCode.K
+          toKey = KeyCode.Num0
+          toModifiers = listOf(LeftShift)
+        }
+
+        // M ,
+        // [ ]
+        mapping {
+          fromKey = KeyCode.M
+          toKey = KeyCode.OpenBracket
+        }
+        mapping {
+          fromKey = KeyCode.Comma
+          toKey = KeyCode.CloseBracket
+        }
+
+        // . /
+        // { }
+        mapping {
+          fromKey = KeyCode.Period
+          toKey = KeyCode.OpenBracket
+          toModifiers = listOf(LeftShift)
+        }
+        mapping {
+          fromKey = KeyCode.Slash
+          toKey = KeyCode.CloseBracket
+          toModifiers = listOf(LeftShift)
+        }
+      },
+      karabinerRule {
+        description = "J-key layer mappings"
+        layerKey = KeyCode.J
+
+        // T R E W Q
+        // % $ # @ !
+        mapping {
+          fromKey = KeyCode.T
+          toKey = KeyCode.Num5
+          toModifiers = listOf(LeftShift)
+        }
+        mapping {
+          fromKey = KeyCode.R
+          toKey = KeyCode.Num4
+          toModifiers = listOf(LeftShift)
+        }
+        mapping {
+          fromKey = KeyCode.E
+          toKey = KeyCode.Num3
+          toModifiers = listOf(LeftShift)
+        }
+
+        mapping {
+          fromKey = KeyCode.W
+          toKey = KeyCode.Num2
+          toModifiers = listOf(LeftShift)
+        }
+        mapping {
+          fromKey = KeyCode.Q
+          toKey = KeyCode.Num1
+          toModifiers = listOf(LeftShift)
+        }
+
+        // Delete sequences
+
+        // delete line
+        mapping {
+          fromKey = KeyCode.S
+          toKey = KeyCode.U
+          toModifiers = listOf(LeftControl)
+          forApp { bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$") }
+        }
+        mapping {
+          fromKey = KeyCode.S
+          toKey = KeyCode.DeleteOrBackspace
+          toModifiers = listOf(LeftCommand)
+          unlessApp {
+            bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
+          }
+        }
+
+        // delete word
+        mapping {
+          fromKey = KeyCode.D
+          toKey = KeyCode.W
+          toModifiers = listOf(LeftControl)
+          forApp { bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$") }
+        }
+        mapping {
+          fromKey = KeyCode.D
+          toKey = KeyCode.DeleteOrBackspace
+          toModifiers = listOf(LeftOption)
+          unlessApp {
+            bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
+          }
+        }
+
+        // delete character
+        mapping {
+          fromKey = KeyCode.F
+          toKey = KeyCode.DeleteOrBackspace
+        }
+
+        // cmd shift [ + ] - for quick tab switching
+        mapping {
+          fromKey = KeyCode.X
+          toKey = KeyCode.OpenBracket
+          toModifiers = listOf(LeftCommand, LeftShift)
+        }
+        mapping {
+          fromKey = KeyCode.C
+          toKey = KeyCode.CloseBracket
+          toModifiers = listOf(LeftCommand, LeftShift)
         }
       },
   )
@@ -112,187 +279,6 @@ fun createVimNavigationRules(newCapsLockModifiers: List<ModifierKeyCode>): Array
 
   return rules.toTypedArray()
 }
-
-fun createLayerKeyRules(): Array<KarabinerRule> =
-    mutableListOf<KarabinerRule>()
-        .apply {
-          add(
-              karabinerRule {
-                description = "F-key layer mappings"
-                layerKey = KeyCode.F
-
-                // --- mapped to right hand side Shift num keys -
-                //   Y U I
-                //   ^ & *
-                mapping {
-                  fromKey = KeyCode.Y
-                  toKey = KeyCode.Num6
-                  toModifiers = listOf(LeftShift)
-                }
-                mapping {
-                  fromKey = KeyCode.U
-                  toKey = KeyCode.Num7
-                  toModifiers = listOf(LeftShift)
-                }
-                mapping {
-                  fromKey = KeyCode.I
-                  toKey = KeyCode.Num8
-                  toModifiers = listOf(LeftShift)
-                }
-
-                // special one - \
-                mapping {
-                  fromKey = KeyCode.O
-                  toKey = KeyCode.Backslash
-                }
-
-                // special ones
-                //  L ; '
-                //  - = +
-                mapping {
-                  fromKey = KeyCode.L
-                  toKey = KeyCode.Hyphen
-                }
-                mapping {
-                  fromKey = KeyCode.Semicolon
-                  toKey = KeyCode.EqualSign
-                  toModifiers = listOf(LeftShift)
-                }
-                mapping {
-                  fromKey = KeyCode.Quote
-                  toKey = KeyCode.EqualSign
-                }
-
-                // J K
-                // ( )
-                mapping {
-                  fromKey = KeyCode.J
-                  toKey = KeyCode.Num9
-                  toModifiers = listOf(LeftShift)
-                }
-                mapping {
-                  fromKey = KeyCode.K
-                  toKey = KeyCode.Num0
-                  toModifiers = listOf(LeftShift)
-                }
-
-                // M ,
-                // [ ]
-                mapping {
-                  fromKey = KeyCode.M
-                  toKey = KeyCode.OpenBracket
-                }
-                mapping {
-                  fromKey = KeyCode.Comma
-                  toKey = KeyCode.CloseBracket
-                }
-
-                // . /
-                // { }
-                mapping {
-                  fromKey = KeyCode.Period
-                  toKey = KeyCode.OpenBracket
-                  toModifiers = listOf(LeftShift)
-                }
-                mapping {
-                  fromKey = KeyCode.Slash
-                  toKey = KeyCode.CloseBracket
-                  toModifiers = listOf(LeftShift)
-                }
-              })
-
-          add(
-              karabinerRule {
-                description = "J-key layer mappings"
-                layerKey = KeyCode.J
-
-                // T R E W Q
-                // % $ # @ !
-                mapping {
-                  fromKey = KeyCode.T
-                  toKey = KeyCode.Num5
-                  toModifiers = listOf(LeftShift)
-                }
-                mapping {
-                  fromKey = KeyCode.R
-                  toKey = KeyCode.Num4
-                  toModifiers = listOf(LeftShift)
-                }
-                mapping {
-                  fromKey = KeyCode.E
-                  toKey = KeyCode.Num3
-                  toModifiers = listOf(LeftShift)
-                }
-
-                mapping {
-                  fromKey = KeyCode.W
-                  toKey = KeyCode.Num2
-                  toModifiers = listOf(LeftShift)
-                }
-                mapping {
-                  fromKey = KeyCode.Q
-                  toKey = KeyCode.Num1
-                  toModifiers = listOf(LeftShift)
-                }
-
-                // Delete sequences
-
-                // delete line
-                mapping {
-                  fromKey = KeyCode.S
-                  toKey = KeyCode.U
-                  toModifiers = listOf(LeftControl)
-                  forApp {
-                    bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
-                  }
-                }
-                mapping {
-                  fromKey = KeyCode.S
-                  toKey = KeyCode.DeleteOrBackspace
-                  toModifiers = listOf(LeftCommand)
-                  unlessApp {
-                    bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
-                  }
-                }
-
-                // delete word
-                mapping {
-                  fromKey = KeyCode.D
-                  toKey = KeyCode.W
-                  toModifiers = listOf(LeftControl)
-                  forApp {
-                    bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
-                  }
-                }
-                mapping {
-                  fromKey = KeyCode.D
-                  toKey = KeyCode.DeleteOrBackspace
-                  toModifiers = listOf(LeftOption)
-                  unlessApp {
-                    bundleIds = listOf("^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$")
-                  }
-                }
-
-                // delete character
-                mapping {
-                  fromKey = KeyCode.F
-                  toKey = KeyCode.DeleteOrBackspace
-                }
-
-                // cmd shift [ + ] - for quick tab switching
-                mapping {
-                  fromKey = KeyCode.X
-                  toKey = KeyCode.OpenBracket
-                  toModifiers = listOf(LeftCommand, LeftShift)
-                }
-                mapping {
-                  fromKey = KeyCode.C
-                  toKey = KeyCode.CloseBracket
-                  toModifiers = listOf(LeftCommand, LeftShift)
-                }
-              })
-        }
-        .toTypedArray()
 
 /**
  * temporarily disabled as i don't use it as much and would rather use it for more prevalent
