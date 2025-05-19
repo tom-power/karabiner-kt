@@ -313,33 +313,41 @@ fun capsLockMouseRules(newCapsLockModifiers: List<ModifierKeyCode>): Array<Karab
 
 /** Creates manipulators for vim-style navigation with various modifier combinations */
 fun createVimNavigationRules(newCapsLockModifiers: List<ModifierKeyCode>): Array<KarabinerRule> {
+  val rules = mutableListOf<KarabinerRule>()
+
+  // important for position in list between the two
   val ARROW_KEYS: List<KeyCode> = listOf(LeftArrow, DownArrow, UpArrow, RightArrow)
   val VIM_NAV_KEYS: List<KeyCode> = listOf(KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L)
 
-  data class ModifierCombo(val from: List<ModifierKeyCode>, val to: List<ModifierKeyCode>?)
-
-  return listOf(
-          ModifierCombo(from = newCapsLockModifiers, to = null),
-          ModifierCombo(
-              from = newCapsLockModifiers + listOf(LeftCommand), to = listOf(LeftCommand)),
-          ModifierCombo(from = newCapsLockModifiers + listOf(LeftOption), to = listOf(LeftOption)),
-          ModifierCombo(from = newCapsLockModifiers + listOf(LeftShift), to = listOf(LeftShift)),
-          ModifierCombo(
-              from = newCapsLockModifiers + listOf(LeftCommand, LeftOption),
-              to = listOf(LeftCommand, LeftOption)),
-          ModifierCombo(
-              from = newCapsLockModifiers + listOf(LeftCommand, LeftShift),
-              to = listOf(LeftCommand, LeftShift)),
+  // map capsLock + (below list of modifier combo) + vim keys
+  //     capsLock + (below list of modifier combo) + arrow keys
+  arrayOf(
+          null,
+          listOf(LeftCommand),
+          listOf(LeftOption),
+          listOf(LeftShift),
+          listOf(LeftCommand, LeftOption),
+          listOf(LeftCommand, LeftShift),
       )
-      .flatMap { combo ->
-        VIM_NAV_KEYS.mapIndexed { index, keyChar ->
-          karabinerRuleSingle {
-            fromKey = keyChar
-            fromModifiers = FromModifiers(mandatory = combo.from)
-            toKey = ARROW_KEYS[index]
-            toModifiers = combo.to
-          }
+      .forEach { modifiers ->
+        VIM_NAV_KEYS.forEachIndexed { index, vimKey ->
+          val fromModifierList = newCapsLockModifiers + (modifiers ?: emptyList<ModifierKeyCode>())
+          val fromModifierListDesc =
+              fromModifierList.joinToString(" + ") { it::class.simpleName.toString() }
+          val desc =
+              "CapsLock + $fromModifierListDesc + ${vimKey::class.simpleName} -> ${ARROW_KEYS[index]::class.simpleName}"
+
+          rules.add(
+              karabinerRuleSingle {
+                description = desc
+                fromKey = vimKey
+                fromModifiers = FromModifiers(mandatory = fromModifierList)
+                toKey = ARROW_KEYS[index]
+                toModifiers = modifiers
+              },
+          )
         }
       }
-      .toTypedArray()
+
+  return rules.toTypedArray()
 }

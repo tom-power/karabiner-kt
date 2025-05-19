@@ -1919,7 +1919,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + H -> LeftArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -1943,7 +1943,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + J -> DownArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -1967,7 +1967,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + K -> UpArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -1991,7 +1991,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + L -> RightArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2015,7 +2015,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + H -> LeftArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2043,7 +2043,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + J -> DownArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2071,7 +2071,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + K -> UpArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2099,7 +2099,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + L -> RightArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2127,7 +2127,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + H -> LeftArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2155,7 +2155,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + J -> DownArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2183,7 +2183,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + K -> UpArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2211,7 +2211,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftOption + L -> RightArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2239,7 +2239,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + H -> LeftArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2267,7 +2267,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + J -> DownArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2295,7 +2295,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + K -> UpArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2323,7 +2323,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftShift + L -> RightArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2351,7 +2351,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + H -> LeftArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2381,7 +2381,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + J -> DownArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2411,7 +2411,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + K -> UpArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2441,7 +2441,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftOption + L -> RightArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2471,7 +2471,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + H -> LeftArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2501,7 +2501,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + J -> DownArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2531,7 +2531,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + K -> UpArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -2561,7 +2561,7 @@
                         ]
                     },
                     {
-                        "description": "",
+                        "description": "CapsLock + RightControl + RightCommand + RightOption + RightShift + LeftCommand + LeftShift + L -> RightArrow",
                         "manipulators": [
                             {
                                 "type": "basic",
