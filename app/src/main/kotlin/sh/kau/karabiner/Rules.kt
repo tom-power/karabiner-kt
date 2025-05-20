@@ -4,7 +4,14 @@ import sh.kau.karabiner.KeyCode.DownArrow
 import sh.kau.karabiner.KeyCode.LeftArrow
 import sh.kau.karabiner.KeyCode.RightArrow
 import sh.kau.karabiner.KeyCode.UpArrow
-import sh.kau.karabiner.ModifierKeyCode.*
+import sh.kau.karabiner.ModifierKeyCode.LeftCommand
+import sh.kau.karabiner.ModifierKeyCode.LeftControl
+import sh.kau.karabiner.ModifierKeyCode.LeftOption
+import sh.kau.karabiner.ModifierKeyCode.LeftShift
+import sh.kau.karabiner.ModifierKeyCode.RightCommand
+import sh.kau.karabiner.ModifierKeyCode.RightControl
+import sh.kau.karabiner.ModifierKeyCode.RightOption
+import sh.kau.karabiner.ModifierKeyCode.RightShift
 
 // Note: The final karabinerConfig construction and JSON writing will be in Main.kt
 
@@ -66,6 +73,11 @@ fun createMainRules(): List<KarabinerRule> {
           fromKey = KeyCode.A
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
           shellCommand = "open -a 'Android Studio.app'"
+        }
+        mapping {
+          fromKey = KeyCode.I
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open raycast://extensions/raycast/raycast-ai/ai-chat"
         }
       },
       karabinerRule {
