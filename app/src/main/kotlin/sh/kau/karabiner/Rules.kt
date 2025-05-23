@@ -52,7 +52,7 @@ fun createMainRules(): List<KarabinerRule> {
         mapping {
           fromKey = KeyCode.Num0
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
-          shellCommand = "open -a 'Warp.app'"
+          shellCommand = "open -a 'Ghostty.app'"
         }
         mapping {
           fromKey = KeyCode.Num9
