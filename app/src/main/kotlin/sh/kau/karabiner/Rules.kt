@@ -70,12 +70,12 @@ fun createMainRules(): List<KarabinerRule> {
           shellCommand = "open -a 'Cursor.app'"
         }
         mapping {
-          fromKey = KeyCode.A
+          fromKey = KeyCode.S
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
           shellCommand = "open -a 'Android Studio.app'"
         }
         mapping {
-          fromKey = KeyCode.I
+          fromKey = KeyCode.A
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
           shellCommand = "open raycast://extensions/raycast/raycast-ai/ai-chat"
         }
