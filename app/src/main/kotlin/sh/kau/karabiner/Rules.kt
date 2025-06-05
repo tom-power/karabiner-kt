@@ -79,6 +79,16 @@ fun createMainRules(): List<KarabinerRule> {
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
           shellCommand = "open raycast://extensions/raycast/raycast-ai/ai-chat"
         }
+        mapping {
+          fromKey = KeyCode.N
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open -a 'Mission Control.app' --args 2"
+        }
+        mapping {
+          fromKey = KeyCode.M
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open -a 'Mission Control.app' --args 3"
+        }
       },
       karabinerRule {
         description = "F-key layer mappings"
