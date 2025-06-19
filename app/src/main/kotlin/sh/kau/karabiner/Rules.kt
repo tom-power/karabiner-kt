@@ -57,7 +57,7 @@ fun createMainRules(): List<KarabinerRule> {
         mapping {
           fromKey = KeyCode.Num9
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
-          shellCommand = "open -a 'Google Chrome.app'"
+          shellCommand = "open -a 'dia.app'"
         }
         mapping {
           fromKey = KeyCode.O
