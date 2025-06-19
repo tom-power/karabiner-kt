@@ -80,12 +80,17 @@ fun createMainRules(): List<KarabinerRule> {
           shellCommand = "open raycast://extensions/raycast/raycast-ai/ai-chat"
         }
         mapping {
-          fromKey = KeyCode.N
+          fromKey = KeyCode.D   // desktop
+          fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
+          shellCommand = "open -a 'Mission Control.app' --args 1"
+        }
+        mapping {
+          fromKey = KeyCode.N   // app expose
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
           shellCommand = "open -a 'Mission Control.app' --args 2"
         }
         mapping {
-          fromKey = KeyCode.M
+          fromKey = KeyCode.M   // mission control
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
           shellCommand = "open -a 'Mission Control.app' --args 3"
         }
