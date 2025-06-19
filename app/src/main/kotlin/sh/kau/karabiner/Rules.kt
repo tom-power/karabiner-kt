@@ -119,6 +119,13 @@ fun createMainRules(): List<KarabinerRule> {
           toKey = KeyCode.Backslash
         }
 
+        // special one - |
+        mapping {
+          fromKey = KeyCode.P
+          toKey = KeyCode.Backslash
+          toModifiers = listOf(LeftShift)
+        }
+
         // special ones
         //  L ; '
         //  - = +
