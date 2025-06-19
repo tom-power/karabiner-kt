@@ -47,7 +47,7 @@ fun createMainRules(): List<KarabinerRule> {
         mapping {
           fromKey = KeyCode.C
           fromModifiers = FromModifiers(mandatory = newCapsLockModifiers)
-          shellCommand = "open raycast://extensions/raycast/raycast/confetti"
+          shellCommand = "open -g raycast://extensions/raycast/raycast/confetti"
         }
         mapping {
           fromKey = KeyCode.Num0
