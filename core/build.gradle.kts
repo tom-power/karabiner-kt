@@ -10,8 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization) // Apply the Kotlin serialization plugin
 
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
+    `java-library`
 }
 
 repositories {
@@ -23,22 +22,31 @@ dependencies {
     implementation(libs.bundles.pods4k)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlin.reflect)
-    implementation(project(":core"))
 
     testImplementation(libs.bundles.testing)
     testRuntimeOnly(libs.runtime.junit.platform)
+}
+
+base {
+    archivesName = "karabiner-kt-core"
 }
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+    withSourcesJar()
 }
 
-application {
-    // Define the main class for the application.
-    mainClass = "sh.kau.karabiner.MainKt"
+version = "1.0.0"
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Implementation-Title"] = "karabiner-kt-core"
+        attributes["Implementation-Version"] = project.version
+    }
 }
+
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()

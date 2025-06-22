@@ -11,4 +11,5 @@ plugins {
 }
 
 rootProject.name = "karabiner-kt"
+include("core")
 include("app")

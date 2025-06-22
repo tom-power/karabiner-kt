@@ -1,9 +1,13 @@
+@file:Suppress("unused")
+
 package sh.kau.karabiner
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+
+
 
 @Serializable
 data class KarabinerRule(

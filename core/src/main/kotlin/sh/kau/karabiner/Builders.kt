@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package sh.kau.karabiner
 
 import kotlinx.serialization.json.JsonPrimitive
