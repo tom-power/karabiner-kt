@@ -103,45 +103,6 @@ $RECYCLE.BIN/
 *.iws
 /.idea/*
 
-# Don't gitignore project specific files
-# ref: https://www.jetbrains.com/help/idea/directories-used-by-the-ide-to-store-settings-caches-plugins-and-logs.html#system-directory
-
-!/.idea/copyright/
-!/.idea/encodings.xml
-!/.idea/fileTemplates/
-!/.idea/inspectionProfiles/
-!/.idea/scopes/
-!/.idea/vcs.xml
-
-# customized code style schemes
-!/.idea/codeStyles/
-
-# Intellij Project Icon
-!.idea/icon.svg
-
-# Intellij Project Name
-!.idea/.name
-
-# to start clean, remove the ".default" suffix in these xmls
-# and replace your existing ones with them
-
-# List of gradle projects supported (right tab)
-!/.idea/gradle.default.xml
-
-# List of disabled projects (loading too many will crash Intellij)
-!/.idea/compiler.default.xml
-
-# Controls Project View (left tab)
-!/.idea/modules.default.xml
-# Referenced by modules.xml
-!/.idea/caper-repo.default.xml
-
-# controls plugin dependencies (like ktmfmt/detekt)
-!/.idea/externalDependencies.xml
-# Plugins used in project
-!.idea/detekt.xml
-!.idea/ktfmt.xml
-
 ##############################################################################
 ### Gradle template
 .gradle
