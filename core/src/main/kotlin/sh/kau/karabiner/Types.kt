@@ -730,6 +730,8 @@ data class Profile(
 
 @Serializable
 data class ComplexModifications(
+    val title: String? = null,
+    val description: String? = null,
     val parameters: Parameters? = null, // Re-using Parameters from above
     val rules: List<KarabinerRule>
 )
