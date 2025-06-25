@@ -472,11 +472,10 @@ sealed class KeyCode {
 
   companion object {
     fun from(name: String): KeyCode {
-      return KeyCode::class
-          .sealedSubclasses
-          .firstNotNullOfOrNull { it.objectInstance }
-          ?.takeIf { it::class.simpleName.equals(name, ignoreCase = true) }
-          ?: error("Unknown KeyCode: $name")
+        return KeyCode::class.sealedSubclasses
+            .singleOrNull { it.simpleName.equals(name, ignoreCase = true) }
+            ?.objectInstance
+            ?: error("Unknown KeyCode: $name")
     }
   }
 }
