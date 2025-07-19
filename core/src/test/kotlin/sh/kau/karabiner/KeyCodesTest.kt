@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class TypesTest {
+class KeyCodesTest {
 
     @ParameterizedTest
     @MethodSource("keyCodeArgs")
@@ -18,6 +18,7 @@ class TypesTest {
         )
     }
 
+    @Suppress("unused")
     private fun keyCodeArgs() =
         KeyCode::class.sealedSubclasses.filter { it.objectInstance != null }
             .map {

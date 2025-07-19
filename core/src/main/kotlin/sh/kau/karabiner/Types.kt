@@ -718,8 +718,7 @@ data class Profile(
     val name: String,
     @SerialName("complex_modifications") val complexModifications: ComplexModifications,
     @SerialName("fn_function_keys") val fnFunctionKeys: List<FnFunctionKey>? = null,
-    //    @SerialName("simple_modifications") val simpleModifications: List<SimpleModification>? =
-    // null,
+    @SerialName("simple_modifications") val simpleModifications: List<SimpleModification>? = null,
     val selected: Boolean? = null,
     @SerialName("virtual_hid_keyboard")
     val virtualHidKeyboard: VirtualHidKeyboard = VirtualHidKeyboard(),
