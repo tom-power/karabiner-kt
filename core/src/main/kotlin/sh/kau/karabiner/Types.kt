@@ -7,8 +7,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
-
-
 @Serializable
 data class KarabinerRule(
     val description: String? = null,
@@ -33,21 +31,24 @@ data class Manipulator(
 data class From(
     @Serializable(with = KeyCodeAsStringSerializer::class)
     @SerialName("key_code") val keyCode: KeyCode? = null,
+    @SerialName("pointing_button") val pointingButton: String? = null,
     val modifiers: FromModifiers? = null,
     @Serializable(with = SimultaneousKeyCodeListSerializer::class)
     val simultaneous: List<KeyCode>? = null,
     @SerialName("simultaneous_options") val simultaneousOptions: SimultaneousOptions? = null,
 ) {
-  companion object {
-    fun with(
-        fromKeyCode: KeyCode,
-        modifiers: FromModifiers? = null,
-    ) =
-        From(
-            keyCode = fromKeyCode,
-            modifiers = modifiers ?: FromModifiers(optional = listOf(ModifierKeyCode.Any)),
-        )
-  }
+    companion object {
+        fun with(
+            fromKeyCode: KeyCode? = null,
+            fromPointingButton: String? = null,
+            modifiers: FromModifiers? = null,
+        ) =
+            From(
+                keyCode = fromKeyCode,
+                pointingButton = fromPointingButton,
+                modifiers = modifiers ?: FromModifiers(optional = listOf(ModifierKeyCode.Any)),
+            )
+    }
 }
 
 @Serializable
@@ -72,35 +73,42 @@ data class To(
     @SerialName("software_function") val softwareFunction: SoftwareFunction? = null
     // `hold_down_milliseconds` is sometimes seen with `to` events. Add if needed.
 ) {
-  companion object {
-    fun with(
-        toKey: KeyCode? = null,
-        toKeyModifiers: List<ModifierKeyCode?>? = null,
-        cmd: ShellCmd? = null,
-        mouseKey: MouseKey? = null,
-        pointingButton: String? = null,
-    ): List<To> {
+    companion object {
+        fun with(
+            toKey: KeyCode? = null,
+            toKeyModifiers: List<ModifierKeyCode?>? = null,
+            cmd: ShellCmd? = null,
+            mouseKey: MouseKey? = null,
+            pointingButton: String? = null,
+        ): List<To> {
 
-      val list = mutableListOf<To>()
+            val list = mutableListOf<To>()
 
-      if (arrayOf(cmd, toKey, mouseKey, pointingButton).count { it != null } == 2)
-          throw IllegalArgumentException("Cannot have two of these instructions set simultaneously")
+            if (arrayOf(cmd, toKey, mouseKey, pointingButton).count { it != null } == 2)
+                throw IllegalArgumentException("Cannot have two of these instructions set simultaneously")
 
-      if (cmd != null) return list.apply { add(To(shellCommand = cmd)) }
-      if (toKey != null) return list.apply { add(To(keyCode = toKey, modifiers = toKeyModifiers)) }
-      if (mouseKey != null) return list.apply { add(To(mouseKey = mouseKey)) }
-      if (pointingButton != null) return list.apply { add(To(pointingButton = pointingButton)) }
+            if (cmd != null) return list.apply { add(To(shellCommand = cmd)) }
+            if (toKey != null) return list.apply { add(To(keyCode = toKey, modifiers = toKeyModifiers)) }
+            if (mouseKey != null) return list.apply { add(To(mouseKey = mouseKey)) }
+            if (pointingButton != null) return list.apply {
+                add(
+                    To(
+                        pointingButton = pointingButton,
+                        modifiers = toKeyModifiers
+                    )
+                )
+            }
 
-      throw IllegalStateException("Could not build To instruction")
+            throw IllegalStateException("Could not build To instruction")
+        }
     }
-  }
 }
 
 enum class ToType {
-  NORMAL,
-  IF_ALONE,
-  AFTER_KEY_UP,
-  IF_HELD_DOWN
+    NORMAL,
+    IF_ALONE,
+    AFTER_KEY_UP,
+    IF_HELD_DOWN
 }
 
 @Serializable
@@ -129,7 +137,8 @@ data class SimultaneousOptions(
     @SerialName("to_after_key_up") val toAfterKeyUp: List<To>? = null
 )
 
-@Serializable data class SetVariable(val name: String, val value: JsonPrimitive)
+@Serializable
+data class SetVariable(val name: String, val value: JsonPrimitive)
 
 @Serializable
 data class MouseKey(
@@ -148,476 +157,798 @@ data class SoftwareFunction(
 
 @Serializable(with = KeyCodeAsStringSerializer::class)
 sealed class KeyCode {
-  @Serializable @SerialName("caps_lock") object CapsLock : KeyCode()
+    @Serializable
+    @SerialName("caps_lock")
+    object CapsLock : KeyCode()
+
+    @Serializable
+    @SerialName("return_or_enter")
+    object ReturnOrEnter : KeyCode()
+
+    @Serializable
+    @SerialName("escape")
+    object Escape : KeyCode()
+
+    @Serializable
+    @SerialName("delete_or_backspace")
+    object DeleteOrBackspace : KeyCode()
+
+    @Serializable
+    @SerialName("delete_forward")
+    object DeleteForward : KeyCode()
+
+    @Serializable
+    @SerialName("tab")
+    object Tab : KeyCode()
+
+    @Serializable
+    @SerialName("spacebar")
+    object Spacebar : KeyCode()
+
+    @Serializable
+    @SerialName("hyphen")
+    object Hyphen : KeyCode()
+
+    @Serializable
+    @SerialName("equal_sign")
+    object EqualSign : KeyCode()
+
+    @Serializable
+    @SerialName("open_bracket")
+    object OpenBracket : KeyCode()
+
+    @Serializable
+    @SerialName("close_bracket")
+    object CloseBracket : KeyCode()
+
+    @Serializable
+    @SerialName("backslash")
+    object Backslash : KeyCode()
+
+    @Serializable
+    @SerialName("non_us_pound")
+    object NonUsPound : KeyCode()
+
+    @Serializable
+    @SerialName("semicolon")
+    object Semicolon : KeyCode()
+
+    @Serializable
+    @SerialName("quote")
+    object Quote : KeyCode()
+
+    @Serializable
+    @SerialName("grave_accent_and_tilde")
+    object GraveAccentAndTilde : KeyCode()
+
+    @Serializable
+    @SerialName("comma")
+    object Comma : KeyCode()
+
+    @Serializable
+    @SerialName("period")
+    object Period : KeyCode()
+
+    @Serializable
+    @SerialName("slash")
+    object Slash : KeyCode()
+
+    @Serializable
+    @SerialName("non_us_backslash")
+    object NonUsBackslash : KeyCode()
+
+    @Serializable
+    @SerialName("up_arrow")
+    object UpArrow : KeyCode()
+
+    @Serializable
+    @SerialName("down_arrow")
+    object DownArrow : KeyCode()
+
+    @Serializable
+    @SerialName("left_arrow")
+    object LeftArrow : KeyCode()
+
+    @Serializable
+    @SerialName("right_arrow")
+    object RightArrow : KeyCode()
+
+    @Serializable
+    @SerialName("page_up")
+    object PageUp : KeyCode()
+
+    @Serializable
+    @SerialName("page_down")
+    object PageDown : KeyCode()
+
+    @Serializable
+    @SerialName("home")
+    object Home : KeyCode()
+
+    @Serializable
+    @SerialName("end")
+    object End : KeyCode()
+
+    @Serializable
+    @SerialName("a")
+    object A : KeyCode()
+
+    @Serializable
+    @SerialName("b")
+    object B : KeyCode()
+
+    @Serializable
+    @SerialName("c")
+    object C : KeyCode()
+
+    @Serializable
+    @SerialName("d")
+    object D : KeyCode()
+
+    @Serializable
+    @SerialName("e")
+    object E : KeyCode()
+
+    @Serializable
+    @SerialName("f")
+    object F : KeyCode()
+
+    @Serializable
+    @SerialName("g")
+    object G : KeyCode()
+
+    @Serializable
+    @SerialName("h")
+    object H : KeyCode()
+
+    @Serializable
+    @SerialName("i")
+    object I : KeyCode()
+
+    @Serializable
+    @SerialName("j")
+    object J : KeyCode()
+
+    @Serializable
+    @SerialName("k")
+    object K : KeyCode()
+
+    @Serializable
+    @SerialName("l")
+    object L : KeyCode()
+
+    @Serializable
+    @SerialName("m")
+    object M : KeyCode()
+
+    @Serializable
+    @SerialName("n")
+    object N : KeyCode()
+
+    @Serializable
+    @SerialName("o")
+    object O : KeyCode()
+
+    @Serializable
+    @SerialName("p")
+    object P : KeyCode()
+
+    @Serializable
+    @SerialName("q")
+    object Q : KeyCode()
+
+    @Serializable
+    @SerialName("r")
+    object R : KeyCode()
+
+    @Serializable
+    @SerialName("s")
+    object S : KeyCode()
+
+    @Serializable
+    @SerialName("t")
+    object T : KeyCode()
+
+    @Serializable
+    @SerialName("u")
+    object U : KeyCode()
+
+    @Serializable
+    @SerialName("v")
+    object V : KeyCode()
+
+    @Serializable
+    @SerialName("w")
+    object W : KeyCode()
+
+    @Serializable
+    @SerialName("x")
+    object X : KeyCode()
+
+    @Serializable
+    @SerialName("y")
+    object Y : KeyCode()
+
+    @Serializable
+    @SerialName("z")
+    object Z : KeyCode()
+
+    @Serializable
+    @SerialName("1")
+    object Num1 : KeyCode()
+
+    @Serializable
+    @SerialName("2")
+    object Num2 : KeyCode()
+
+    @Serializable
+    @SerialName("3")
+    object Num3 : KeyCode()
+
+    @Serializable
+    @SerialName("4")
+    object Num4 : KeyCode()
+
+    @Serializable
+    @SerialName("5")
+    object Num5 : KeyCode()
+
+    @Serializable
+    @SerialName("6")
+    object Num6 : KeyCode()
+
+    @Serializable
+    @SerialName("7")
+    object Num7 : KeyCode()
+
+    @Serializable
+    @SerialName("8")
+    object Num8 : KeyCode()
+
+    @Serializable
+    @SerialName("9")
+    object Num9 : KeyCode()
+
+    @Serializable
+    @SerialName("0")
+    object Num0 : KeyCode()
+
+    @Serializable
+    @SerialName("f1")
+    object F1 : KeyCode()
+
+    @Serializable
+    @SerialName("f2")
+    object F2 : KeyCode()
+
+    @Serializable
+    @SerialName("f3")
+    object F3 : KeyCode()
+
+    @Serializable
+    @SerialName("f4")
+    object F4 : KeyCode()
+
+    @Serializable
+    @SerialName("f5")
+    object F5 : KeyCode()
+
+    @Serializable
+    @SerialName("f6")
+    object F6 : KeyCode()
+
+    @Serializable
+    @SerialName("f7")
+    object F7 : KeyCode()
+
+    @Serializable
+    @SerialName("f8")
+    object F8 : KeyCode()
+
+    @Serializable
+    @SerialName("f9")
+    object F9 : KeyCode()
+
+    @Serializable
+    @SerialName("f10")
+    object F10 : KeyCode()
+
+    @Serializable
+    @SerialName("f11")
+    object F11 : KeyCode()
+
+    @Serializable
+    @SerialName("f12")
+    object F12 : KeyCode()
+
+    @Serializable
+    @SerialName("f13")
+    object F13 : KeyCode()
+
+    @Serializable
+    @SerialName("f14")
+    object F14 : KeyCode()
+
+    @Serializable
+    @SerialName("f15")
+    object F15 : KeyCode()
+
+    @Serializable
+    @SerialName("f16")
+    object F16 : KeyCode()
+
+    @Serializable
+    @SerialName("f17")
+    object F17 : KeyCode()
+
+    @Serializable
+    @SerialName("f18")
+    object F18 : KeyCode()
+
+    @Serializable
+    @SerialName("f19")
+    object F19 : KeyCode()
+
+    @Serializable
+    @SerialName("f20")
+    object F20 : KeyCode()
+
+    @Serializable
+    @SerialName("f21")
+    object F21 : KeyCode()
+
+    @Serializable
+    @SerialName("f22")
+    object F22 : KeyCode()
+
+    @Serializable
+    @SerialName("f23")
+    object F23 : KeyCode()
+
+    @Serializable
+    @SerialName("f24")
+    object F24 : KeyCode()
+
+    @Serializable
+    @SerialName("display_brightness_decrement")
+    object DisplayBrightnessDecrement : KeyCode()
+
+    @Serializable
+    @SerialName("display_brightness_increment")
+    object DisplayBrightnessIncrement : KeyCode()
+
+    @Serializable
+    @SerialName("mission_control")
+    object MissionControl : KeyCode()
+
+    @Serializable
+    @SerialName("launchpad")
+    object Launchpad : KeyCode()
+
+    @Serializable
+    @SerialName("dashboard")
+    object Dashboard : KeyCode()
+
+    @Serializable
+    @SerialName("illumination_decrement")
+    object IlluminationDecrement : KeyCode()
+
+    @Serializable
+    @SerialName("illumination_increment")
+    object IlluminationIncrement : KeyCode()
+
+    @Serializable
+    @SerialName("rewind")
+    object Rewind : KeyCode()
+
+    @Serializable
+    @SerialName("play_or_pause")
+    object PlayOrPause : KeyCode()
+
+    @Serializable
+    @SerialName("fastforward")
+    object Fastforward : KeyCode()
+
+    @Serializable
+    @SerialName("mute")
+    object Mute : KeyCode()
+
+    @Serializable
+    @SerialName("volume_decrement")
+    object VolumeDecrement : KeyCode()
+
+    @Serializable
+    @SerialName("volume_increment")
+    object VolumeIncrement : KeyCode()
+
+    @Serializable
+    @SerialName("eject")
+    object Eject : KeyCode()
+
+    @Serializable
+    @SerialName("apple_display_brightness_decrement")
+    object AppleDisplayBrightnessDecrement : KeyCode()
+
+    @Serializable
+    @SerialName("apple_display_brightness_increment")
+    object AppleDisplayBrightnessIncrement : KeyCode()
+
+    @Serializable
+    @SerialName("apple_top_case_display_brightness_decrement")
+    object AppleTopCaseDisplayBrightnessDecrement : KeyCode()
+
+    @Serializable
+    @SerialName("apple_top_case_display_brightness_increment")
+    object AppleTopCaseDisplayBrightnessIncrement : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_num_lock")
+    object KeypadNumLock : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_slash")
+    object KeypadSlash : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_asterisk")
+    object KeypadAsterisk : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_hyphen")
+    object KeypadHyphen : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_plus")
+    object KeypadPlus : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_enter")
+    object KeypadEnter : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_1")
+    object Keypad1 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_2")
+    object Keypad2 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_3")
+    object Keypad3 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_4")
+    object Keypad4 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_5")
+    object Keypad5 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_6")
+    object Keypad6 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_7")
+    object Keypad7 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_8")
+    object Keypad8 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_9")
+    object Keypad9 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_0")
+    object Keypad0 : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_period")
+    object KeypadPeriod : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_equal_sign")
+    object KeypadEqualSign : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_comma")
+    object KeypadComma : KeyCode()
+
+    @Serializable
+    @SerialName("keypad_equal_sign_as400")
+    object KeypadEqualSignAs400 : KeyCode()
+
+    @Serializable
+    @SerialName("locking_caps_lock")
+    object LockingCapsLock : KeyCode()
 
-  @Serializable @SerialName("return_or_enter") object ReturnOrEnter : KeyCode()
-
-  @Serializable @SerialName("escape") object Escape : KeyCode()
-
-  @Serializable @SerialName("delete_or_backspace") object DeleteOrBackspace : KeyCode()
-
-  @Serializable @SerialName("delete_forward") object DeleteForward : KeyCode()
-
-  @Serializable @SerialName("tab") object Tab : KeyCode()
-
-  @Serializable @SerialName("spacebar") object Spacebar : KeyCode()
-
-  @Serializable @SerialName("hyphen") object Hyphen : KeyCode()
-
-  @Serializable @SerialName("equal_sign") object EqualSign : KeyCode()
-
-  @Serializable @SerialName("open_bracket") object OpenBracket : KeyCode()
-
-  @Serializable @SerialName("close_bracket") object CloseBracket : KeyCode()
-
-  @Serializable @SerialName("backslash") object Backslash : KeyCode()
-
-  @Serializable @SerialName("non_us_pound") object NonUsPound : KeyCode()
-
-  @Serializable @SerialName("semicolon") object Semicolon : KeyCode()
-
-  @Serializable @SerialName("quote") object Quote : KeyCode()
-
-  @Serializable @SerialName("grave_accent_and_tilde") object GraveAccentAndTilde : KeyCode()
-
-  @Serializable @SerialName("comma") object Comma : KeyCode()
-
-  @Serializable @SerialName("period") object Period : KeyCode()
-
-  @Serializable @SerialName("slash") object Slash : KeyCode()
-
-  @Serializable @SerialName("non_us_backslash") object NonUsBackslash : KeyCode()
-
-  @Serializable @SerialName("up_arrow") object UpArrow : KeyCode()
-
-  @Serializable @SerialName("down_arrow") object DownArrow : KeyCode()
-
-  @Serializable @SerialName("left_arrow") object LeftArrow : KeyCode()
-
-  @Serializable @SerialName("right_arrow") object RightArrow : KeyCode()
-
-  @Serializable @SerialName("page_up") object PageUp : KeyCode()
-
-  @Serializable @SerialName("page_down") object PageDown : KeyCode()
-
-  @Serializable @SerialName("home") object Home : KeyCode()
-
-  @Serializable @SerialName("end") object End : KeyCode()
-
-  @Serializable @SerialName("a") object A : KeyCode()
-
-  @Serializable @SerialName("b") object B : KeyCode()
-
-  @Serializable @SerialName("c") object C : KeyCode()
-
-  @Serializable @SerialName("d") object D : KeyCode()
-
-  @Serializable @SerialName("e") object E : KeyCode()
-
-  @Serializable @SerialName("f") object F : KeyCode()
-
-  @Serializable @SerialName("g") object G : KeyCode()
-
-  @Serializable @SerialName("h") object H : KeyCode()
-
-  @Serializable @SerialName("i") object I : KeyCode()
-
-  @Serializable @SerialName("j") object J : KeyCode()
-
-  @Serializable @SerialName("k") object K : KeyCode()
-
-  @Serializable @SerialName("l") object L : KeyCode()
-
-  @Serializable @SerialName("m") object M : KeyCode()
-
-  @Serializable @SerialName("n") object N : KeyCode()
-
-  @Serializable @SerialName("o") object O : KeyCode()
-
-  @Serializable @SerialName("p") object P : KeyCode()
-
-  @Serializable @SerialName("q") object Q : KeyCode()
-
-  @Serializable @SerialName("r") object R : KeyCode()
-
-  @Serializable @SerialName("s") object S : KeyCode()
-
-  @Serializable @SerialName("t") object T : KeyCode()
-
-  @Serializable @SerialName("u") object U : KeyCode()
-
-  @Serializable @SerialName("v") object V : KeyCode()
-
-  @Serializable @SerialName("w") object W : KeyCode()
-
-  @Serializable @SerialName("x") object X : KeyCode()
-
-  @Serializable @SerialName("y") object Y : KeyCode()
-
-  @Serializable @SerialName("z") object Z : KeyCode()
-
-  @Serializable @SerialName("1") object Num1 : KeyCode()
-
-  @Serializable @SerialName("2") object Num2 : KeyCode()
-
-  @Serializable @SerialName("3") object Num3 : KeyCode()
-
-  @Serializable @SerialName("4") object Num4 : KeyCode()
-
-  @Serializable @SerialName("5") object Num5 : KeyCode()
-
-  @Serializable @SerialName("6") object Num6 : KeyCode()
-
-  @Serializable @SerialName("7") object Num7 : KeyCode()
-
-  @Serializable @SerialName("8") object Num8 : KeyCode()
-
-  @Serializable @SerialName("9") object Num9 : KeyCode()
-
-  @Serializable @SerialName("0") object Num0 : KeyCode()
-
-  @Serializable @SerialName("f1") object F1 : KeyCode()
-
-  @Serializable @SerialName("f2") object F2 : KeyCode()
-
-  @Serializable @SerialName("f3") object F3 : KeyCode()
-
-  @Serializable @SerialName("f4") object F4 : KeyCode()
-
-  @Serializable @SerialName("f5") object F5 : KeyCode()
-
-  @Serializable @SerialName("f6") object F6 : KeyCode()
-
-  @Serializable @SerialName("f7") object F7 : KeyCode()
-
-  @Serializable @SerialName("f8") object F8 : KeyCode()
-
-  @Serializable @SerialName("f9") object F9 : KeyCode()
-
-  @Serializable @SerialName("f10") object F10 : KeyCode()
-
-  @Serializable @SerialName("f11") object F11 : KeyCode()
-
-  @Serializable @SerialName("f12") object F12 : KeyCode()
-
-  @Serializable @SerialName("f13") object F13 : KeyCode()
-
-  @Serializable @SerialName("f14") object F14 : KeyCode()
-
-  @Serializable @SerialName("f15") object F15 : KeyCode()
-
-  @Serializable @SerialName("f16") object F16 : KeyCode()
-
-  @Serializable @SerialName("f17") object F17 : KeyCode()
-
-  @Serializable @SerialName("f18") object F18 : KeyCode()
-
-  @Serializable @SerialName("f19") object F19 : KeyCode()
-
-  @Serializable @SerialName("f20") object F20 : KeyCode()
-
-  @Serializable @SerialName("f21") object F21 : KeyCode()
-
-  @Serializable @SerialName("f22") object F22 : KeyCode()
-
-  @Serializable @SerialName("f23") object F23 : KeyCode()
-
-  @Serializable @SerialName("f24") object F24 : KeyCode()
-
-  @Serializable
-  @SerialName("display_brightness_decrement")
-  object DisplayBrightnessDecrement : KeyCode()
-
-  @Serializable
-  @SerialName("display_brightness_increment")
-  object DisplayBrightnessIncrement : KeyCode()
-
-  @Serializable @SerialName("mission_control") object MissionControl : KeyCode()
-
-  @Serializable @SerialName("launchpad") object Launchpad : KeyCode()
-
-  @Serializable @SerialName("dashboard") object Dashboard : KeyCode()
-
-  @Serializable @SerialName("illumination_decrement") object IlluminationDecrement : KeyCode()
-
-  @Serializable @SerialName("illumination_increment") object IlluminationIncrement : KeyCode()
-
-  @Serializable @SerialName("rewind") object Rewind : KeyCode()
-
-  @Serializable @SerialName("play_or_pause") object PlayOrPause : KeyCode()
-
-  @Serializable @SerialName("fastforward") object Fastforward : KeyCode()
-
-  @Serializable @SerialName("mute") object Mute : KeyCode()
-
-  @Serializable @SerialName("volume_decrement") object VolumeDecrement : KeyCode()
-
-  @Serializable @SerialName("volume_increment") object VolumeIncrement : KeyCode()
-
-  @Serializable @SerialName("eject") object Eject : KeyCode()
-
-  @Serializable
-  @SerialName("apple_display_brightness_decrement")
-  object AppleDisplayBrightnessDecrement : KeyCode()
-
-  @Serializable
-  @SerialName("apple_display_brightness_increment")
-  object AppleDisplayBrightnessIncrement : KeyCode()
-
-  @Serializable
-  @SerialName("apple_top_case_display_brightness_decrement")
-  object AppleTopCaseDisplayBrightnessDecrement : KeyCode()
-
-  @Serializable
-  @SerialName("apple_top_case_display_brightness_increment")
-  object AppleTopCaseDisplayBrightnessIncrement : KeyCode()
-
-  @Serializable @SerialName("keypad_num_lock") object KeypadNumLock : KeyCode()
-
-  @Serializable @SerialName("keypad_slash") object KeypadSlash : KeyCode()
-
-  @Serializable @SerialName("keypad_asterisk") object KeypadAsterisk : KeyCode()
-
-  @Serializable @SerialName("keypad_hyphen") object KeypadHyphen : KeyCode()
-
-  @Serializable @SerialName("keypad_plus") object KeypadPlus : KeyCode()
-
-  @Serializable @SerialName("keypad_enter") object KeypadEnter : KeyCode()
-
-  @Serializable @SerialName("keypad_1") object Keypad1 : KeyCode()
-
-  @Serializable @SerialName("keypad_2") object Keypad2 : KeyCode()
-
-  @Serializable @SerialName("keypad_3") object Keypad3 : KeyCode()
-
-  @Serializable @SerialName("keypad_4") object Keypad4 : KeyCode()
-
-  @Serializable @SerialName("keypad_5") object Keypad5 : KeyCode()
-
-  @Serializable @SerialName("keypad_6") object Keypad6 : KeyCode()
-
-  @Serializable @SerialName("keypad_7") object Keypad7 : KeyCode()
-
-  @Serializable @SerialName("keypad_8") object Keypad8 : KeyCode()
-
-  @Serializable @SerialName("keypad_9") object Keypad9 : KeyCode()
-
-  @Serializable @SerialName("keypad_0") object Keypad0 : KeyCode()
-
-  @Serializable @SerialName("keypad_period") object KeypadPeriod : KeyCode()
-
-  @Serializable @SerialName("keypad_equal_sign") object KeypadEqualSign : KeyCode()
-
-  @Serializable @SerialName("keypad_comma") object KeypadComma : KeyCode()
-
-  @Serializable @SerialName("keypad_equal_sign_as400") object KeypadEqualSignAs400 : KeyCode()
-
-  @Serializable @SerialName("locking_caps_lock") object LockingCapsLock : KeyCode()
-
-  @Serializable @SerialName("locking_num_lock") object LockingNumLock : KeyCode()
-
-  @Serializable @SerialName("locking_scroll_lock") object LockingScrollLock : KeyCode()
-
-  @Serializable @SerialName("alternate_erase") object AlternateErase : KeyCode()
-
-  @Serializable @SerialName("sys_req_or_attention") object SysReqOrAttention : KeyCode()
-
-  @Serializable @SerialName("cancel") object Cancel : KeyCode()
-
-  @Serializable @SerialName("clear") object Clear : KeyCode()
-
-  @Serializable @SerialName("prior") object Prior : KeyCode()
-
-  @Serializable @SerialName("return") object Return : KeyCode()
-
-  @Serializable @SerialName("separator") object Separator : KeyCode()
-
-  @Serializable @SerialName("out") object Out : KeyCode()
-
-  @Serializable @SerialName("oper") object Oper : KeyCode()
-
-  @Serializable @SerialName("clear_or_again") object ClearOrAgain : KeyCode()
-
-  @Serializable @SerialName("cr_sel_or_props") object CrSelOrProps : KeyCode()
-
-  @Serializable @SerialName("ex_sel") object ExSel : KeyCode()
-
-  @Serializable
-  @SerialName("vk_consumer_brightness_down")
-  object VkConsumerBrightnessDown : KeyCode()
-
-  @Serializable @SerialName("vk_consumer_brightness_up") object VkConsumerBrightnessUp : KeyCode()
-
-  @Serializable @SerialName("vk_mission_control") object VkMissionControl : KeyCode()
-
-  @Serializable @SerialName("vk_launchpad") object VkLaunchpad : KeyCode()
-
-  @Serializable @SerialName("vk_dashboard") object VkDashboard : KeyCode()
-
-  @Serializable
-  @SerialName("vk_consumer_illumination_down")
-  object VkConsumerIlluminationDown : KeyCode()
-
-  @Serializable
-  @SerialName("vk_consumer_illumination_up")
-  object VkConsumerIlluminationUp : KeyCode()
-
-  @Serializable @SerialName("vk_consumer_previous") object VkConsumerPrevious : KeyCode()
-
-  @Serializable @SerialName("vk_consumer_play") object VkConsumerPlay : KeyCode()
-
-  @Serializable @SerialName("vk_consumer_next") object VkConsumerNext : KeyCode()
-
-  val name = this::class.simpleName ?: error("Unknown key name")
-
-  companion object {
-    fun from(name: String): KeyCode {
-        return KeyCode::class.sealedSubclasses
-            .singleOrNull { it.simpleName.equals(name, ignoreCase = true) }
-            ?.objectInstance
-            ?: error("Unknown KeyCode: $name")
+    @Serializable
+    @SerialName("locking_num_lock")
+    object LockingNumLock : KeyCode()
+
+    @Serializable
+    @SerialName("locking_scroll_lock")
+    object LockingScrollLock : KeyCode()
+
+    @Serializable
+    @SerialName("alternate_erase")
+    object AlternateErase : KeyCode()
+
+    @Serializable
+    @SerialName("sys_req_or_attention")
+    object SysReqOrAttention : KeyCode()
+
+    @Serializable
+    @SerialName("cancel")
+    object Cancel : KeyCode()
+
+    @Serializable
+    @SerialName("clear")
+    object Clear : KeyCode()
+
+    @Serializable
+    @SerialName("prior")
+    object Prior : KeyCode()
+
+    @Serializable
+    @SerialName("return")
+    object Return : KeyCode()
+
+    @Serializable
+    @SerialName("separator")
+    object Separator : KeyCode()
+
+    @Serializable
+    @SerialName("out")
+    object Out : KeyCode()
+
+    @Serializable
+    @SerialName("oper")
+    object Oper : KeyCode()
+
+    @Serializable
+    @SerialName("clear_or_again")
+    object ClearOrAgain : KeyCode()
+
+    @Serializable
+    @SerialName("cr_sel_or_props")
+    object CrSelOrProps : KeyCode()
+
+    @Serializable
+    @SerialName("ex_sel")
+    object ExSel : KeyCode()
+
+    @Serializable
+    @SerialName("vk_consumer_brightness_down")
+    object VkConsumerBrightnessDown : KeyCode()
+
+    @Serializable
+    @SerialName("vk_consumer_brightness_up")
+    object VkConsumerBrightnessUp : KeyCode()
+
+    @Serializable
+    @SerialName("vk_mission_control")
+    object VkMissionControl : KeyCode()
+
+    @Serializable
+    @SerialName("vk_launchpad")
+    object VkLaunchpad : KeyCode()
+
+    @Serializable
+    @SerialName("vk_dashboard")
+    object VkDashboard : KeyCode()
+
+    @Serializable
+    @SerialName("vk_consumer_illumination_down")
+    object VkConsumerIlluminationDown : KeyCode()
+
+    @Serializable
+    @SerialName("vk_consumer_illumination_up")
+    object VkConsumerIlluminationUp : KeyCode()
+
+    @Serializable
+    @SerialName("vk_consumer_previous")
+    object VkConsumerPrevious : KeyCode()
+
+    @Serializable
+    @SerialName("vk_consumer_play")
+    object VkConsumerPlay : KeyCode()
+
+    @Serializable
+    @SerialName("vk_consumer_next")
+    object VkConsumerNext : KeyCode()
+
+    val name = this::class.simpleName ?: error("Unknown key name")
+
+    companion object {
+        fun from(name: String): KeyCode {
+            return KeyCode::class.sealedSubclasses
+                .singleOrNull { it.simpleName.equals(name, ignoreCase = true) }
+                ?.objectInstance
+                ?: error("Unknown KeyCode: $name")
+        }
     }
-  }
 }
 
 @Serializable(with = ModifierKeyCodeAsStringSerializer::class)
 sealed class ModifierKeyCode : KeyCode() {
-  @Serializable @SerialName("hyper") object Hyper : KeyCode()
+    @Serializable
+    @SerialName("hyper")
+    object Hyper : KeyCode()
 
-  @Serializable @SerialName("left_control") object LeftControl : ModifierKeyCode()
+    @Serializable
+    @SerialName("left_control")
+    object LeftControl : ModifierKeyCode()
 
-  @Serializable @SerialName("left_shift") object LeftShift : ModifierKeyCode()
+    @Serializable
+    @SerialName("left_shift")
+    object LeftShift : ModifierKeyCode()
 
-  @Serializable @SerialName("left_option") object LeftOption : ModifierKeyCode()
+    @Serializable
+    @SerialName("left_option")
+    object LeftOption : ModifierKeyCode()
 
-  @Serializable @SerialName("left_command") object LeftCommand : ModifierKeyCode()
+    @Serializable
+    @SerialName("left_command")
+    object LeftCommand : ModifierKeyCode()
 
-  @Serializable @SerialName("right_control") object RightControl : ModifierKeyCode()
+    @Serializable
+    @SerialName("right_control")
+    object RightControl : ModifierKeyCode()
 
-  @Serializable @SerialName("right_shift") object RightShift : ModifierKeyCode()
+    @Serializable
+    @SerialName("right_shift")
+    object RightShift : ModifierKeyCode()
 
-  @Serializable @SerialName("right_option") object RightOption : ModifierKeyCode()
+    @Serializable
+    @SerialName("right_option")
+    object RightOption : ModifierKeyCode()
 
-  @Serializable @SerialName("right_command") object RightCommand : ModifierKeyCode()
+    @Serializable
+    @SerialName("right_command")
+    object RightCommand : ModifierKeyCode()
 
-  @Serializable @SerialName("fn") object Fn : ModifierKeyCode()
+    @Serializable
+    @SerialName("fn")
+    object Fn : ModifierKeyCode()
 
-  @Serializable @SerialName("command") object Command : ModifierKeyCode()
+    @Serializable
+    @SerialName("command")
+    object Command : ModifierKeyCode()
 
-  @Serializable @SerialName("control") object Control : ModifierKeyCode()
+    @Serializable
+    @SerialName("control")
+    object Control : ModifierKeyCode()
 
-  @Serializable @SerialName("option") object Option : ModifierKeyCode()
+    @Serializable
+    @SerialName("option")
+    object Option : ModifierKeyCode()
 
-  @Serializable @SerialName("shift") object Shift : ModifierKeyCode()
+    @Serializable
+    @SerialName("shift")
+    object Shift : ModifierKeyCode()
 
-  @Serializable @SerialName("left_alt") object LeftAlt : ModifierKeyCode()
+    @Serializable
+    @SerialName("left_alt")
+    object LeftAlt : ModifierKeyCode()
 
-  @Serializable @SerialName("left_gui") object LeftGui : ModifierKeyCode()
+    @Serializable
+    @SerialName("left_gui")
+    object LeftGui : ModifierKeyCode()
 
-  @Serializable @SerialName("right_alt") object RightAlt : ModifierKeyCode()
+    @Serializable
+    @SerialName("right_alt")
+    object RightAlt : ModifierKeyCode()
 
-  @Serializable @SerialName("right_gui") object RightGui : ModifierKeyCode()
+    @Serializable
+    @SerialName("right_gui")
+    object RightGui : ModifierKeyCode()
 
-  @Serializable @SerialName("any") object Any : ModifierKeyCode()
+    @Serializable
+    @SerialName("any")
+    object Any : ModifierKeyCode()
 }
 
 @Serializable
 sealed interface Condition {
 
-  @Serializable
-  @SerialName("frontmost_application_if")
-  data class FrontmostApplicationIfCondition(
-      @SerialName("bundle_identifiers") var bundleIds: List<String>? = null,
-      @SerialName("file_paths") var filePaths: List<String>? = null,
-  ) : Condition
+    @Serializable
+    @SerialName("frontmost_application_if")
+    data class FrontmostApplicationIfCondition(
+        @SerialName("bundle_identifiers") var bundleIds: List<String>? = null,
+        @SerialName("file_paths") var filePaths: List<String>? = null,
+    ) : Condition
 
-  @Serializable
-  @SerialName("frontmost_application_unless")
-  data class FrontmostApplicationUnlessCondition(
-      @SerialName("bundle_identifiers") var bundleIds: List<String>? = null,
-      @SerialName("file_paths") var filePaths: List<String>? = null,
-  ) : Condition
+    @Serializable
+    @SerialName("frontmost_application_unless")
+    data class FrontmostApplicationUnlessCondition(
+        @SerialName("bundle_identifiers") var bundleIds: List<String>? = null,
+        @SerialName("file_paths") var filePaths: List<String>? = null,
+    ) : Condition
 
-  @Serializable
-  @SerialName("device_if")
-  data class DeviceIfCondition(
-      var identifiers: List<DeviceIdentifier>? = null,
-  ) : Condition
+    @Serializable
+    @SerialName("device_if")
+    data class DeviceIfCondition(
+        var identifiers: List<DeviceIdentifier>? = null,
+    ) : Condition
 
-  @Serializable
-  @SerialName("device_unless")
-  data class DeviceUnlessCondition(
-      var identifiers: List<DeviceIdentifier>? = null,
-  ) : Condition
+    @Serializable
+    @SerialName("device_unless")
+    data class DeviceUnlessCondition(
+        var identifiers: List<DeviceIdentifier>? = null,
+    ) : Condition
 
-  @Serializable
-  @SerialName("device_exists_if")
-  data class DeviceExistsIfCondition(
-      val identifiers: List<DeviceIdentifier>,
-  ) : Condition
+    @Serializable
+    @SerialName("device_exists_if")
+    data class DeviceExistsIfCondition(
+        val identifiers: List<DeviceIdentifier>,
+    ) : Condition
 
-  @Serializable
-  @SerialName("device_exists_unless")
-  data class DeviceExistsUnlessCondition(
-      val identifiers: List<DeviceIdentifier>,
-  ) : Condition
+    @Serializable
+    @SerialName("device_exists_unless")
+    data class DeviceExistsUnlessCondition(
+        val identifiers: List<DeviceIdentifier>,
+    ) : Condition
 
-  @Serializable
-  @SerialName("keyboard_type_if")
-  data class KeyboardTypeIfCondition(
-      @SerialName("keyboard_types") val keyboardTypes: List<String>,
-  ) : Condition
+    @Serializable
+    @SerialName("keyboard_type_if")
+    data class KeyboardTypeIfCondition(
+        @SerialName("keyboard_types") val keyboardTypes: List<String>,
+    ) : Condition
 
-  @Serializable
-  @SerialName("keyboard_type_unless")
-  data class KeyboardTypeUnlessCondition(
-      @SerialName("keyboard_types") val keyboardTypes: List<String>,
-  ) : Condition
+    @Serializable
+    @SerialName("keyboard_type_unless")
+    data class KeyboardTypeUnlessCondition(
+        @SerialName("keyboard_types") val keyboardTypes: List<String>,
+    ) : Condition
 
-  @Serializable
-  data class InputSourceSpec(
-      val language: String? = null,
-      @SerialName("input_source_id") val inputSourceId: String? = null,
-      @SerialName("input_mode_id") val inputModeId: String? = null
-  )
+    @Serializable
+    data class InputSourceSpec(
+        val language: String? = null,
+        @SerialName("input_source_id") val inputSourceId: String? = null,
+        @SerialName("input_mode_id") val inputModeId: String? = null
+    )
 
-  @Serializable
-  @SerialName("input_source_if")
-  data class InputSourceIfCondition(
-      @SerialName("input_sources") val inputSources: List<InputSourceSpec>,
-  ) : Condition
+    @Serializable
+    @SerialName("input_source_if")
+    data class InputSourceIfCondition(
+        @SerialName("input_sources") val inputSources: List<InputSourceSpec>,
+    ) : Condition
 
-  @Serializable
-  @SerialName("input_source_unless")
-  data class InputSourceUnlessCondition(
-      @SerialName("input_sources") val inputSources: List<InputSourceSpec>,
-  ) : Condition
+    @Serializable
+    @SerialName("input_source_unless")
+    data class InputSourceUnlessCondition(
+        @SerialName("input_sources") val inputSources: List<InputSourceSpec>,
+    ) : Condition
 
-  @Serializable
-  @SerialName("variable_if")
-  data class VariableIfCondition(
-      val name: String,
-      val value: JsonPrimitive,
-  ) : Condition
+    @Serializable
+    @SerialName("variable_if")
+    data class VariableIfCondition(
+        val name: String,
+        val value: JsonPrimitive,
+    ) : Condition
 
-  @Serializable
-  @SerialName("variable_unless")
-  data class VariableUnlessCondition(
-      val name: String,
-      val value: JsonPrimitive,
-  ) : Condition
+    @Serializable
+    @SerialName("variable_unless")
+    data class VariableUnlessCondition(
+        val name: String,
+        val value: JsonPrimitive,
+    ) : Condition
 
-  @Serializable
-  @SerialName("event_changed_if")
-  data class EventChangedIfCondition(
-      val value: Boolean,
-  ) : Condition
+    @Serializable
+    @SerialName("event_changed_if")
+    data class EventChangedIfCondition(
+        val value: Boolean,
+    ) : Condition
 
-  @Serializable
-  @SerialName("event_changed_unless")
-  data class EventChangedUnlessCondition(
-      val value: Boolean,
-  ) : Condition
+    @Serializable
+    @SerialName("event_changed_unless")
+    data class EventChangedUnlessCondition(
+        val value: Boolean,
+    ) : Condition
 }
 
 @Serializable
@@ -638,25 +969,25 @@ data class DeviceConfiguration(
     @SerialName("disable_built_in_keyboard_if_exists")
     val disableBuiltInKeyboardIfExists: Boolean? = null,
 ) {
-  companion object {
-    //    val APPLE_BUILTIN_KEYBOARD =
-    //        DeviceConfiguration(
-    //            identifiers = DeviceIdentifier(isKeyboard = true),
-    //            isApple = true,
-    //            manufacturer = "Apple",
-    //            product = "Apple Internal Keyboard / Trackpad",
-    //            transport = "FIFO",
-    //        )
-    //    val APPLE_BUILTIN_TRACKPAD =
-    //        DeviceConfiguration(
-    //            identifiers = DeviceIdentifier(isPointingDevice = true),
-    //            isApple = true,
-    //            isBuiltInPointingDevice = true,
-    //            manufacturer = "Apple",
-    //            product = "Apple Internal Keyboard / Trackpad",
-    //            transport = "FIFO",
-    //        )
-  }
+    companion object {
+        //    val APPLE_BUILTIN_KEYBOARD =
+        //        DeviceConfiguration(
+        //            identifiers = DeviceIdentifier(isKeyboard = true),
+        //            isApple = true,
+        //            manufacturer = "Apple",
+        //            product = "Apple Internal Keyboard / Trackpad",
+        //            transport = "FIFO",
+        //        )
+        //    val APPLE_BUILTIN_TRACKPAD =
+        //        DeviceConfiguration(
+        //            identifiers = DeviceIdentifier(isPointingDevice = true),
+        //            isApple = true,
+        //            isBuiltInPointingDevice = true,
+        //            manufacturer = "Apple",
+        //            product = "Apple Internal Keyboard / Trackpad",
+        //            transport = "FIFO",
+        //        )
+    }
 }
 
 @Serializable
@@ -679,22 +1010,22 @@ data class DeviceIdentifier(
     /** location_id will change when you change USB port */
     @SerialName("location_id") val locationId: Long? = null,
 ) {
-  companion object {
+    companion object {
 
-    val APPLE_KEYBOARDS =
-        listOf(
-            DeviceIdentifier(vendorId = 1452, isKeyboard = true),
-            DeviceIdentifier(vendorId = 76, isKeyboard = true),
-            DeviceIdentifier(isBuiltInKeyboard = true),
-        )
+        val APPLE_KEYBOARDS =
+            listOf(
+                DeviceIdentifier(vendorId = 1452, isKeyboard = true),
+                DeviceIdentifier(vendorId = 76, isKeyboard = true),
+                DeviceIdentifier(isBuiltInKeyboard = true),
+            )
 
-    val ANNE_PRO_2 = DeviceIdentifier(vendorId = 1241L, productId = 41618L)
-    val MS_SCULPT = DeviceIdentifier(vendorId = 1118L, productId = 1957L)
-    val TADA68 = DeviceIdentifier(vendorId = 65261L, productId = 4611L)
-    val KINESIS = DeviceIdentifier(vendorId = 10730L)
-    val LOGITECH_G915 = DeviceIdentifier(vendorId = 1133L)
-    val KEYCHRON = DeviceIdentifier(vendorId = 76L)
-  }
+        val ANNE_PRO_2 = DeviceIdentifier(vendorId = 1241L, productId = 41618L)
+        val MS_SCULPT = DeviceIdentifier(vendorId = 1118L, productId = 1957L)
+        val TADA68 = DeviceIdentifier(vendorId = 65261L, productId = 4611L)
+        val KINESIS = DeviceIdentifier(vendorId = 10730L)
+        val LOGITECH_G915 = DeviceIdentifier(vendorId = 1133L)
+        val KEYCHRON = DeviceIdentifier(vendorId = 76L)
+    }
 }
 
 // Root structure for the final JSON (approximated from karabiner.json)
@@ -744,12 +1075,14 @@ data class VirtualHidKeyboard(
     val keyboardType: String = "ansi" // e.g., "ansi"
 )
 
-@Serializable data class FromFnKey(
+@Serializable
+data class FromFnKey(
     @Serializable(with = KeyCodeAsStringSerializer::class)
     @SerialName("key_code") val keyCode: KeyCode
 )
 
-@Serializable data class FnFunctionKey(val from: FromFnKey, val to: List<To>)
+@Serializable
+data class FnFunctionKey(val from: FromFnKey, val to: List<To>)
 
 @Serializable
 data class SimpleModification(
@@ -757,12 +1090,14 @@ data class SimpleModification(
     val to: List<SimpleModificationValue>
 )
 
-@Serializable data class SimpleModificationKey(
+@Serializable
+data class SimpleModificationKey(
     @Serializable(with = KeyCodeAsStringSerializer::class)
     @SerialName("key_code") val keyCode: KeyCode
 )
 
-@Serializable data class SimpleModificationValue(
+@Serializable
+data class SimpleModificationValue(
     @Serializable(with = KeyCodeAsStringSerializer::class)
     @SerialName("key_code") val keyCode: KeyCode
 )

@@ -1,0 +1,29 @@
+{
+    "title": "pointingButton",
+    "rules": [
+        {
+            "description": "button1 (button2 to button1)",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "pointing_button": "button2",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "modifiers": [
+                                "left_command"
+                            ],
+                            "pointing_button": "button1"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

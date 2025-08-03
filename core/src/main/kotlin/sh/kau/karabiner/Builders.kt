@@ -13,6 +13,7 @@ typealias ShellCmd = String
 // -----------------------------------------
 open class MappingRule(
     var fromKey: KeyCode? = null,
+    var fromPointingButton: String? = null,
     var fromModifiers: FromModifiers? = null,
     var toKey: KeyCode? = null,
     var toKeyIfAlone: KeyCode? = null,
@@ -81,6 +82,7 @@ fun karabinerRuleSingle(
     layerKey = singleRule.layerKey
     mapping {
       fromKey = singleRule.fromKey
+      fromPointingButton = singleRule.fromPointingButton
       fromModifiers = singleRule.fromModifiers
       toKey = singleRule.toKey
       toModifiers = singleRule.toModifiers
@@ -102,8 +104,9 @@ fun karabinerRule(
   layerKeyRule.mappings.forEach { keyMapping ->
     val fromModifier =
         From.with(
-            keyMapping.fromKey!!,
-            keyMapping.fromModifiers,
+            fromKeyCode = keyMapping.fromKey,
+            fromPointingButton = keyMapping.fromPointingButton,
+            modifiers = keyMapping.fromModifiers,
         )
 
     val toModifier =
