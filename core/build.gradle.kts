@@ -42,7 +42,7 @@ java {
     withSourcesJar()
 }
 
-version = "1.1.2"
+version = "0.2"
 
 tasks.withType<Jar> {
     manifest {

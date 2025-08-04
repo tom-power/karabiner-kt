@@ -20,6 +20,8 @@ open class MappingRule(
     var toModifiers: List<ModifierKeyCode?>? = null,
     var mouseKey: MouseKey? = null,
     var pointingButton: String? = null,
+    var from: From? = null,
+    var to: List<To>? = null,
 ) {
   var conditions = mutableListOf<Condition>()
 
@@ -101,18 +103,19 @@ fun karabinerRule(
 
   layerKeyRule.mappings.forEach { keyMapping ->
     val fromModifier =
-        From.with(
+        keyMapping.from ?: From.with(
             keyMapping.fromKey!!,
             keyMapping.fromModifiers,
         )
 
     val toModifier =
-        To.with(
+        keyMapping.to ?: To.with(
             keyMapping.toKey,
             keyMapping.toModifiers,
             keyMapping.shellCommand,
             keyMapping.mouseKey,
-            keyMapping.pointingButton)
+            keyMapping.pointingButton
+        )
 
     if (layerKeyRule.layerKey == null) {
       val toAloneModifier = keyMapping.toKeyIfAlone?.let { To.with(keyMapping.toKeyIfAlone) }
