@@ -152,6 +152,43 @@ fun karabinerRule(
   return KarabinerRule(layerKeyRule.description, manipulators)
 }
 
+fun karabinerRuleSimple(
+    block: SimpleRule.() -> Unit,
+): KarabinerRule =
+    SimpleRule().apply(block).run {
+        karabinerRule {
+            description = this@run.description()
+            mapping {
+                fromKey = this@run.fromKey
+                fromModifiers = FromModifiers(mandatory = fromModifier?.let(::listOf))
+                toKey = this@run.toKey
+                toModifiers = toModifier?.let(::listOf)
+            }
+        }
+    }
+
+data class SimpleRule(
+    var description: String? = null,
+    var fromKey: KeyCode? = null,
+    var fromModifier: ModifierKeyCode? = null,
+    var toKey: KeyCode? = null,
+    var toModifier: ModifierKeyCode? = null,
+) {
+    fun description(): String = description ?: descriptionFromKeys()
+
+    private fun descriptionFromKeys(): String =
+        "${toKey.name()} + ${toModifier?.name()} (${fromKey.name()} + ${fromModifier?.name()})"
+
+    private fun KeyCode?.name(): String? = this?.name?.name()
+    private fun ModifierKeyCode?.name(): String? = this?.name?.name()
+    private fun String?.name(): String? = this?.camelToSnakeCase()?.lowercase()
+
+    private fun String.camelToSnakeCase(): String {
+        val pattern = "(?<=.)[A-Z]".toRegex()
+        return this.replace(pattern, "_$0").lowercase()
+    }
+}
+
 // endregion
 
 // region builder instructions
