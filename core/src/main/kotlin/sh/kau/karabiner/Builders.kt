@@ -152,7 +152,7 @@ fun karabinerRule(
   return KarabinerRule(layerKeyRule.description, manipulators)
 }
 
-fun karabinerRuleSimple(
+fun karabinerRuleAutoDescription(
     block: SimpleRule.() -> Unit,
 ): KarabinerRule =
     SimpleRule().apply(block).run {
@@ -163,6 +163,9 @@ fun karabinerRuleSimple(
                 fromModifiers = FromModifiers(mandatory = fromModifier?.let(::listOf))
                 toKey = this@run.toKey
                 toModifiers = toModifier?.let(::listOf)
+                forApp {
+                    bundleIds = this@run.forAppIds
+                }
             }
         }
     }
@@ -173,6 +176,7 @@ data class SimpleRule(
     var fromModifier: ModifierKeyCode? = null,
     var toKey: KeyCode? = null,
     var toModifier: ModifierKeyCode? = null,
+    var forAppIds: List<String>? = null
 ) {
     fun description(): String = description ?: descriptionFromKeys()
 
