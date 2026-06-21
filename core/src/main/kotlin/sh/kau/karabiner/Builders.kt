@@ -163,8 +163,10 @@ fun karabinerRuleAutoDescription(
                 fromModifiers = FromModifiers(mandatory = fromModifier?.let(::listOf))
                 toKey = this@run.toKey
                 toModifiers = toModifier?.let(::listOf)
-                forApp {
-                    bundleIds = this@run.forAppIds
+                this@run.forAppIds?.let {
+                    forApp {
+                        bundleIds = it
+                    }
                 }
             }
         }
