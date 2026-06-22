@@ -82,8 +82,10 @@ fun karabinerRuleSingle(
     description = singleRule.description
     layerKey = singleRule.layerKey
     mapping {
+      from = singleRule.from
       fromKey = singleRule.fromKey
       fromModifiers = singleRule.fromModifiers
+      to = singleRule.to
       toKey = singleRule.toKey
       toModifiers = singleRule.toModifiers
       toKeyIfAlone = singleRule.toKeyIfAlone
