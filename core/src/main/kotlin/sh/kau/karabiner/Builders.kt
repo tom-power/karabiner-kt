@@ -95,6 +95,27 @@ fun karabinerRuleSingle(
   }
 }
 
+fun SingleRule.description(): String {
+    fun String.camelToSnakeCase(): String {
+        val pattern = "(?<=.)[A-Z]".toRegex()
+        return this.replace(pattern, "_$0").lowercase()
+    }
+    fun String.name(): String = this.camelToSnakeCase().lowercase()
+    fun KeyCode.name(): String = this.name.name()
+    fun ModifierKeyCode.name(): String = this.name.name()
+    fun List<ModifierKeyCode?>.name(): String = this.filterNotNull().joinToString(",") { it.name() }
+    fun FromModifiers.name(): String =  mandatory?.name().orEmpty() + optional?.name().orEmpty()
+    fun descriptionFromKeys(): String {
+        val toKeyName = toKey?.name().orEmpty()
+        val toModifiersName = toModifiers?.name()?.let { " + $it" }.orEmpty()
+        val fromKeyName = fromKey?.name().orEmpty()
+        val fromModifiersName = fromModifiers?.name()?.let { " + $it" }.orEmpty()
+        return "$toKeyName$toModifiersName ($fromKeyName$fromModifiersName)"
+    }
+
+    return descriptionFromKeys()
+}
+
 fun karabinerRule(
     block: LayerKeyRule.() -> Unit,
 ): KarabinerRule {
@@ -150,49 +171,6 @@ fun karabinerRule(
   }
 
   return KarabinerRule(layerKeyRule.description, manipulators)
-}
-
-fun karabinerRuleAutoDescription(
-    block: SimpleRule.() -> Unit,
-): KarabinerRule =
-    SimpleRule().apply(block).run {
-        karabinerRule {
-            description = this@run.description()
-            mapping {
-                fromKey = this@run.fromKey
-                fromModifiers = FromModifiers(mandatory = fromModifier?.let(::listOf))
-                toKey = this@run.toKey
-                toModifiers = toModifier?.let(::listOf)
-                this@run.forAppIds?.let {
-                    forApp {
-                        bundleIds = it
-                    }
-                }
-            }
-        }
-    }
-
-data class SimpleRule(
-    var description: String? = null,
-    var fromKey: KeyCode? = null,
-    var fromModifier: ModifierKeyCode? = null,
-    var toKey: KeyCode? = null,
-    var toModifier: ModifierKeyCode? = null,
-    var forAppIds: List<String>? = null
-) {
-    fun description(): String = description ?: descriptionFromKeys()
-
-    private fun descriptionFromKeys(): String =
-        "${toKey.name()} + ${toModifier?.name()} (${fromKey.name()} + ${fromModifier?.name()})"
-
-    private fun KeyCode?.name(): String? = this?.name?.name()
-    private fun ModifierKeyCode?.name(): String? = this?.name?.name()
-    private fun String?.name(): String? = this?.camelToSnakeCase()?.lowercase()
-
-    private fun String.camelToSnakeCase(): String {
-        val pattern = "(?<=.)[A-Z]".toRegex()
-        return this.replace(pattern, "_$0").lowercase()
-    }
 }
 
 // endregion
